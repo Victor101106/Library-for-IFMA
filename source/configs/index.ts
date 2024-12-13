@@ -1,3 +1,4 @@
+export * from './decorators'
 export * from './dotenv'
 export * from './engine'
 export * from './formbody'
