@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Biblioteca • IFMA Porto Franco</title>
+</head>
+<body>
+
+    <script src="https://accounts.google.com/gsi/client" async></script>
+
+    <style>
+
+        body {
+            place-items: center;
+            display: grid;
+            height: 100vh;
+            width: 100vw;
+            padding: 0;
+            margin: 0;
+        }
+
+    </style>
+
+    <divn id="g_buttons">
+
+        <div id="g_id_onload" 
+            data-client_id="<%= GOOGLE_CLIENT_ID %>"
+            data-login_uri="<%= GOOGLE_REDIRECT_URI %>"
+            data-auto_prompt="false">
+        </div>
+    
+        <div class="g_id_signin" 
+            data-type="standard"
+            data-size="large"
+            data-theme="outline"
+            data-text="continue_with"
+            data-shape="rectangular" 
+            data-logo_alignment="left">
+        </div>
+
+    </divn>
+
+</body>
+</html>
