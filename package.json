@@ -1,0 +1,42 @@
+{
+  "name": "library-for-ifma",
+  "description": "Web application for management and access control to the library of Instituto Federal do Maranhão - Campus Avançado Porto Franco.",
+  "version": "0.0.1",
+  "keywords": [
+    "library-system",
+    "library",
+    "web-application",
+    "academic-library",
+    "porto-franco",
+    "campus-porto-franco",
+    "maranhão",
+    "instituto-federal-do-maranhão",
+    "ifma",
+    "if",
+    "instituto-federal",
+    "typescript",
+    "node",
+    "model-view-controller",
+    "mvc"
+  ],
+  "contributors": [
+    {
+      "name": "Victor Gabriel",
+      "email": "victorgabriel101106+github@gmail.com",
+      "url": "https://github.com/Victor101106/"
+    },
+    {
+      "name": "Dyego Santos",
+      "email": "diegopollary@gmail.com",
+      "url": "https://github.com/pollary/"
+    }
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Victor101106/Library-for-IFMA"
+  },
+  "engines": {
+    "node": "20.x"
+  },
+  "license": "GPL-3.0-only"
+}
