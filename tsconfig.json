@@ -29,7 +29,30 @@
       "rootDir": "./source",                               /* Specify the root folder within your source files. */
       // "moduleResolution": "node10",                     /* Specify how TypeScript looks up a file from a given module specifier. */
       // "baseUrl": "./",                                  /* Specify the base directory to resolve non-relative module names. */
-      // "paths": {},                                      /* Specify a set of entries that re-map imports to additional lookup locations. */
+      "paths": {                                           /* Specify a set of entries that re-map imports to additional lookup locations. */
+        "@public/*": ["./source/public/*"],
+        "@public": ["./source/public"],
+        "@configs/*": ["./source/configs/*"],
+        "@configs": ["./source/configs"],
+        "@controllers/*": ["./source/controllers/*"],
+        "@controllers": ["./source/controllers"],
+        "@helpers/*": ["./source/helpers/*"],
+        "@helpers": ["./source/helpers"],
+        "@middlewares/*": ["./source/middlewares/*"],
+        "@middlewares": ["./source/middlewares"],
+        "@models/*": ["./source/models/*"],
+        "@models": ["./source/models"],
+        "@repositories/*": ["./source/repositories/*"],
+        "@repositories": ["./source/repositories"],
+        "@routes/*": ["./source/routes/*"],
+        "@routes": ["./source/routes"],
+        "@schemas/*": ["./source/schemas/*"],
+        "@schemas": ["./source/schemas"],
+        "@services/*": ["./source/services/*"],
+        "@services": ["./source/services"],
+        "@views/*": ["./source/views/*"],
+        "@views": ["./source/views"]
+      },
       // "rootDirs": [],                                   /* Allow multiple folders to be treated as one when resolving modules. */
       // "typeRoots": [],                                  /* Specify multiple folders that act like './node_modules/@types'. */
       // "types": [],                                      /* Specify type package names to be included without being referenced in a source file. */

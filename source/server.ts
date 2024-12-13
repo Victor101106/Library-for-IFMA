@@ -1,4 +1,4 @@
-import { instance } from './configs'
+import { instance } from '@configs'
 
 const PORT = 3030
 
