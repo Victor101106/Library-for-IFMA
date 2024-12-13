@@ -22,6 +22,7 @@
 ## Content Table
 - [Requirements](#requirements)
 - [Conventional Commits](#conventional-commits)
+- [Result Pattern](#result-pattern)
 - [RBAC - Roles and Permissions](#rbac---role-based-access-control)
 - [License](#license)
 - [Contact](#contact)
@@ -66,6 +67,68 @@ The commit message should be structured as follows:
 #### Example:
 ```bash
 feat(auth): add login functionality
+```
+
+## Result Pattern
+
+This project uses the **Go-based Result Pattern** to manage type-safe operation results. The `Result` type provides a type-safe way to handle both successful and failed operations.
+
+### Defining `Result`
+
+To define a result, use the generic type `Result<F, S>`, where:
+- `F`: represents the type of the failure (failed result).
+- `S`: represents the type of the success (successful result).
+
+#### Example:
+
+Below is an example of a division function. If the operation fails (e.g., division by zero), the result contains a DivisionByZeroError. Otherwise, it contains a number.
+
+```ts
+function divide(dividend: number, divisor: number): Result<DivisionByZeroError, number> {
+    // Implementation goes here
+}
+```
+
+### Returning `Result`
+
+To return a result, use:
+- `failure(F)`: for failed outcomes, passing the result value (`F`).
+- `success(S)`: for successful outcomes, passing the result value (`S`).
+
+#### Example:
+
+Here’s the implementation of the divide function using `failure(F)` for failure and `success(S)` for success:
+
+```ts
+function divide(dividend: number, divisor: number): Result<DivisionByZeroError, number> {
+    
+    if (divisor === 0) {
+        return failure(new DivisionByZeroError());
+    }
+
+    return success(dividend / divisor);
+
+}
+```
+
+### Handling `Result`
+
+To handle a result, use the `successfully()` and `failed()` methods of `Result` to determine the return type. Then, access the corresponding value safely.
+
+#### Example:
+
+Here’s an example of using the divide function to calculate the division of `x` and `y`:
+
+```ts
+
+const result = divide(x, y); // Get the result
+
+if (result.failed()) {
+    throw result.value; // Handle the error (e.g., throw)
+}
+
+console.log(`Result: ${result.value}`); // Process the success value
+
 ```
 
 ## RBAC - Role-based Access Control
