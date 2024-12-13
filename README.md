@@ -21,6 +21,7 @@
 
 ## Content Table
 - [Requirements](#requirements)
+- [Environment Variables](#environment-variables)
 - [Conventional Commits](#conventional-commits)
 - [Result Pattern](#result-pattern)
 - [RBAC - Roles and Permissions](#rbac---role-based-access-control)
@@ -30,6 +31,14 @@
 ## Requirements
 
 1. `NodeJS v20.x`.
+
+## Environment Variables
+
+To run the project correctly, you must set the required environment variables. Create a `.env` file in the root directory based on the `.env.example` file. Below is a description of the required variables:
+
+| Variable                   | Description                                               | Example Value                         |
+|----------------------------|-----------------------------------------------------------|---------------------------------------|
+| `PORT`                     | The port where the server will listen                     | `3030`                                |
 
 ## Conventional Commits
 

@@ -36,7 +36,7 @@
     "url": "https://github.com/Victor101106/Library-for-IFMA"
   },
   "scripts": {
-    "start:dev": "tsx watch source/server.ts",
+    "start:dev": "tsx watch --env-file=.env source/server.ts",
     "git:commit": "cz"
   },
   "devDependencies": {

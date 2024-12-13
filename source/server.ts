@@ -1,14 +1,12 @@
-import { instance } from '@configs'
+import { environment, instance } from '@configs'
 
-const PORT = 3030
-
-instance.listen({ port: PORT }, (error) => {
+instance.listen({ port: environment.PORT }, (error) => {
 
     if (error) {
         console.error(error)
         process.exit(1)
     }
 
-    console.log(`⚡ Listening at PORT ${PORT}!`)
+    console.log(`⚡ Listening at PORT ${environment.PORT}!`)
 
 })
