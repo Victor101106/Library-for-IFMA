@@ -40,8 +40,8 @@
   },
   "devDependencies": {
     "commitizen": "^4.3.1",
-    "typescript": "^5.7.2",
-    "tsx": "^4.19.2"
+    "tsx": "^4.19.2",
+    "typescript": "^5.7.2"
   },
   "config": {
     "commitizen": {
@@ -51,5 +51,8 @@
   "engines": {
     "node": "20.x"
   },
-  "license": "GPL-3.0-only"
+  "license": "GPL-3.0-only",
+  "dependencies": {
+    "fastify": "^5.1.0"
+  }
 }
