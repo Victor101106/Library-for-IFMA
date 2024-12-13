@@ -75,6 +75,7 @@ To run the project correctly, you must set the required environment variables. C
 | `GOOGLE_CLIENT_SECRET_KEY`     | Secret key used for authenticating with Google APIs            | `your-google-secret-key`              |
 | `GOOGLE_REDIRECT_URI`          | The URI where Google redirects users after authentication      | `http://localhost:3030/auth/callback` |
 | `GOOGLE_CLIENT_ID`             | Unique identifier for your Google API client	                  | `your-google-client-id`               |
+| `ACCESS_TOKEN_SECRET_KEY`      | Secret key used to sign access tokens                          | `your-access-token-secret-key`        |
 | `PORT`                         | The port where the server will listen                          | `3030`                                |
 
 ## Conventional Commits
