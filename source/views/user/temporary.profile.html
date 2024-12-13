@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Biblioteca • IFMA Porto Franco</title>
+</head>
+<body>
+
+    <style>
+
+        * {
+            box-sizing: border-box;
+            padding: 0;
+            margin: 0;
+        }
+
+        body {
+            place-items: center;
+            display: grid;
+            height: 100vh;
+            width: 100vw;
+        }
+
+        #g_profile {
+            flex-direction: column;
+            align-items: center;
+            display: flex;
+            gap: 12px;
+        }
+
+        #g_profile_picture {
+            border-radius: 999px;
+            height: 96px;
+            width: 96px;
+        }
+
+        #g_profile_name,
+        #g_profile_email,
+        #g_profile_exit_button {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            text-align: center;
+        }
+
+        #g_profile_name {
+            font-weight: bold;
+            font-size: 18px;
+        }
+
+        #g_profile_email {
+            font-size: 16px;
+        }
+
+        #g_profile_exit_button_wrapper {
+            height: fit-content;
+            width: 100%;
+        }
+
+        #g_profile_exit_button {
+            transition: background-color .25s, color .25s;
+            border-radius: 999px;
+            padding: 10px 5px;
+            margin-top: 16px;
+            font-size: 16px;
+            cursor: pointer;
+            border: none;
+            width: 100%;
+        }
+
+        #g_profile_exit_button:hover {
+            background-color: blue;
+            color: white;
+        }
+
+    </style>
+    
+    <div id="g_profile">
+        <img id="g_profile_picture" src="<%= picture %>" alt="Foto de perfil do usuário">
+        <div id="g_profile_wrapper">
+            <p id="g_profile_name"><%= name %></p>
+            <p id="g_profile_email"><%= email %></p>
+        </div>
+        <a id="g_profile_exit_button_wrapper" href="/api/logout">
+            <button id="g_profile_exit_button">Desconectar</button>
+        </a>
+    </div>
+
+</body>
+</html>
