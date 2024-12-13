@@ -39,6 +39,11 @@
     "start:dev": "tsx watch --env-file=.env source/server.ts",
     "git:commit": "cz"
   },
+  "dependencies": {
+    "@fastify/static": "^8.0.3",
+    "fastify": "^5.1.0",
+    "zod": "^3.24.1"
+  },
   "devDependencies": {
     "commitizen": "^4.3.1",
     "tsx": "^4.19.2",
@@ -52,9 +57,5 @@
   "engines": {
     "node": "20.x"
   },
-  "license": "GPL-3.0-only",
-  "dependencies": {
-    "fastify": "^5.1.0",
-    "zod": "^3.24.1"
-  }
+  "license": "GPL-3.0-only"
 }
