@@ -1,11 +1,11 @@
+import { userController } from '@controllers'
+import { authMiddleware } from '@middlewares'
 import { FastifyInstance } from 'fastify'
 
 module.exports = (instance: FastifyInstance) => {
-    instance.get('/profile', (request, reply) => {
-        return reply.view('user/temporary.profile.html', {
-            picture: 'picture-url',
-            email: 'john@doe.com',
-            name: 'John Doe'
-        })
+    instance.get('/profile', {
+        preHandler: (request, reply, done) => authMiddleware.ensureAuthenticationHandle(request, reply, done)
+    },(request, reply) => {
+        return userController.profileHandle(request, reply)
     })
 }
