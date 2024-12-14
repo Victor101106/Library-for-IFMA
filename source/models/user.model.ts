@@ -46,8 +46,8 @@ export class UserModel {
 
     public static validateRequest(request: UserModel.Request): Result<Error, UserModel.Request> {
 
-        if (!UserModel.validatePicture(request.email))
-            return failure(new InvalidPictureError)
+        if (!UserModel.validatePicture(request.picture))
+            return failure(new InvalidPictureError())
         
         if (!UserModel.validateEmail(request.email))
             return failure(new InvalidEmailError(request.email))
