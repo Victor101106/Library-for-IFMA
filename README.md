@@ -22,6 +22,7 @@
 ## Content Table
 - [Requirements](#requirements)
 - [Getting Started](#getting-started)
+- [Features](#features)
 - [Environment Variables](#environment-variables)
 - [Conventional Commits](#conventional-commits)
 - [Result Pattern](#result-pattern)
@@ -64,6 +65,57 @@ Follow the step-by-step instructions to set up and run the project:
     ```bash
     npm run start:dev
     ```
+
+## Features
+
+### User Authentication
+
+- [x] It should allow users to log in using Google OAuth2.
+
+### Book Loans
+
+- [ ] It should allow users to add books to a cart;
+- [ ] It should allow users to review selected books;
+- [ ] It should allow users to choose loan options, including a return date (maximum of one week);
+- [ ] It should allow users to choose pickup and return time slots (morning: 08:00-12:00; afternoon: 14:00-18:00);
+- [ ] It should allow users to renew loans if more time is needed to finish reading a book;
+- [ ] It should allow users to reserve books that are currently loaned out;
+- [ ] It should prioritize reservations based on the first user to reserve the book.
+
+### Book Search
+
+- [ ] It should allow users to search for books using keywords;
+- [ ] It should allow users to search for books using categories;
+- [ ] It should allow users to filter books by book code, title, author, genre, or subject.
+
+### Email Notifications
+
+- [ ] It should send a confirmation email to users upon successful loan creation, including the return date and time;
+- [ ] It should send reminder emails to users two days before the return deadline;
+- [ ] It should send reminder emails to users one day before the return deadline;
+- [ ] It should send notifications to administrators about overdue returns;
+- [ ] It should send notifications to administrators about completed returns;
+- [ ] It should send notifications to administrators about loan renewals.
+
+### Stock Management
+
+- [ ] It should allow administrators to add books to the inventory;
+- [ ] It should allow administrators to update book details in the inventory;
+- [ ] It should allow administrators to delete books from the inventory;
+- [ ] It should allow administrators to track the quantity of each book in the inventory.
+
+### Access Control
+
+- [ ] It should implement different access levels for administrators;
+- [ ] It should implement different access levels for teachers;
+- [ ] It should implement different access levels for students.
+
+### Reporting
+
+- [ ] It should allow administrators to generate reports about completed loans;
+- [ ] It should allow administrators to generate reports about pending loans;
+- [ ] It should allow administrators to generate reports about the stock status;
+- [ ] It should allow administrators to generate reports about overdue returns.
 
 ## Environment Variables
 
