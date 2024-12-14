@@ -1,4 +1,5 @@
 import { cookieHelper } from '@helpers'
+import { UserModel } from '@models'
 import { callbackRequestSchema } from '@schemas/controllers/auth'
 import { authService, AuthService, tokenService, TokenService, userService, UserService } from '@services'
 import { FastifyReply, FastifyRequest } from 'fastify'
@@ -40,19 +41,31 @@ export class AuthController {
 
         const payload = verificationResult.value
 
-        const creationResult = await this.userService.createUser({
-            picture: String(payload.picture),
-            googleId: String(payload.sub),
-            email: String(payload.email),
-            name: String(payload.name)
-        })
+        const findResult = await this.userService.findUserByGoogleId(payload.sub)
 
-        if (creationResult.failed())
-            return reply.redirect('/')
+        let user: UserModel
 
-        const user = creationResult.value
+        if (findResult.successfully()) {
+            
+            user = findResult.value
 
-        const accessToken = await this.tokenService.createAccessToken(user)
+        } else {
+            
+            const creationResult = await this.userService.createUser({
+                picture: String(payload.picture),
+                googleId: String(payload.sub),
+                email: String(payload.email),
+                name: String(payload.name)
+            })
+    
+            if (creationResult.failed())
+                return reply.redirect('/')
+    
+            user = creationResult.value
+
+        }
+
+        const accessToken = await this.tokenService.createAccessToken(user.id)
 
         reply.header('set-cookie', cookieHelper.createAccessTokenCookie(accessToken))
         

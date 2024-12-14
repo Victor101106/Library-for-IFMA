@@ -2,7 +2,7 @@ import { Schema } from '@schemas'
 import { z, ZodSchema } from 'zod'
 
 export const PayloadSchemaByZod = z.object({
-    userId: z.string()
+    sub: z.string()
 })
 
 export type PayloadSchemaType = z.infer<typeof PayloadSchemaByZod>

@@ -17,6 +17,11 @@ export namespace UserService {
         export type Response = UserModel
     }
     
+    export namespace FindUserByGoogleId {
+        export type Request = string
+        export type Response = UserModel
+    }
+
     export namespace FindUserById {
         export type Request = string
         export type Response = UserModel
@@ -52,10 +57,21 @@ export class UserService {
         return success(user)
 
     }
+    
+    async findUserByGoogleId(googleId: UserService.FindUserByGoogleId.Request): Promise<Result<UserNotFoundError, UserService.FindUserByGoogleId.Response>> {
 
-    async findUserById(request: UserService.FindUserById.Request): Promise<Result<UserNotFoundError, UserService.FindUserById.Response>> {
+        const userFound = await this.userRepository.findByGoogleId(googleId)
+
+        if (!userFound)
+            return failure(new UserNotFoundError())
+
+        return success(userFound)
+
+    }
+
+    async findUserById(userId: UserService.FindUserById.Request): Promise<Result<UserNotFoundError, UserService.FindUserById.Response>> {
         
-        const userFound = await this.userRepository.findById(request)
+        const userFound = await this.userRepository.findById(userId)
 
         if (!userFound)
             return failure(new UserNotFoundError())
