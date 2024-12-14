@@ -7,6 +7,17 @@
     "library",
     "web-application",
     "academic-library",
+    "library-management",
+    "library-software",
+    "library-loans",
+    "library-reservations",
+    "library-stock",
+    "access-control",
+    "google-oauth2",
+    "typescript",
+    "node",
+    "model-view-controller",
+    "mvc",
     "porto-franco",
     "campus-porto-franco",
     "maranhão",
@@ -14,10 +25,8 @@
     "ifma",
     "if",
     "instituto-federal",
-    "typescript",
-    "node",
-    "model-view-controller",
-    "mvc"
+    "zod-validation",
+    "fastify-framework"
   ],
   "contributors": [
     {
