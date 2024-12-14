@@ -1,8 +1,8 @@
 import { environment } from '@configs'
 import { failure, Result, success } from '@helpers'
 import { UserModel } from '@models'
+import { payloadSchema } from '@schemas/services/token'
 import { sign, verify } from 'jsonwebtoken'
-import { z } from 'zod'
 import { InvalidAccessTokenError } from './errors'
 
 export namespace TokenService {
@@ -28,7 +28,7 @@ export class TokenService {
     }
 
     async createAccessToken(request: TokenService.CreateAccessToken.Request): Promise<TokenService.CreateAccessToken.Response> {
-        return sign(request.id, environment.ACCESS_TOKEN_SECRET_KEY, { expiresIn: '30d' })
+        return sign({ userId: request.id }, environment.ACCESS_TOKEN_SECRET_KEY, { expiresIn: '30d' })
     }
 
     async receiveUserIdFromAccessToken(request: TokenService.ReceiveUserIdFromAccessToken.Request): Promise<Result<InvalidAccessTokenError, TokenService.ReceiveUserIdFromAccessToken.Response>> {
@@ -36,7 +36,7 @@ export class TokenService {
             
             const payload = verify(request, environment.ACCESS_TOKEN_SECRET_KEY)
 
-            const userId = z.string().parse(payload)
+            const { userId } = payloadSchema.validate(payload)
 
             return success(userId)
 
