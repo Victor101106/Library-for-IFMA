@@ -107,7 +107,7 @@ Follow the step-by-step instructions to set up and run the project:
 ### Access Control
 
 - [ ] It should implement different access levels for administrators;
-- [ ] It should implement different access levels for teachers;
+- [ ] It should implement different access levels for employees;
 - [ ] It should implement different access levels for students.
 
 ### Reporting
@@ -237,22 +237,33 @@ This project uses Role-based Access Control (RBAC) to manage user permissions ba
 ### Roles:
 
 1. Administrator;
-2. Teacher;
+2. Employee;
 3. Student;
 4. Anonymous.
 
 ### Permissions:
 
-|           | Administrator | Teacher | Student           | Anonymous |
-|-----------|---------------|---------|-------------------|-----------|
-| Rent Book | ✅            | ✅      | ⚠️<sup>[1]</sup> | ❌        |
+|                       | Administrator | Employee         | Student           | Anonymous |
+|-----------------------|---------------|------------------|-------------------|-----------|
+| Authenticate          | ✅            | ✅               | ✅               | ❌        |
+| Search books          | ✅            | ✅               | ✅               | ✅        |
+| Add book to cart      | ✅            | ✅               | ✅               | ❌        |
+| Borrow a book         | ✅            | ✅               | ⚠️<sup>[1]</sup> | ❌        |
+| Renew book loan       | ✅            | ✅               | ✅               | ❌        |
+| Reserve borrowed book | ✅            | ✅               | ✅               | ❌        |
+| Generate reports      | ✅            | ⚠️<sup>[2]</sup> | ❌               | ❌        |
+| Add books             | ✅            | ❌               | ❌               | ❌        |
+| Update book details   | ✅            | ❌               | ❌               | ❌        |
+| Delete books          | ✅            | ❌               | ❌               | ❌        |
+| Track book quantity   | ✅            | ❌               | ❌               | ❌        |
 
 > ✅ means `allowed` \
 > ❌ means `denied` \
 > ⚠️ means `allowed w/ conditions`
 
 #### Conditions:
-1. Students can rent a book for a maximum of seven days and renew the rental at the end of the period with priority.
+1. Students can borrow a book for a maximum of seven days;
+2. Employees can generate reports only for their loans.
 
 ## License
 
