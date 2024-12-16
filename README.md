@@ -123,14 +123,13 @@ Follow the step-by-step instructions to set up and run the project:
 
 To run the project correctly, you must set the required environment variables. Create a `.env` file in the root directory based on the `.env.example` file. Below is a description of the required variables:
 
-| Variable                       | Description                                                    | Example Value                         |
-|--------------------------------|----------------------------------------------------------------|---------------------------------------|
-| `GOOGLE_REDIRECT_URI_ENDPOINT` | The endpoint where Google redirects users after authentication | `/auth/callback`                      |
-| `GOOGLE_CLIENT_SECRET_KEY`     | Secret key used for authenticating with Google APIs            | `your-google-secret-key`              |
-| `GOOGLE_REDIRECT_URI`          | The URI where Google redirects users after authentication      | `http://localhost:3030/auth/callback` |
-| `GOOGLE_CLIENT_ID`             | Unique identifier for your Google API client	                  | `your-google-client-id`               |
-| `ACCESS_TOKEN_SECRET_KEY`      | Secret key used to sign access tokens                          | `your-access-token-secret-key`        |
-| `PORT`                         | The port where the server will listen                          | `3030`                                |
+| Variable                       | Description                                               | Example Value                         |
+|--------------------------------|-----------------------------------------------------------|---------------------------------------|
+| `ACCESS_TOKEN_SECRET_KEY`      | Secret key used to sign access tokens                     | `your-access-token-secret-key`        |
+| `GOOGLE_CLIENT_SECRET_KEY`     | Secret key used for authenticating with Google APIs       | `your-google-secret-key`              |
+| `GOOGLE_REDIRECT_URI`          | The URI where Google redirects users after authentication | `http://localhost:3030/auth/callback` |
+| `GOOGLE_CLIENT_ID`             | Unique identifier for your Google API client	             | `your-google-client-id`               |
+| `PORT`                         | The port where the server will listen                     | `3030`                                |
 
 ## Conventional Commits
 
