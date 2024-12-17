@@ -27,9 +27,9 @@ export class UserController {
         const user = result.value
 
         return reply.view('user/temporary.profile.html', {
-            picture: user.picture,
-            email: user.email,
-            name: user.name
+            picture: user.picture.value,
+            email: user.email.value,
+            name: user.name.value
         })
 
     }

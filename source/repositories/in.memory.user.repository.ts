@@ -1,9 +1,9 @@
-import { UserModel } from '@models'
+import { User } from '@models'
 import { UserRepository } from './contracts'
 
 export class InMemoryUserRepository implements UserRepository {
     
-    private readonly database: Array<UserModel> = new Array()
+    private readonly database: Array<User> = new Array()
 
     private constructor () {}
 
@@ -11,13 +11,13 @@ export class InMemoryUserRepository implements UserRepository {
         return new InMemoryUserRepository()
     }
 
-    async save(user: UserModel): Promise<void> {
+    async save(user: User): Promise<void> {
         this.database.push(user)
     }
 
-    async deleteById(id: string): Promise<UserModel | void> {
+    async deleteById(id: string): Promise<User | void> {
         
-        const index = this.database.findIndex(user => user.id === id)
+        const index = this.database.findIndex(user => user.id.value === id)
 
         if (index == -1)
             return
@@ -26,17 +26,17 @@ export class InMemoryUserRepository implements UserRepository {
 
     }
 
-    async findByGoogleId(googleId: string): Promise<UserModel | void> {
-        return this.database.find(user => user.googleId === googleId)
+    async findByGoogleId(googleId: string): Promise<User | void> {
+        return this.database.find(user => user.googleId.value === googleId)
     }
 
-    async findById(id: string): Promise<UserModel | void> {
-        return this.database.find(user => user.id === id)
+    async findById(id: string): Promise<User | void> {
+        return this.database.find(user => user.id.value === id)
     }
 
-    async update(user: UserModel): Promise<void> {
+    async update(user: User): Promise<void> {
         
-        const index = this.database.findIndex(found => found.id === user.id)
+        const index = this.database.findIndex(found => found.id.value === user.id.value)
 
         if (index == -1)
             return

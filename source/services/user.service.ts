@@ -1,8 +1,7 @@
 import { failure, Result, success } from '@helpers'
-import { UserModel } from '@models'
+import { User } from '@models'
 import { inMemoryUserRepository } from '@repositories'
 import { UserRepository } from '@repositories/contracts'
-import { v4 as uuidv4 } from 'uuid'
 import { UserNotFoundError } from './errors'
 
 export namespace UserService {
@@ -13,18 +12,19 @@ export namespace UserService {
             picture: string
             email: string
             name: string
+            role: string
         }
-        export type Response = UserModel
+        export type Response = User
     }
     
     export namespace FindUserByGoogleId {
         export type Request = string
-        export type Response = UserModel
+        export type Response = User
     }
 
     export namespace FindUserById {
         export type Request = string
-        export type Response = UserModel
+        export type Response = User
     }
 
 }
@@ -39,12 +39,12 @@ export class UserService {
 
     async createUser(request: UserService.CreateUser.Request): Promise<Result<UserNotFoundError, UserService.CreateUser.Response>> {
 
-        const creationResult = UserModel.create({
+        const creationResult = User.create({
             googleId: request.googleId,
             picture: request.picture,
             email: request.email,
             name: request.name,
-            id: uuidv4()
+            role: request.role
         })
 
         if (creationResult.failed())

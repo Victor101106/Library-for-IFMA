@@ -1,9 +1,9 @@
-import { UserModel } from '@models'
+import { User } from '@models'
 
 export interface UserRepository {
-    save(user: UserModel): Promise<void>
-    update(user: UserModel): Promise<void>
-    deleteById(id: string): Promise<UserModel | void>
-    findById(id: string): Promise<UserModel | void>
-    findByGoogleId(googleId: string): Promise<UserModel | void>
+    save(user: User): Promise<void>
+    update(user: User): Promise<void>
+    deleteById(id: string): Promise<User | void>
+    findById(id: string): Promise<User | void>
+    findByGoogleId(googleId: string): Promise<User | void>
 }
