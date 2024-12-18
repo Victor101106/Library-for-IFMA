@@ -1,4 +1,4 @@
-import { cookieHelper } from '@helpers'
+import { ACCESS_TOKEN_COOKIE, serializeCookie } from '@helpers'
 import { RoleEnum, User } from '@models'
 import { callbackRequestSchema } from '@schemas/controllers/auth'
 import { authService, AuthService, tokenService, TokenService, userService, UserService } from '@services'
@@ -17,12 +17,7 @@ export class AuthController {
     }
 
     async logoutHandler(request: FastifyRequest, reply: FastifyReply): Promise<FastifyReply> {
-
-        reply.header('set-cookie', cookieHelper.createAccessTokenCookie(''))
-        reply.redirect('/')
-
-        return reply
-        
+        return reply.header('set-cookie', serializeCookie(ACCESS_TOKEN_COOKIE, '')).redirect('/')
     }
 
     async callbackHandler(request: FastifyRequest, reply: FastifyReply): Promise<FastifyReply> {
@@ -68,7 +63,7 @@ export class AuthController {
 
         const accessToken = await this.tokenService.createAccessToken(user.id.value)
 
-        reply.header('set-cookie', cookieHelper.createAccessTokenCookie(accessToken))
+        reply.header('set-cookie', serializeCookie(ACCESS_TOKEN_COOKIE, accessToken))
         
         return reply.redirect('/profile')
 

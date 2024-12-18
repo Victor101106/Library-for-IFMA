@@ -1,34 +1,29 @@
 import { parse, ParseOptions, serialize, SerializeOptions } from 'cookie'
 
-const ACCESS_TOKEN_COOKIE_LIFETIME_DAYS = 30
-const ACCESS_TOKEN_COOKIE_EXPIRATION_DATE = new Date(Date.now() + ACCESS_TOKEN_COOKIE_LIFETIME_DAYS * 24 * 60 * 60 * 1000)
-
-export class CookieHelper {
-
-    private constructor () {}
-
-    public static create(): CookieHelper {
-        return new CookieHelper()
-    }
-
-    createAccessTokenCookie(accessToken: string) {
-        return this.serialize('access-token', accessToken, {
-            expires: ACCESS_TOKEN_COOKIE_EXPIRATION_DATE,
-            httpOnly: true,
-            sameSite: true,
-            secure: true,
-            path: '/'
-        })
-    }
-
-    serialize(name: string, value: string, options?: SerializeOptions) {
-        return serialize(name, value, options)
-    }
-
-    parse(cookies: string, options?: ParseOptions) {
-        return parse(cookies, options)
-    }
-
+export interface Cookie {
+    options: SerializeOptions
+    name: string
 }
 
-export const cookieHelper = CookieHelper.create()
+export const ACCESS_TOKEN_COOKIE: Cookie = {
+    name: 'access-token',
+    options: {
+        expires: calculateCookieExpirationByDays(30),
+        sameSite: true,
+        httpOnly: true,
+        secure: true,
+        path: '/'
+    }
+}
+
+export function calculateCookieExpirationByDays(days: number) {
+    return new Date(Date.now() + days * 24 * 60 * 60 * 1000)
+}
+
+export function parseCookie(cookie: string, options?: ParseOptions) {
+    return parse(cookie, options)
+}
+
+export function serializeCookie(cookie: Cookie, value: string) {
+    return serialize(cookie.name, value, cookie.options)
+}

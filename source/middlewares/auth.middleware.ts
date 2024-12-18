@@ -1,12 +1,13 @@
-import { cookieHelper } from '@helpers'
+import { ACCESS_TOKEN_COOKIE } from '@helpers'
 import { denyAuthenticationRequestSchema, ensureAuthenticationRequestSchema } from '@schemas/middlewares/auth'
 import { tokenService, TokenService } from '@services'
+import { parse as parseCookie } from 'cookie'
 import { FastifyReply, FastifyRequest, HookHandlerDoneFunction } from 'fastify'
 
 export class AuthMiddleware {
 
     private constructor (
-        private readonly tokenService: TokenService,
+        private readonly tokenService: TokenService
     ) {}
 
     public static create(tokenService: TokenService): AuthMiddleware {
@@ -25,9 +26,9 @@ export class AuthMiddleware {
         if (!cookieHeader)
             return done()
 
-        const cookies = cookieHelper.parse(cookieHeader)
+        const cookie = parseCookie(cookieHeader)
 
-        const accessToken = cookies['access-token']
+        const accessToken = cookie[ACCESS_TOKEN_COOKIE.name]
 
         if (!accessToken)
             return done()
@@ -45,9 +46,9 @@ export class AuthMiddleware {
 
         const { cookie: cookieHeader } = validationResult.value.headers
 
-        const cookies = cookieHelper.parse(cookieHeader)
+        const cookie = parseCookie(cookieHeader)
 
-        const accessToken = cookies['access-token']
+        const accessToken = cookie[ACCESS_TOKEN_COOKIE.name]
 
         if (!accessToken)
             return reply.redirect('/logout')
