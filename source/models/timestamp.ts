@@ -26,4 +26,8 @@ export class Timestamp {
         return this.timestamp
     }
 
+    public to(): Timestamp.DTO {
+        return this.value.getTime()
+    }
+
 }

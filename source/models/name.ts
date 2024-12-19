@@ -46,4 +46,8 @@ export class Name {
         return this.name
     }
 
+    public to(): Name.DTO {
+        return this.value
+    }
+
 }

@@ -45,5 +45,9 @@ export class Picture {
     public get value(): string {
         return this.picture
     }
+    
+    public to(): Picture.DTO {
+        return this.value
+    }
 
 }

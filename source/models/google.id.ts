@@ -33,4 +33,8 @@ export class GoogleId {
         return z.string().min(1).safeParse(googleid).success
     }
 
+    public to(): GoogleId.DTO {
+        return this.value
+    }
+
 }

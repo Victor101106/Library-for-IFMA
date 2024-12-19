@@ -52,4 +52,8 @@ export class Role {
         return this.role
     }
 
+    public to(): Role.DTO {
+        return this.value
+    }
+
 }

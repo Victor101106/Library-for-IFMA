@@ -33,4 +33,8 @@ export class Email {
         return z.string().email().safeParse(email).success
     }
 
+    public to(): Email.DTO {
+        return this.value
+    }
+
 }

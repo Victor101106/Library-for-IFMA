@@ -20,4 +20,8 @@ export class Id {
         return new Id(id)
     }
 
+    public to(): Id.DTO {
+        return this.value
+    }
+
 }

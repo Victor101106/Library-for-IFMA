@@ -98,4 +98,21 @@ export class User {
 
     }
 
+    public to(): User.DTO {
+
+        const registration = this.registration.to()
+        const createdAt    = this.createdAt   .to()
+        const updatedAt    = this.updatedAt   .to()
+        const googleId     = this.googleId    .to()
+        const picture      = this.picture     .to()
+        const siape        = this.siape       .to()
+        const email        = this.email       .to()
+        const role         = this.role        .to()
+        const name         = this.name        .to()
+        const id           = this.id          .to()
+
+        return { registration, createdAt, updatedAt, googleId, picture, siape, email, role, name, id }
+
+    }
+
 }

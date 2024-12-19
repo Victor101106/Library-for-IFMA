@@ -46,4 +46,8 @@ export class Registration {
         return this.registration
     }
 
+    public to(): Registration.DTO {
+        return this.value
+    }
+
 }

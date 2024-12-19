@@ -46,4 +46,8 @@ export class Siape {
         return this.siape
     }
 
+    public to(): Siape.DTO {
+        return this.value
+    }
+
 }
