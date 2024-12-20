@@ -1,7 +1,7 @@
+import { FastifyTypedInstance } from '@configs/types'
 import FastifyView from '@fastify/view'
-import { FastifyInstance } from 'fastify'
 
-export default (instance: FastifyInstance) => {
+export default (instance: FastifyTypedInstance) => {
     instance.register(FastifyView, { 
         engine: { ejs: require('ejs') },
         root: './source/views/'

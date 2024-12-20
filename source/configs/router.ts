@@ -1,8 +1,8 @@
-import { FastifyInstance } from 'fastify'
+import { FastifyTypedInstance } from '@configs/types'
 import { existsSync, readdirSync } from 'fs'
 import { join } from 'path'
 
-export default (instance: FastifyInstance): void => {
+export default (instance: FastifyTypedInstance): void => {
     
     const routesFolderPath = join(__dirname, '../routes/')
 

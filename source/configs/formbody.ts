@@ -1,6 +1,6 @@
+import { FastifyTypedInstance } from '@configs/types'
 import fastifyFormbody from '@fastify/formbody'
-import { FastifyInstance } from 'fastify'
 
-export default (instance: FastifyInstance): void => {
+export default (instance: FastifyTypedInstance): void => {
     instance.register(fastifyFormbody)
 }

@@ -1,4 +1,4 @@
-import { FastifyInstance } from 'fastify'
+import { FastifyTypedInstance } from '@configs/types'
 
 declare module 'fastify' {
     interface FastifyRequest {
@@ -6,6 +6,6 @@ declare module 'fastify' {
     }
 }
 
-export default (instance: FastifyInstance) => {
+export default (instance: FastifyTypedInstance) => {
     instance.decorateRequest('locals')
 }
