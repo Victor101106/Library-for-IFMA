@@ -1,18 +1,27 @@
 import { failure, Result, success } from '@helpers'
-import { User } from '@models'
+import { RoleEnum, User } from '@models'
 import { inMemoryUserRepository } from '@repositories'
 import { UserRepository } from '@repositories/contracts'
 import { UserNotFoundError } from './errors'
 
 export namespace UserService {
     
+    export namespace FindByGoogleIdOrCreateUser {
+        export type Request = {
+            googleId: string
+            picture?: string
+            email?: string
+            name?: string
+        }
+        export type Response = User
+    }
+
     export namespace CreateUser {
         export type Request = {
             googleId: string
             picture: string
             email: string
             name: string
-            role: string
         }
         export type Response = User
     }
@@ -37,14 +46,37 @@ export class UserService {
         return new UserService(userRepository)
     }
 
-    async createUser(request: UserService.CreateUser.Request): Promise<Result<UserNotFoundError, UserService.CreateUser.Response>> {
+    public async findByGoogleIdOrCreateUser(request: UserService.FindByGoogleIdOrCreateUser.Request): Promise<Result<Error, UserService.FindByGoogleIdOrCreateUser.Response>> {
+
+        const userFound = await this.userRepository.findByGoogleId(request.googleId)
+
+        if (userFound)
+            return success(userFound)
+            
+        const creationResult = await this.createUser({
+            googleId: String(request.googleId),
+            picture: String(request.picture),
+            email: String(request.email),
+            name: String(request.name)
+        })
+
+        if (creationResult.failed())
+            return failure(creationResult.value)
+
+        const user = creationResult.value
+
+        return success(user)
+
+    }
+
+    public async createUser(request: UserService.CreateUser.Request): Promise<Result<UserNotFoundError, UserService.CreateUser.Response>> {
 
         const creationResult = User.create({
             googleId: request.googleId,
             picture: request.picture,
             email: request.email,
             name: request.name,
-            role: request.role
+            role: RoleEnum.Pending
         })
 
         if (creationResult.failed())
@@ -58,7 +90,7 @@ export class UserService {
 
     }
     
-    async findUserByGoogleId(googleId: UserService.FindUserByGoogleId.Request): Promise<Result<UserNotFoundError, UserService.FindUserByGoogleId.Response>> {
+    public async findUserByGoogleId(googleId: UserService.FindUserByGoogleId.Request): Promise<Result<UserNotFoundError, UserService.FindUserByGoogleId.Response>> {
 
         const userFound = await this.userRepository.findByGoogleId(googleId)
 
@@ -69,7 +101,7 @@ export class UserService {
 
     }
 
-    async findUserById(userId: UserService.FindUserById.Request): Promise<Result<UserNotFoundError, UserService.FindUserById.Response>> {
+    public async findUserById(userId: UserService.FindUserById.Request): Promise<Result<UserNotFoundError, UserService.FindUserById.Response>> {
         
         const userFound = await this.userRepository.findById(userId)
 

@@ -6,6 +6,6 @@ module.exports = (instance: FastifyInstance) => {
     instance.get('/profile', {
         preHandler: (request, reply, done) => authMiddleware.ensureAuthenticationHandle(request, reply, done)
     },(request, reply) => {
-        return userController.profileHandle(request, reply)
+        return userController.profileHandler(request, reply)
     })
 }

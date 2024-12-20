@@ -1,3 +1,4 @@
+import { ok, unauthorized } from '@helpers'
 import { profileRequestSchema } from '@schemas/controllers/user'
 import { userService, UserService } from '@services'
 import { FastifyReply, FastifyRequest } from 'fastify'
@@ -10,27 +11,23 @@ export class UserController {
         return new UserController(userService)
     }
 
-    async profileHandle(request: FastifyRequest, reply: FastifyReply): Promise<FastifyReply> {
+    public async profileHandler(request: FastifyRequest, reply: FastifyReply): Promise<FastifyReply> {
         
         const validationResult = profileRequestSchema.validateSafe(request)
 
         if (validationResult.failed())
-            return reply.redirect('/logout')
+            return unauthorized(reply, validationResult.value)
 
         const { userId } = validationResult.value.locals
         
         const result = await this.userService.findUserById(userId)
 
         if (result.failed())
-            return reply.redirect('/logout')
+            return unauthorized(reply, result.value)
 
         const user = result.value
 
-        return reply.view('user/temporary.profile.html', {
-            picture: user.picture.value,
-            email: user.email.value,
-            name: user.name.value
-        })
+        return ok(reply, user.to())
 
     }
 

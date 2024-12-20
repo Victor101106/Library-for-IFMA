@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Biblioteca • IFMA Porto Franco</title>
+</head>
+<body>
+
+    <script src="https://accounts.google.com/gsi/client" async></script>
+
+    <style>
+
+        body {
+            place-items: center;
+            display: grid;
+            height: 100vh;
+            width: 100vw;
+            padding: 0;
+            margin: 0;
+        }
+
+    </style>
+
+    <div id="g_buttons">
+
+        <div id="g_id_onload" 
+            data-client_id="<%= GOOGLE_CLIENT_ID %>"
+            data-auto_prompt="false"
+            data-context="signin"
+            data-ux_mode="popup"
+            data-callback="handleCredentialResponse">
+        </div>
+    
+        <div class="g_id_signin" 
+            data-type="standard"
+            data-size="large"
+            data-theme="outline"
+            data-text="continue_with"
+            data-shape="rectangular" 
+            data-logo_alignment="left">
+        </div>
+
+    </div>
+
+    <script>
+        
+        async function handleCredentialResponse({ credential }) {
+
+            try {
+
+                const response = await fetch('/authenticate/google', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ credential }),
+                })
+
+                const data = await response.json()
+
+                if (data.error || response.status != 200)
+                    return alert('Autenticação falhou!')
+
+                alert(`Autenticado como ${data.user.name} (${data.user.email})!`)
+
+            } catch (error) {
+                alert('Autenticação falhou!')
+            }
+
+        }
+
+    </script>
+
+</body>
+</html>

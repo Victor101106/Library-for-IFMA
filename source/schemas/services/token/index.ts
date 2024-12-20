@@ -1,1 +1,1 @@
-export * from './payload.schema';
+export * from './access.token.payload.schema';

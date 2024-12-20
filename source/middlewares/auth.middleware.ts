@@ -1,8 +1,9 @@
-import { ACCESS_TOKEN_COOKIE } from '@helpers'
-import { denyAuthenticationRequestSchema, ensureAuthenticationRequestSchema } from '@schemas/middlewares/auth'
+import { ACCESS_TOKEN_COOKIE, unauthorized } from '@helpers'
+import { ensureAuthenticationRequestSchema } from '@schemas/middlewares/auth'
 import { tokenService, TokenService } from '@services'
 import { parse as parseCookie } from 'cookie'
 import { FastifyReply, FastifyRequest, HookHandlerDoneFunction } from 'fastify'
+import { AccessTokenMissingError } from './errors'
 
 export class AuthMiddleware {
 
@@ -14,35 +15,12 @@ export class AuthMiddleware {
         return new AuthMiddleware(tokenService)
     }
 
-    async denyAuthenticationHandle(request: FastifyRequest, reply: FastifyReply, done: HookHandlerDoneFunction): Promise<FastifyReply | void> {
-
-        const validationResult = denyAuthenticationRequestSchema.validateSafe(request)
-
-        if (validationResult.failed())
-            return done()
-
-        const { cookie: cookieHeader } = validationResult.value.headers
-
-        if (!cookieHeader)
-            return done()
-
-        const cookie = parseCookie(cookieHeader)
-
-        const accessToken = cookie[ACCESS_TOKEN_COOKIE.name]
-
-        if (!accessToken)
-            return done()
-        
-        return reply.redirect('/profile')
-
-    }
-
-    async ensureAuthenticationHandle(request: FastifyRequest, reply: FastifyReply, done: HookHandlerDoneFunction): Promise<FastifyReply | void> {
+    public async ensureAuthenticationHandle(request: FastifyRequest, reply: FastifyReply, done: HookHandlerDoneFunction): Promise<FastifyReply | void> {
 
         const validationResult = ensureAuthenticationRequestSchema.validateSafe(request)
 
         if (validationResult.failed())
-            return reply.redirect('/logout')
+            return unauthorized(reply, validationResult.value)
 
         const { cookie: cookieHeader } = validationResult.value.headers
 
@@ -51,12 +29,12 @@ export class AuthMiddleware {
         const accessToken = cookie[ACCESS_TOKEN_COOKIE.name]
 
         if (!accessToken)
-            return reply.redirect('/logout')
+            return unauthorized(reply, new AccessTokenMissingError())
 
-        const receiptResult = await this.tokenService.receiveUserIdFromAccessToken(accessToken)
+        const receiptResult = await this.tokenService.verifyAccessToken(accessToken)
 
         if (receiptResult.failed())
-            return reply.redirect('/logout')
+            return unauthorized(reply, receiptResult.value)
 
         const userId = receiptResult.value
 

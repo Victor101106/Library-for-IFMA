@@ -5,7 +5,7 @@ export abstract class Schema<T> {
 
     protected abstract generateSchema(): ZodSchema<T>
 
-    validate(request: unknown): T {
+    public validate(request: unknown): T {
 
         const schema = this.generateSchema()
         const parse = schema.parse(request)
@@ -14,7 +14,7 @@ export abstract class Schema<T> {
 
     }
 
-    validateSafe(request: unknown): Result<Error, T> {
+    public validateSafe(request: unknown): Result<Error, T> {
 
         const schema = this.generateSchema()
         const parse = schema.safeParse(request)

@@ -1,8 +1,8 @@
-import { ACCESS_TOKEN_COOKIE, serializeCookie } from '@helpers'
-import { RoleEnum, User } from '@models'
-import { callbackRequestSchema } from '@schemas/controllers/auth'
+import { ACCESS_TOKEN_COOKIE, badRequest, ok, serializeCookie } from '@helpers'
+import { authenticateWithGoogleCallbackRequestSchema, authenticateWithGoogleRequestSchema } from '@schemas/controllers/auth'
 import { authService, AuthService, tokenService, TokenService, userService, UserService } from '@services'
 import { FastifyReply, FastifyRequest } from 'fastify'
+import { TokenPayload } from 'google-auth-library'
 
 export class AuthController {
 
@@ -16,56 +16,88 @@ export class AuthController {
         return new AuthController(authService, tokenService, userService)
     }
 
-    async logoutHandler(request: FastifyRequest, reply: FastifyReply): Promise<FastifyReply> {
-        return reply.header('set-cookie', serializeCookie(ACCESS_TOKEN_COOKIE, '')).redirect('/')
+    public async logoutHandler(request: FastifyRequest, reply: FastifyReply): Promise<FastifyReply> {
+
+        reply.header('set-cookie', serializeCookie(ACCESS_TOKEN_COOKIE, ''))
+
+        return ok(reply)
+
     }
 
-    async callbackHandler(request: FastifyRequest, reply: FastifyReply): Promise<FastifyReply> {
+    public async redirectToGoogleAuthorizeURLHandler(request: FastifyRequest, reply: FastifyReply): Promise<FastifyReply> {
+
+        const redirectURL = authService.generateGoogleAuthorizeURL()
+
+        return reply.redirect(redirectURL)
+
+    }
+
+    public async authenticateWithGoogleCallbackHandler(request: FastifyRequest, reply: FastifyReply): Promise<FastifyReply> {
         
-        const validationResult = callbackRequestSchema.validateSafe(request)
+        const validationResult = authenticateWithGoogleCallbackRequestSchema.validateSafe(request)
 
         if (validationResult.failed())
-            return reply.redirect('/')
+            return badRequest(reply, validationResult.value)
 
-        const { credential } = validationResult.value.body
+        const { code } = validationResult.value.query
 
-        const verificationResult = await this.authService.verifyCredential(credential)
+        const verificationResult = await this.authService.verifyGoogleCode(code)
 
         if (verificationResult.failed())
-            return reply.redirect('/')
+            return badRequest(reply, verificationResult.value)
 
         const payload = verificationResult.value
 
-        const findResult = await this.userService.findUserByGoogleId(payload.sub)
+        return this.authenticateWithGoogleCommonHandler(payload, reply)
 
-        let user: User
+    }
 
-        if (findResult.successfully()) {
-            
-            user = findResult.value
+    public async authenticateWithGoogleHandler(request: FastifyRequest, reply: FastifyReply): Promise<FastifyReply> {
 
-        } else {
-            
-            const creationResult = await this.userService.createUser({
-                picture: String(payload.picture),
-                googleId: String(payload.sub),
-                email: String(payload.email),
-                name: String(payload.name),
-                role: RoleEnum.Pending
-            })
-    
-            if (creationResult.failed())
-                return reply.redirect('/')
-    
-            user = creationResult.value
+        const validationResult = authenticateWithGoogleRequestSchema.validateSafe(request)
 
-        }
+        if (validationResult.failed())
+            return badRequest(reply, validationResult.value)
 
-        const accessToken = await this.tokenService.createAccessToken(user.id.value)
+        const { credential } = validationResult.value.body
+
+        const verificationResult = await this.authService.verifyGoogleCredential(credential)
+
+        if (verificationResult.failed())
+            return badRequest(reply, verificationResult.value)
+
+        const payload = verificationResult.value
+
+        return this.authenticateWithGoogleCommonHandler(payload, reply)
+
+    }
+
+    private async authenticateWithGoogleCommonHandler(payload: TokenPayload, reply: FastifyReply): Promise<FastifyReply> {
+        
+        const userOrError = await this.userService.findByGoogleIdOrCreateUser({
+            googleId: payload.sub,
+            picture: payload.picture,
+            email: payload.email,
+            name: payload.name
+        })
+
+        if (userOrError.failed())
+            return badRequest(reply, userOrError.value)
+
+        const user = userOrError.value
+
+        const accessToken = await this.tokenService.signAccessToken(user.id.value)
 
         reply.header('set-cookie', serializeCookie(ACCESS_TOKEN_COOKIE, accessToken))
         
-        return reply.redirect('/profile')
+        return ok(reply, {
+            user: {
+                picture: user.picture.to(),
+                email: user.email.to(),
+                name: user.name.to(),
+                id: user.id.to()
+            }
+        })
 
     }
 
