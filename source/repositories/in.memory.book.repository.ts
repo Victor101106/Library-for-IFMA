@@ -34,6 +34,17 @@ export class InMemoryBookRepository implements BookRepository {
 
     }
 
+    public async deleteByCode(code: number): Promise<Book | void> {
+
+        const index = this.database.findIndex(book => book.code.value === code)
+
+        if (index == -1)
+            return
+
+        return this.database.splice(index, 1)[0]
+
+    }
+
 }
 
 export const inMemoryBookRepository = InMemoryBookRepository.create()

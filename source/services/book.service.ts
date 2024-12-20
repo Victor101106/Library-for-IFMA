@@ -38,6 +38,11 @@ export namespace BookService {
         export type Response = Book
     }
 
+    export namespace DeleteBook {
+        export type Request = number
+        export type Response = Book
+    }
+
 }
 
 export class BookService {
@@ -113,6 +118,17 @@ export class BookService {
         await this.bookRepository.update(bookFound)
 
         return success(bookFound)
+
+    }
+
+    public async deleteBook(code: BookService.DeleteBook.Request): Promise<Result<BookNotFoundError, BookService.DeleteBook.Response>> {
+        
+        const deletedBook = await this.bookRepository.deleteByCode(code)
+
+        if (!deletedBook)
+            return failure(new BookNotFoundError())
+
+        return success(deletedBook)
 
     }
 
