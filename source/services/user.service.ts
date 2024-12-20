@@ -89,7 +89,7 @@ export class UserService {
             picture: request.picture,
             email: request.email,
             name: request.name,
-            role: RoleEnum.Pending
+            role: RoleEnum.Unverified
         })
 
         if (creationResult.failed())
@@ -112,7 +112,7 @@ export class UserService {
 
         const user = userResult.value
 
-        if (user.role.value !== RoleEnum.Pending)
+        if (user.role.value !== RoleEnum.Unverified)
             return failure(new UserAlreadyHasRoleError())
 
         const updatedIdentifier = request.registration 

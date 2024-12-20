@@ -240,24 +240,24 @@ This project uses Role-based Access Control (RBAC) to manage user permissions ba
 1. Administrator;
 2. Employee;
 3. Student;
-4. Pending;
+4. Unverified;
 5. Anonymous.
 
 ### Permissions:
 
-|                       | Administrator | Employee         | Student          | Pending | Anonymous |
-|-----------------------|---------------|------------------|------------------|---------|-----------|
-| Complete signup       | ❌            | ❌               | ❌               | ✅     | ❌        |
-| Search books          | ✅            | ✅               | ✅               | ❌     | ❌        |
-| Add book to cart      | ✅            | ✅               | ✅               | ❌     | ❌        |
-| Borrow a book         | ✅            | ✅               | ⚠️<sup>[1]</sup> | ❌     | ❌        |
-| Renew book loan       | ✅            | ✅               | ✅               | ❌     | ❌        |
-| Reserve borrowed book | ✅            | ✅               | ✅               | ❌     | ❌        |
-| Generate reports      | ✅            | ⚠️<sup>[2]</sup> | ❌               | ❌     | ❌        |
-| Add books             | ✅            | ❌               | ❌               | ❌     | ❌        |
-| Update book details   | ✅            | ❌               | ❌               | ❌     | ❌        |
-| Delete books          | ✅            | ❌               | ❌               | ❌     | ❌        |
-| Track book quantity   | ✅            | ❌               | ❌               | ❌     | ❌        |
+|                       | Administrator | Employee         | Student          | Unverified | Anonymous |
+|-----------------------|---------------|------------------|------------------|------------|-----------|
+| Complete signup       | ❌            | ❌               | ❌               | ✅        | ❌        |
+| Search books          | ✅            | ✅               | ✅               | ❌        | ❌        |
+| Add book to cart      | ✅            | ✅               | ✅               | ❌        | ❌        |
+| Borrow a book         | ✅            | ✅               | ⚠️<sup>[1]</sup> | ❌        | ❌        |
+| Renew book loan       | ✅            | ✅               | ✅               | ❌        | ❌        |
+| Reserve borrowed book | ✅            | ✅               | ✅               | ❌        | ❌        |
+| Generate reports      | ✅            | ⚠️<sup>[2]</sup> | ❌               | ❌        | ❌        |
+| Add books             | ✅            | ❌               | ❌               | ❌        | ❌        |
+| Update book details   | ✅            | ❌               | ❌               | ❌        | ❌        |
+| Delete books          | ✅            | ❌               | ❌               | ❌        | ❌        |
+| Track book quantity   | ✅            | ❌               | ❌               | ❌        | ❌        |
 
 > ✅ means `allowed` \
 > ❌ means `denied` \

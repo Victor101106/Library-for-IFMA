@@ -8,9 +8,9 @@ export namespace Role {
 }
 
 export enum RoleEnum {
+    Unverified = "unverified",
     Employee = "employee",
     Student = "student",
-    Pending = "pending",
     Admin = "admin"
 }
 
