@@ -2,7 +2,7 @@ import { ACCESS_TOKEN_COOKIE, unauthorized } from '@helpers'
 import { ensureAuthenticationRequestSchema } from '@schemas/middlewares/auth'
 import { tokenService, TokenService } from '@services'
 import { parse as parseCookie } from 'cookie'
-import { FastifyReply, FastifyRequest, HookHandlerDoneFunction } from 'fastify'
+import { FastifyReply, FastifyRequest } from 'fastify'
 import { AccessTokenMissingError } from './errors'
 
 export class AuthMiddleware {
@@ -15,7 +15,7 @@ export class AuthMiddleware {
         return new AuthMiddleware(tokenService)
     }
 
-    public async ensureAuthenticationHandle(request: FastifyRequest, reply: FastifyReply, done: HookHandlerDoneFunction): Promise<FastifyReply | void> {
+    public async ensureAuthenticationHandle(request: FastifyRequest, reply: FastifyReply): Promise<FastifyReply | void> {
 
         const validationResult = ensureAuthenticationRequestSchema.validateSafe(request)
 
@@ -39,8 +39,6 @@ export class AuthMiddleware {
         const userId = receiptResult.value
 
         request.locals = { userId }
-
-        return done()
 
     }
 

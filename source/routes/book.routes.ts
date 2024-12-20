@@ -7,7 +7,7 @@ import { z } from 'zod'
 module.exports = (instance: FastifyTypedInstance) => {
 
     instance.post('/book', {
-        onRequest: (request, reply, done) => authMiddleware.ensureAuthenticationHandle(request, reply, done),
+        onRequest: (request, reply) => authMiddleware.ensureAuthenticationHandle(request, reply),
         schema: {
             tags: ['Book'],
             summary: 'Create book',
