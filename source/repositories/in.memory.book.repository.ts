@@ -23,6 +23,17 @@ export class InMemoryBookRepository implements BookRepository {
         return this.database.find(book => book.id.value === id)
     }
 
+    public async update(book: Book): Promise<void> {
+        
+        const index = this.database.findIndex(found => found.id.value === book.id.value)
+
+        if (index == -1)
+            return
+
+        this.database[index] = book
+
+    }
+
 }
 
 export const inMemoryBookRepository = InMemoryBookRepository.create()

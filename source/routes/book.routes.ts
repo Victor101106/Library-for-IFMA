@@ -1,7 +1,7 @@
 import { FastifyTypedInstance } from '@configs/types'
 import { bookController } from '@controllers/book.controller'
 import { authMiddleware } from '@middlewares/auth.middleware'
-import { CreateBookRequestSchemaByZod, GetBookByCodeRequestSchemaByZod } from '@schemas/controllers/book'
+import { CreateBookRequestSchemaByZod, GetBookByCodeRequestSchemaByZod, UpdateBookRequestSchemaByZod } from '@schemas/controllers/book'
 import { z } from 'zod'
 
 module.exports = (instance: FastifyTypedInstance) => {
@@ -55,6 +55,32 @@ module.exports = (instance: FastifyTypedInstance) => {
         }
     }, async (request, reply) => {
         return bookController.getBookByCodeHandler(request, reply)
+    })
+
+    instance.put('/book/:code', {
+        schema: {
+            tags: ['Book'],
+            summary: 'Update book details',
+            params: UpdateBookRequestSchemaByZod.shape.params,
+            body: UpdateBookRequestSchemaByZod.shape.body,
+            response: {
+                200: z.object({
+                    createdAt: z.number(),
+                    updatedAt: z.number(),
+                    stockCount: z.number(),
+                    createdBy: z.string(),
+                    picture: z.string().optional(),
+                    subject: z.string(),
+                    author: z.string(),
+                    genre: z.string(),
+                    title: z.string(),
+                    code: z.number(),
+                    id: z.string()
+                })
+            }
+        }
+    }, async (request, reply) => {
+        return bookController.updateBookHandler(request, reply)
     })
 
 }

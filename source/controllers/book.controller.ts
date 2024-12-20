@@ -1,5 +1,5 @@
 import { badRequest, created, ok } from '@helpers'
-import { createBookRequestSchema, getBookByCodeRequestSchema } from '@schemas/controllers/book'
+import { createBookRequestSchema, getBookByCodeRequestSchema, updateBookRequestSchema } from '@schemas/controllers/book'
 import { bookService, BookService } from '@services'
 import { FastifyReply, FastifyRequest } from 'fastify'
 
@@ -55,6 +55,26 @@ export class BookController {
             return badRequest(reply, findResult.value)
 
         const book = findResult.value
+
+        return ok(reply, book.to())
+
+    }
+
+    public async updateBookHandler(request: FastifyRequest, reply: FastifyReply): Promise<FastifyReply> {
+        
+        const validationResult = updateBookRequestSchema.validateSafe(request)
+
+        if (validationResult.failed())
+            return badRequest(reply, validationResult.value)
+
+        const { params, body } = validationResult.value
+        
+        const updateResult = await this.bookService.updateBook({ ...body, ...params })
+
+        if (updateResult.failed())
+            return badRequest(reply, updateResult.value)
+
+        const book = updateResult.value
 
         return ok(reply, book.to())
 
