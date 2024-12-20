@@ -3,7 +3,7 @@ import { z, ZodSchema } from 'zod'
 
 export const DeleteBookRequestSchemaByZod = z.object({
     params: z.object({
-        code: z.coerce.number()
+        id: z.string()
     })
 })
 

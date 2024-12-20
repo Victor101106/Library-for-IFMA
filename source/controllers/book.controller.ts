@@ -1,5 +1,5 @@
 import { badRequest, created, ok } from '@helpers'
-import { createBookRequestSchema, deleteBookRequestSchema, getBookByCodeRequestSchema, updateBookRequestSchema } from '@schemas/controllers/book'
+import { createBookRequestSchema, deleteBookRequestSchema, getBookByIdRequestSchema, updateBookRequestSchema } from '@schemas/controllers/book'
 import { bookService, BookService } from '@services'
 import { FastifyReply, FastifyRequest } from 'fastify'
 
@@ -21,14 +21,12 @@ export class BookController {
         const { body, locals } = validationResult.value
         
         const creationResult = await this.bookService.createBook({
-            stockCount: body.stockCount,
             createdBy: locals.userId,
             picture: body.picture,
             subject: body.subject,
             author: body.author,
             genre: body.genre,
-            title: body.title,
-            code: body.code
+            title: body.title
         })
 
         if (creationResult.failed())
@@ -40,16 +38,16 @@ export class BookController {
 
     }
 
-    public async getBookByCodeHandler(request: FastifyRequest, reply: FastifyReply): Promise<FastifyReply> {
+    public async getBookByIdHandler(request: FastifyRequest, reply: FastifyReply): Promise<FastifyReply> {
         
-        const validationResult = getBookByCodeRequestSchema.validateSafe(request)
+        const validationResult = getBookByIdRequestSchema.validateSafe(request)
 
         if (validationResult.failed())
             return badRequest(reply, validationResult.value)
 
-        const { code } = validationResult.value.params
+        const { id } = validationResult.value.params
         
-        const findResult = await this.bookService.findBookByCode(code)
+        const findResult = await this.bookService.findBookById(id)
 
         if (findResult.failed())
             return badRequest(reply, findResult.value)
@@ -87,9 +85,9 @@ export class BookController {
         if (validationResult.failed())
             return badRequest(reply, validationResult.value)
 
-        const { code } = validationResult.value.params
+        const { id } = validationResult.value.params
         
-        const deleteResult = await this.bookService.deleteBook(code)
+        const deleteResult = await this.bookService.deleteBook(id)
 
         if (deleteResult.failed())
             return badRequest(reply, deleteResult.value)

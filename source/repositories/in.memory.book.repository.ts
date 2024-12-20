@@ -15,10 +15,6 @@ export class InMemoryBookRepository implements BookRepository {
         this.database.push(book)
     }
     
-    public async findByCode(code: number): Promise<Book | void> {
-        return this.database.find(book => book.code.value === code)
-    }
-
     public async findById(id: string): Promise<Book | void> {
         return this.database.find(book => book.id.value === id)
     }
@@ -34,9 +30,9 @@ export class InMemoryBookRepository implements BookRepository {
 
     }
 
-    public async deleteByCode(code: number): Promise<Book | void> {
+    public async delete(id: string): Promise<Book | void> {
 
-        const index = this.database.findIndex(book => book.code.value === code)
+        const index = this.database.findIndex(book => book.id.value === id)
 
         if (index == -1)
             return

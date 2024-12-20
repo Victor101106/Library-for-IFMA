@@ -1,7 +1,7 @@
 import { FastifyTypedInstance } from '@configs/types'
 import { bookController } from '@controllers/book.controller'
 import { authMiddleware } from '@middlewares/auth.middleware'
-import { CreateBookRequestSchemaByZod, DeleteBookRequestSchemaByZod, GetBookByCodeRequestSchemaByZod, UpdateBookRequestSchemaByZod } from '@schemas/controllers/book'
+import { CreateBookRequestSchemaByZod, DeleteBookRequestSchemaByZod, GetBookByIdRequestSchemaByZod, UpdateBookRequestSchemaByZod } from '@schemas/controllers/book'
 import { z } from 'zod'
 
 module.exports = (instance: FastifyTypedInstance) => {
@@ -16,14 +16,12 @@ module.exports = (instance: FastifyTypedInstance) => {
                 200: z.object({
                     createdAt: z.number(),
                     updatedAt: z.number(),
-                    stockCount: z.number(),
                     createdBy: z.string(),
                     picture: z.string().optional(),
                     subject: z.string(),
                     author: z.string(),
                     genre: z.string(),
                     title: z.string(),
-                    code: z.number(),
                     id: z.string()
                 })
             }
@@ -32,32 +30,30 @@ module.exports = (instance: FastifyTypedInstance) => {
         return bookController.createBookHandler(request, reply)
     })
 
-    instance.get('/book/:code', {
+    instance.get('/book/:id', {
         schema: {
             tags: ['Book'],
-            summary: 'Get book by code',
-            params: GetBookByCodeRequestSchemaByZod.shape.params,
+            summary: 'Get book by id',
+            params: GetBookByIdRequestSchemaByZod.shape.params,
             response: {
                 200: z.object({
                     createdAt: z.number(),
                     updatedAt: z.number(),
-                    stockCount: z.number(),
                     createdBy: z.string(),
                     picture: z.string().optional(),
                     subject: z.string(),
                     author: z.string(),
                     genre: z.string(),
                     title: z.string(),
-                    code: z.number(),
                     id: z.string()
                 })
             }
         }
     }, async (request, reply) => {
-        return bookController.getBookByCodeHandler(request, reply)
+        return bookController.getBookByIdHandler(request, reply)
     })
 
-    instance.put('/book/:code', {
+    instance.put('/book/:id', {
         schema: {
             tags: ['Book'],
             summary: 'Update book details',
@@ -67,14 +63,12 @@ module.exports = (instance: FastifyTypedInstance) => {
                 200: z.object({
                     createdAt: z.number(),
                     updatedAt: z.number(),
-                    stockCount: z.number(),
                     createdBy: z.string(),
                     picture: z.string().optional(),
                     subject: z.string(),
                     author: z.string(),
                     genre: z.string(),
                     title: z.string(),
-                    code: z.number(),
                     id: z.string()
                 })
             }
@@ -83,7 +77,7 @@ module.exports = (instance: FastifyTypedInstance) => {
         return bookController.updateBookHandler(request, reply)
     })
     
-    instance.delete('/book/:code', {
+    instance.delete('/book/:id', {
         schema: {
             tags: ['Book'],
             summary: 'Delete book',
@@ -92,14 +86,12 @@ module.exports = (instance: FastifyTypedInstance) => {
                 200: z.object({
                     createdAt: z.number(),
                     updatedAt: z.number(),
-                    stockCount: z.number(),
                     createdBy: z.string(),
                     picture: z.string().optional(),
                     subject: z.string(),
                     author: z.string(),
                     genre: z.string(),
                     title: z.string(),
-                    code: z.number(),
                     id: z.string()
                 })
             }

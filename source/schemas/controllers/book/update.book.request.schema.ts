@@ -3,7 +3,6 @@ import { z, ZodSchema } from 'zod'
 
 export const UpdateBookRequestSchemaByZod = z.object({
     body: z.object({
-        stockCount: z.number().optional(),
         picture: z.string().url().optional(),
         subject: z.string().optional(),
         author: z.string().optional(),
@@ -11,7 +10,7 @@ export const UpdateBookRequestSchemaByZod = z.object({
         title: z.string().optional()
     }),
     params: z.object({
-        code: z.coerce.number()
+        id: z.string()
     })
 })
 
