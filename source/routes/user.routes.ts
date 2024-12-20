@@ -16,7 +16,7 @@ module.exports = (instance: FastifyTypedInstance) => {
                     updatedAt: z.number(),
                     googleId: z.string(),
                     picture: z.string(),
-                    siape: z.string().optional(),
+                    siape: z.number().optional(),
                     email: z.string(),
                     role: z.string(),
                     name: z.string(),
