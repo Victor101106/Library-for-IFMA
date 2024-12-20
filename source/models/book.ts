@@ -2,6 +2,7 @@ import { failure, Result, success } from '@helpers'
 import { Attribute, Id, Picture, Timestamp } from './index'
 
 export namespace Book {
+    
     export type Request = {
         createdBy: string
         picture ?: string
@@ -10,12 +11,26 @@ export namespace Book {
         genre    : string
         title    : string
     }
+    
     export type DTO = Request & {
         createdAt: number
         updatedAt: number
         id       : string
     }
+    
     export type Response = Book
+    
+    export namespace Update {
+        export type Request = {
+            picture?: string | void
+            subject?: string | void
+            author ?: string | void
+            genre  ?: string | void
+            title  ?: string | void
+        }
+        export type Response = Book
+    }
+
 }
 
 export class Book {
@@ -84,6 +99,24 @@ export class Book {
         const id        = Id       .with(data.id)
         
         return new Book(createdAt, updatedAt, createdBy, picture, subject, author, genre, title, id)
+
+    }
+
+    public update(request: Book.Update.Request): Result<Error, Book.Update.Response> {
+
+        const results = [
+            request.picture ? this.picture.update(request.picture) : undefined,
+            request.subject ? this.subject.update(request.subject) : undefined,
+            request.author  ? this.author .update(request.author)  : undefined,
+            request.genre   ? this.genre  .update(request.genre)   : undefined,
+            request.title   ? this.title  .update(request.title)   : undefined
+        ]
+
+        for (const result of results)
+            if (result?.failed())
+                return failure(result.value)
+
+        return success(this)
 
     }
 

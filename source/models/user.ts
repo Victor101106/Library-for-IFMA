@@ -2,6 +2,7 @@ import { failure, Result, success } from '@helpers'
 import { Email, GoogleId, Id, Name, Picture, Registration, Role, Siape, Timestamp } from './index'
 
 export namespace User {
+    
     export type Request = {
         registration?: string
         googleId     : string
@@ -11,12 +12,26 @@ export namespace User {
         name         : string
         role         : string
     }
+    
     export type DTO = Request & {
         createdAt: number
         updatedAt: number
         id       : string
     }
+    
     export type Response = User
+    
+    export namespace Update {
+        export type Request = {
+            registration?: string | void
+            picture     ?: string | void
+            siape       ?: number | void
+            name        ?: string | void
+            role        ?: string | void
+        }
+        export type Response = User
+    }
+
 }
 
 export class User {
@@ -95,6 +110,24 @@ export class User {
         const id           = Id          .with(data.id)
         
         return new User(registration, createdAt, updatedAt, googleId, picture, siape, email, role, name, id)
+
+    }
+
+    public update(request: User.Update.Request): Result<Error, User.Update.Response> {
+
+        const results = [
+            request.registration ? this.registration.update(request.registration) : undefined,
+            request.picture      ? this.picture     .update(request.picture)      : undefined,
+            request.siape        ? this.siape       .update(request.siape)        : undefined,
+            request.name         ? this.name        .update(request.name)         : undefined,
+            request.role         ? this.role        .update(request.role)         : undefined,
+        ]
+
+        for (const result of results)
+            if (result?.failed())
+                return failure(result.value)
+
+        return success(this)
 
     }
 

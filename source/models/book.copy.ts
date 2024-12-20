@@ -3,18 +3,29 @@ import { Available } from './available'
 import { Code, Id, Timestamp } from './index'
 
 export namespace BookCopy {
+    
     export type Request = {
         available: boolean
         createdBy: string
         bookId   : string
         code     : number
     }
+    
     export type DTO = Request & {
         createdAt: number
         updatedAt: number
         id       : string
     }
+    
     export type Response = BookCopy
+
+    export namespace Update {
+        export type Request = {
+            available?: boolean | void
+        }
+        export type Response = BookCopy
+    }
+
 }
 
 export class BookCopy {
@@ -62,6 +73,15 @@ export class BookCopy {
         const id        = Id       .with(data.id)
         
         return new BookCopy(createdAt, updatedAt, available, createdBy, bookId, code, id)
+
+    }
+
+    public update(request: BookCopy.Update.Request): Result<Error, BookCopy.Update.Response> {
+
+        if (request.available)
+            this.available.update(request.available)
+
+        return success(this)
 
     }
 

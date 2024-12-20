@@ -79,23 +79,22 @@ export class BookService {
         if (!bookFound)
             return failure(new BookNotFoundError())
 
-        const updateResults = [
-            request.picture ? bookFound.picture.update(request.picture) : undefined,
-            request.subject ? bookFound.subject.update(request.subject) : undefined,
-            request.author  ? bookFound.author .update(request.author)  : undefined,
-            request.genre   ? bookFound.genre  .update(request.genre)   : undefined,
-            request.title   ? bookFound.title  .update(request.title)   : undefined
-        ]
+        const updateResult = bookFound.update({
+            picture: request.picture,
+            subject: request.subject,
+            author: request.author,
+            genre: request.genre,
+            title: request.title
+        })
 
-        for (const updateResult of updateResults) {
-            if (updateResult && updateResult.failed()) {
-                return failure(updateResult.value)
-            }
-        }
+        if (updateResult.failed())
+            return failure(updateResult.value)
 
-        await this.bookRepository.update(bookFound)
+        const book = updateResult.value
 
-        return success(bookFound)
+        await this.bookRepository.update(book)
+
+        return success(book)
 
     }
 

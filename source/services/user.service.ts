@@ -115,17 +115,14 @@ export class UserService {
         if (user.role.value !== RoleEnum.Unverified)
             return failure(new UserAlreadyHasRoleError())
 
-        const updatedIdentifier = request.registration 
-            ? user.registration.update(request.registration)
-            : user.siape.update(request.siape!)
+        const updateResult = user.update({
+            registration: request.registration,
+            siape: request.siape,
+            role: request.registration ? RoleEnum.Student : RoleEnum.Employee
+        })
 
-        if (updatedIdentifier.failed())
-            return failure(updatedIdentifier.value)
-
-        const updatedRole = user.role.update(request.registration ? RoleEnum.Student : RoleEnum.Employee)
-
-        if (updatedRole.failed())
-            return failure(updatedRole.value)
+        if (updateResult.failed())
+            return failure(updateResult.value)
 
         await this.userRepository.save(user)
 
