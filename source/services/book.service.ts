@@ -1,0 +1,80 @@
+import { failure, Result, success } from '@helpers'
+import { Book } from '@models'
+import { inMemoryBookRepository } from '@repositories'
+import { BookRepository } from '@repositories/contracts'
+import { BookNotFoundError, CodeAlreadyInUseError } from './errors'
+
+export namespace BookService {
+    
+    export namespace CreateBook {
+        export type Request = {
+            stockCount: number,
+            createdBy: string,
+            picture?: string,
+            subject: string,
+            author: string,
+            genre: string,
+            title: string,
+            code: number
+        }
+        export type Response = Book
+    }
+
+    export namespace FindBookByCode {
+        export type Request = number
+        export type Response = Book
+    }
+
+}
+
+export class BookService {
+
+    private constructor (private readonly bookRepository: BookRepository) {}
+
+    public static create(bookRepository: BookRepository): BookService {
+        return new BookService(bookRepository)
+    }
+
+    public async createBook(request: BookService.CreateBook.Request): Promise<Result<Error, BookService.CreateBook.Response>> {
+
+        const bookFound = await this.bookRepository.findByCode(request.code)
+
+        if (bookFound)
+            return failure(new CodeAlreadyInUseError())
+
+        const creationResult = Book.create({
+            stockCount: request.stockCount,
+            createdBy: request.createdBy,
+            picture: request.picture,
+            subject: request.subject,
+            author: request.author,
+            genre: request.genre,
+            title: request.title,
+            code: request.code
+        })
+
+        if (creationResult.failed())
+            return failure(creationResult.value)
+
+        const book = creationResult.value
+
+        await this.bookRepository.save(book)
+
+        return success(book)
+
+    }
+
+    public async findBookByCode(code: BookService.FindBookByCode.Request): Promise<Result<BookNotFoundError, BookService.FindBookByCode.Response>> {
+        
+        const bookFound = await this.bookRepository.findByCode(code)
+        
+        if (!bookFound)
+            return failure(new BookNotFoundError())
+
+        return success(bookFound)
+        
+    }
+
+}
+
+export const bookService = BookService.create(inMemoryBookRepository)

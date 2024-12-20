@@ -59,7 +59,7 @@ module.exports = (instance: FastifyTypedInstance) => {
     })
 
     instance.post('/signup/complete', {
-        preHandler: (request, reply, done) => authMiddleware.ensureAuthenticationHandle(request, reply, done),
+        onRequest: (request, reply, done) => authMiddleware.ensureAuthenticationHandle(request, reply, done),
         schema: {
             tags: ['Authentication'],
             summary: 'Complete user signup to purchase role',

@@ -5,7 +5,7 @@ import { z } from 'zod'
 
 module.exports = (instance: FastifyTypedInstance) => {
     instance.get('/profile', {
-        preHandler: (request, reply, done) => authMiddleware.ensureAuthenticationHandle(request, reply, done),
+        onRequest: (request, reply, done) => authMiddleware.ensureAuthenticationHandle(request, reply, done),
         schema: {
             tags: ['User'],
             summary: 'Get authenticated user profile',

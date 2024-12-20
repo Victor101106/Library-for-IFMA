@@ -6,6 +6,10 @@ export function ok(reply: FastifyReply, payload?: unknown): FastifyReply {
     return reply.status(200).send(payload)
 }
 
+export function created(reply: FastifyReply, payload?: unknown): FastifyReply {
+    return reply.status(201).send(payload)
+}
+
 export function badRequest(reply: FastifyReply, error: Error): FastifyReply {
     return reply.status(400).send(error)
 }

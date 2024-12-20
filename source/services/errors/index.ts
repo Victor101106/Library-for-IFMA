@@ -1,3 +1,5 @@
+export * from './book.not.found.error'
+export * from './code.already.in.use.error'
 export * from './invalid.access.token.error'
 export * from './invalid.google.code.error'
 export * from './invalid.google.credential.error'
