@@ -5,8 +5,8 @@ export namespace User {
     export type Request = {
         registration?: string
         googleId     : string
-        picture      : string
-        siape?       : number
+        picture     ?: string
+        siape       ?: number
         email        : string
         name         : string
         role         : string
@@ -66,12 +66,12 @@ export class User {
             return failure(roleResult.value)
         
         const registration = registrationResult.value
-        const googleId     = googleIdResult.value
-        const picture      = pictureResult.value
-        const siape        = siapeResult.value
-        const email        = emailResult.value
-        const role         = roleResult.value
-        const name         = nameResult.value
+        const googleId     = googleIdResult    .value
+        const picture      = pictureResult     .value
+        const siape        = siapeResult       .value
+        const email        = emailResult       .value
+        const role         = roleResult        .value
+        const name         = nameResult        .value
         
         const createdAt = Timestamp.create()
         const updatedAt = Timestamp.create()

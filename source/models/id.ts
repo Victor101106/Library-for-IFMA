@@ -1,7 +1,7 @@
 import { v4 as uuidv4 } from 'uuid'
 
 export namespace Id {
-    export type Request = void
+    export type Request = string | void
     export type DTO = string
     export type Response = Id
 }
@@ -12,8 +12,8 @@ export class Id {
         public readonly value: string
     ) {}
 
-    public static create(): Id.Response {
-        return new Id(uuidv4())
+    public static create(id: Id.Request): Id.Response {
+        return new Id(id || uuidv4())
     }
 
     public static with(id: Id.DTO): Id.Response {

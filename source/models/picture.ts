@@ -3,20 +3,20 @@ import { z } from 'zod'
 import { InvalidPictureError } from './errors'
 
 export namespace Picture {
-    export type Request = string
-    export type DTO = string
+    export type Request = string | undefined
+    export type DTO = string | undefined
     export type Response = Picture
 }
 
 export class Picture {
 
     private constructor (
-        private picture: string
+        private picture: string | undefined
     ) {}
 
     public static create(picture: Picture.Request): Result<InvalidPictureError, Picture.Response> {
         
-        const isInvalidPicture = !Picture.validate(picture)
+        const isInvalidPicture = picture && !Picture.validate(picture)
 
         if (isInvalidPicture)
             return failure(new InvalidPictureError())
@@ -42,7 +42,7 @@ export class Picture {
 
     }
 
-    public get value(): string {
+    public get value(): string | undefined {
         return this.picture
     }
     
