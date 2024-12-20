@@ -22,6 +22,11 @@ export namespace BookCopyService {
         export type Response = BookCopy
     }
 
+    export namespace DeleteBookCopyByCode {
+        export type Request = number
+        export type Response = BookCopy
+    }
+
 }
 
 export class BookCopyService {
@@ -73,6 +78,17 @@ export class BookCopyService {
             return failure(new BookCopyNotFoundError())
 
         return success(bookFound)
+
+    }
+
+    public async deleteBookCopyByCode(code: BookCopyService.DeleteBookCopyByCode.Request): Promise<Result<BookCopyNotFoundError, BookCopyService.DeleteBookCopyByCode.Response>> {
+        
+        const deletedBookCopy = await this.bookCopyRepository.deleteByCode(code)
+
+        if (!deletedBookCopy)
+            return failure(new BookCopyNotFoundError())
+
+        return success(deletedBookCopy)
 
     }
 
