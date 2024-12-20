@@ -2,7 +2,7 @@ import { failure, Result, success } from '@helpers'
 import { RoleEnum, User } from '@models'
 import { inMemoryUserRepository } from '@repositories'
 import { UserRepository } from '@repositories/contracts'
-import { UserNotFoundError } from './errors'
+import { UserAlreadyHasRoleError, UserNotFoundError } from './errors'
 
 export namespace UserService {
     
@@ -22,6 +22,19 @@ export namespace UserService {
             picture: string
             email: string
             name: string
+        }
+        export type Response = User
+    }
+    
+    export namespace CompleteSignUp {
+        export type Request = {
+            registration: string
+            userId: string
+            siape?: void
+        } | {
+            registration?: void
+            userId: string
+            siape: number
         }
         export type Response = User
     }
@@ -83,6 +96,36 @@ export class UserService {
             return failure(creationResult.value)
 
         const user = creationResult.value
+
+        await this.userRepository.save(user)
+
+        return success(user)
+
+    }
+
+    public async completeSignUp(request: UserService.CompleteSignUp.Request): Promise<Result<UserAlreadyHasRoleError, UserService.CompleteSignUp.Response>> {
+
+        const userResult = await this.findUserById(request.userId)
+
+        if (userResult.failed())
+            return failure(userResult.value)
+
+        const user = userResult.value
+
+        if (user.role.value !== RoleEnum.Pending)
+            return failure(new UserAlreadyHasRoleError())
+
+        const updatedIdentifier = request.registration 
+            ? user.registration.update(request.registration)
+            : user.siape.update(request.siape!)
+
+        if (updatedIdentifier.failed())
+            return failure(updatedIdentifier.value)
+
+        const updatedRole = user.role.update(request.registration ? RoleEnum.Student : RoleEnum.Employee)
+
+        if (updatedRole.failed())
+            return failure(updatedRole.value)
 
         await this.userRepository.save(user)
 

@@ -1,5 +1,5 @@
 import { ACCESS_TOKEN_COOKIE, badRequest, ok, serializeCookie } from '@helpers'
-import { authenticateWithGoogleCallbackRequestSchema, authenticateWithGoogleRequestSchema } from '@schemas/controllers/auth'
+import { authenticateWithGoogleCallbackRequestSchema, authenticateWithGoogleRequestSchema, completeSignUpRequestSchema } from '@schemas/controllers/auth'
 import { authService, AuthService, tokenService, TokenService, userService, UserService } from '@services'
 import { FastifyReply, FastifyRequest } from 'fastify'
 import { TokenPayload } from 'google-auth-library'
@@ -14,6 +14,30 @@ export class AuthController {
 
     public static create(authService: AuthService, tokenService: TokenService, userService: UserService): AuthController {
         return new AuthController(authService, tokenService, userService)
+    }
+
+    public async completeSignUpHandler(request: FastifyRequest, reply: FastifyReply): Promise<FastifyReply> {
+
+        const validationResult = completeSignUpRequestSchema.validateSafe(request)
+
+        if (validationResult.failed())
+            return badRequest(reply, validationResult.value)
+
+        const { body, locals } = validationResult.value
+
+        const completedSignUp = await userService.completeSignUp({ ...locals, ...body })
+
+        if (completedSignUp.failed())
+            return badRequest(reply, completedSignUp.value)
+
+        const user = completedSignUp.value
+
+        return ok(reply, {
+            registration: user.registration.to(),
+            siape: user.siape.to(),
+            role: user.role.to()
+        })
+
     }
 
     public async logoutHandler(request: FastifyRequest, reply: FastifyReply): Promise<FastifyReply> {

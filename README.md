@@ -71,7 +71,7 @@ Follow the step-by-step instructions to set up and run the project:
 ### User Authentication
 
 - [x] It should allow users to initiate sign up using Google OAuth2;
-- [ ] It should aloow users to complete sign up by providing a registration for students or SIAPE for employees;
+- [x] It should aloow users to complete sign up by providing a registration for students or SIAPE for employees;
 - [x] It should allow users to log in using Google OAuth2.
 
 ### Book Loans

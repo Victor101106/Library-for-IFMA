@@ -1,5 +1,7 @@
 import { FastifyTypedInstance } from '@configs/types'
 import { authController } from '@controllers'
+import { authMiddleware } from '@middlewares/auth.middleware'
+import { AuthenticateWithGoogleCallbackRequestSchemaByZod, AuthenticateWithGoogleRequestSchemaByZod, CompleteSignUpRequestSchemaByZod } from '@schemas/controllers/auth'
 import { z } from 'zod'
 
 module.exports = (instance: FastifyTypedInstance) => {
@@ -20,9 +22,7 @@ module.exports = (instance: FastifyTypedInstance) => {
         schema: {
             tags: ['Authentication'],
             summary: 'Authenticate with Google OAuth2 callback in redirect URI',
-            querystring: z.object({
-                code: z.string()
-            }),
+            querystring: AuthenticateWithGoogleCallbackRequestSchemaByZod.shape.query,
             response: {
                 200: z.object({
                     users: z.object({
@@ -42,9 +42,7 @@ module.exports = (instance: FastifyTypedInstance) => {
         schema: {
             tags: ['Authentication'],
             summary: 'Authenticate with Google OAuth2 credential',
-            body: z.object({
-                credential: z.string()
-            }),
+            body: AuthenticateWithGoogleRequestSchemaByZod.shape.body,
             response: {
                 200: z.object({
                     user: z.object({
@@ -58,6 +56,24 @@ module.exports = (instance: FastifyTypedInstance) => {
         }
     }, async (request, reply) => {
         return authController.authenticateWithGoogleHandler(request, reply)
+    })
+
+    instance.post('/signup/complete', {
+        preHandler: (request, reply, done) => authMiddleware.ensureAuthenticationHandle(request, reply, done),
+        schema: {
+            tags: ['Authentication'],
+            summary: 'Complete user signup to purchase role',
+            body: CompleteSignUpRequestSchemaByZod.shape.body,
+            response: {
+                200: z.object({
+                    registration: z.string().optional(),
+                    siape: z.number().optional(),
+                    role: z.string()
+                })
+            }
+        }
+    }, async (request, reply) => {
+        return authController.completeSignUpHandler(request, reply)
     })
 
     instance.get('/logout', {
