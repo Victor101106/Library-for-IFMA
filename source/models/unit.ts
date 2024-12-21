@@ -14,7 +14,6 @@ export namespace Unit {
     export type DTO = Request & {
         createdAt: number
         updatedAt: number
-        id       : string
     }
     
     export type Response = Unit
@@ -36,8 +35,7 @@ export class Unit {
         public readonly available: Available,
         public readonly createdBy: Id,
         public readonly bookId   : Id,
-        public readonly code     : Code,
-        public readonly id       : Id
+        public readonly code     : Code
     ) {}
 
     public static create(request: Unit.Request): Result<Error, Unit.Response> {
@@ -56,9 +54,8 @@ export class Unit {
 
         const createdBy = Id.create(request.createdBy)
         const bookId    = Id.create(request.bookId)
-        const id        = Id.create()
         
-        return success(new Unit(createdAt, updatedAt, available, createdBy, bookId, code, id))
+        return success(new Unit(createdAt, updatedAt, available, createdBy, bookId, code))
 
     }
 
@@ -70,9 +67,8 @@ export class Unit {
         const createdBy = Id       .with(data.createdBy)
         const bookId    = Id       .with(data.bookId)
         const code      = Code     .with(data.code)
-        const id        = Id       .with(data.id)
         
-        return new Unit(createdAt, updatedAt, available, createdBy, bookId, code, id)
+        return new Unit(createdAt, updatedAt, available, createdBy, bookId, code)
 
     }
 
@@ -95,9 +91,8 @@ export class Unit {
         const createdBy = this.createdBy.to()
         const bookId    = this.bookId   .to()
         const code      = this.code     .to()
-        const id        = this.id       .to()
 
-        return { createdAt, updatedAt, available, createdBy, bookId, code, id }
+        return { createdAt, updatedAt, available, createdBy, bookId, code }
 
     }
 

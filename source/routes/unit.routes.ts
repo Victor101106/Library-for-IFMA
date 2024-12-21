@@ -20,8 +20,7 @@ module.exports = (instance: FastifyTypedInstance) => {
                     createdBy: z.string(),
                     available: z.boolean(),
                     bookId: z.string(),
-                    code: z.number(),
-                    id: z.string()
+                    code: z.number()
                 })
             }
         }
@@ -41,8 +40,7 @@ module.exports = (instance: FastifyTypedInstance) => {
                     available: z.boolean(),
                     createdBy: z.string(),
                     bookId: z.string(),
-                    code: z.number(),
-                    id: z.string()
+                    code: z.number()
                 })
             }
         }
@@ -62,8 +60,7 @@ module.exports = (instance: FastifyTypedInstance) => {
                     available: z.boolean(),
                     createdBy: z.string(),
                     bookId: z.string(),
-                    code: z.number(),
-                    id: z.string()
+                    code: z.number()
                 })
             }
         }
@@ -83,8 +80,7 @@ module.exports = (instance: FastifyTypedInstance) => {
                         available: z.boolean(),
                         createdBy: z.string(),
                         bookId: z.string(),
-                        code: z.number(),
-                        id: z.string()
+                        code: z.number()
                     })
                 )
             }
@@ -105,8 +101,7 @@ module.exports = (instance: FastifyTypedInstance) => {
                         available: z.boolean(),
                         createdBy: z.string(),
                         bookId: z.string(),
-                        code: z.number(),
-                        id: z.string()
+                        code: z.number()
                     })
                 )
             }
