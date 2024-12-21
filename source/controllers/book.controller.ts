@@ -98,6 +98,16 @@ export class BookController {
 
     }
 
+    public async getAllBooksHandler(request: FastifyRequest, reply: FastifyReply): Promise<FastifyReply> {
+        
+        const books = await this.bookService.findAllBooks()
+
+        const booksTo = books.map(book => book.to())
+
+        return ok(reply, booksTo)
+
+    }
+
 }
 
 export const bookController = BookController.create(bookService)

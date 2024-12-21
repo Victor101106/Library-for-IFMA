@@ -22,6 +22,11 @@ export namespace BookCopyService {
         export type Response = BookCopy
     }
 
+    export namespace FindAllBookCopies {
+        export type Request = void
+        export type Response = Array<BookCopy>
+    }
+
     export namespace DeleteBookCopyByCode {
         export type Request = number
         export type Response = BookCopy
@@ -90,6 +95,10 @@ export class BookCopyService {
 
         return success(deletedBookCopy)
 
+    }
+
+    public async findAllBookCopies(): Promise<BookCopyService.FindAllBookCopies.Response> {
+        return await this.bookCopyRepository.findAll()
     }
 
 }

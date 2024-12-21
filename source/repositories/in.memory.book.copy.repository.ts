@@ -19,6 +19,10 @@ export class InMemoryBookCopyRepository implements BookCopyRepository {
         return this.database.find(bookCopy => bookCopy.code.value == code)
     }
 
+    public async findAll(): Promise<Array<BookCopy>> {
+        return this.database
+    }
+
     public async deleteByCode(code: number): Promise<BookCopy | void> {
 
         const index = this.database.findIndex(bookCopy => bookCopy.code.value === code)

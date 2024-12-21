@@ -76,6 +76,18 @@ export class BookCopyController {
 
     }
 
+    
+    public async getAllBookCopiesHandler(request: FastifyRequest, reply: FastifyReply): Promise<FastifyReply> {
+        
+        const bookCopies = await this.bookCopyService.findAllBookCopies()
+
+        const bookCopiesTo = bookCopies.map(bookCopy => bookCopy.to())
+
+        return ok(reply, bookCopiesTo)
+
+    }
+
+
 }
 
 export const bookCopyController = BookCopyController.create(bookCopyService)

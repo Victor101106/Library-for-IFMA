@@ -100,4 +100,28 @@ module.exports = (instance: FastifyTypedInstance) => {
         return bookController.deleteBookHandler(request, reply)
     })
 
+    instance.get('/book/list', {
+        schema: {
+            tags: ['Book'],
+            summary: 'Get all books',
+            response: {
+                200: z.array(
+                    z.object({
+                        createdAt: z.number(),
+                        updatedAt: z.number(),
+                        createdBy: z.string(),
+                        picture: z.string().optional(),
+                        subject: z.string(),
+                        author: z.string(),
+                        genre: z.string(),
+                        title: z.string(),
+                        id: z.string()
+                    })
+                )
+            }
+        }
+    }, async (request, reply) => {
+        return bookController.getAllBooksHandler(request, reply)
+    })
+
 }

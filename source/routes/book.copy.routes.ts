@@ -70,4 +70,26 @@ module.exports = (instance: FastifyTypedInstance) => {
         return bookCopyController.deleteBookCopyByCodeHandler(request, reply)
     })
 
+    instance.get('/book/copy/list', {
+        schema: {
+            tags: ['Book Copy'],
+            summary: 'Get all book copies',
+            response: {
+                200: z.array(
+                    z.object({
+                        createdAt: z.number(),
+                        updatedAt: z.number(),
+                        available: z.boolean(),
+                        createdBy: z.string(),
+                        bookId: z.string(),
+                        code: z.number(),
+                        id: z.string()
+                    })
+                )
+            }
+        }
+    }, async (request, reply) => {
+        return bookCopyController.getAllBookCopiesHandler(request, reply)
+    })
+
 }
