@@ -25,6 +25,7 @@
 - [Features](#features)
 - [Environment Variables](#environment-variables)
 - [Conventional Commits](#conventional-commits)
+- [Documentation](#documentation)
 - [Result Pattern](#result-pattern)
 - [RBAC - Roles and Permissions](#rbac---role-based-access-control)
 - [License](#license)
@@ -167,6 +168,27 @@ The commit message should be structured as follows:
 #### Example:
 ```bash
 feat(auth): add login functionality
+```
+
+## Documentation
+
+This project uses **Fastify** and **Swagger** to provide robust and user-friendly API documentation. Swagger dynamically generates a detailed overview of all available endpoints, allowing developers to understand and interact with the API without additional effort.
+
+### Zod Integration
+
+The project uses **Zod** to define and validate the structure of requests and responses. Combined with the **Fastify Zod Type Provider**, this ensures type safety across the API. These tools ensure that all inputs and outputs follow the expected schema, reducing potential errors and improving the development experience.
+
+### How to Access
+
+You can access the API documentation through the following endpoint:
+```bash
+GET /documentation
+```
+> This route offers an interactive interface where you can explore and test the API with ease.
+
+#### Example:
+```bash
+http://localhost:3030/documentation
 ```
 
 ## Result Pattern
