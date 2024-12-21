@@ -1,6 +1,7 @@
 export * from './attribute'
 export * from './book'
 export * from './book.copy'
+export * from './cart.item'
 export * from './code'
 export * from './email'
 export * from './google.id'
