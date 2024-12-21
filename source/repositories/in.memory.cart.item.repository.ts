@@ -19,6 +19,10 @@ export class InMemoryCartItemRepository implements CartItemRepository {
         this.database.push(cartitem)
     }
 
+    public async findManyByUserId(userId: string): Promise<Array<CartItem>> {
+        return this.database.filter(cartItem => cartItem.userId.value == userId)
+    }
+
 }
 
 export const inMemoryCartItemRepository = InMemoryCartItemRepository.create()

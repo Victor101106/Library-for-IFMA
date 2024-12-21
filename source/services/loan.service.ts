@@ -1,5 +1,5 @@
 import { failure, Result, success } from '@helpers/result'
-import { CartItem } from '@models'
+import { Book, CartItem } from '@models'
 import { inMemoryCartItemRepository } from '@repositories'
 import { CartItemRepository } from '@repositories/contracts'
 import { bookService, BookService } from './book.service'
@@ -14,6 +14,11 @@ export namespace LoanService {
             userId: string
         }
         export type Response = CartItem
+    }
+    
+    export namespace GetCartByUserId {
+        export type Request = string
+        export type Response = Array<Book>
     }
 
 }
@@ -55,6 +60,26 @@ export class LoanService {
         await this.cartItemRepository.save(cartItem)
 
         return success(cartItem)
+
+    }
+
+    public async getCartByUserId(userId: LoanService.GetCartByUserId.Request): Promise<Result<Error, LoanService.GetCartByUserId.Response>> {
+        
+        const cartItems = await this.cartItemRepository.findManyByUserId(userId)
+        const cartBooks = new Array<Book>()
+
+        for (const cartItem of cartItems) {
+
+            const bookResult = await this.bookService.findBookById(cartItem.bookId.value)
+
+            if (bookResult.failed())
+                return failure(bookResult.value)
+
+            cartBooks.push(bookResult.value)
+
+        }
+
+        return success(cartBooks)
 
     }
 

@@ -27,4 +27,29 @@ module.exports = (instance: FastifyTypedInstance) => {
         return loanController.addBookToCartHandler(request, reply)
     })
 
+    instance.get('/loan/cart', {
+        onRequest: [authMiddleware.ensureAuthenticationHandle],
+        schema: {
+            tags: ['Loan'],
+            summary: 'Get user cart',
+            response: {
+                200: z.array(
+                    z.object({
+                        createdAt: z.number(),
+                        updatedAt: z.number(),
+                        createdBy: z.string(),
+                        picture: z.string().optional(),
+                        subject: z.string(),
+                        author: z.string(),
+                        genre: z.string(),
+                        title: z.string(),
+                        id: z.string()
+                    })
+                )
+            }
+        }
+    }, async (request: FastifyRequest, reply) => {
+        return loanController.getCartHandler(request, reply)
+    })
+
 }
