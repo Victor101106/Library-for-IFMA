@@ -4,10 +4,10 @@ import { authMiddleware } from '@middlewares'
 import { z } from 'zod'
 
 module.exports = (instance: FastifyTypedInstance) => {
-    instance.get('/profile', {
+    instance.get('/users/me', {
         onRequest: [authMiddleware.ensureAuthenticationHandle],
         schema: {
-            tags: ['User'],
+            tags: ['Users'],
             summary: 'Get authenticated user profile',
             response: {
                 200: z.object({
@@ -25,6 +25,6 @@ module.exports = (instance: FastifyTypedInstance) => {
             }
         }
     }, async (request, reply) => {
-        return userController.profileHandler(request, reply)
+        return userController.findMeHandler(request, reply)
     })
 }

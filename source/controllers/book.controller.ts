@@ -1,5 +1,5 @@
 import { badRequest, created, ok } from '@helpers'
-import { CreateBookRequest, DeleteBookRequest, GetBookByIdRequest, UpdateBookRequest } from '@schemas/controllers'
+import { CreateBookRequest, DeleteBookRequest, FindBookByIdRequest, UpdateBookRequest } from '@schemas/controllers'
 import { bookService, BookService } from '@services'
 import { FastifyReply, FastifyRequest } from 'fastify'
 
@@ -13,7 +13,7 @@ export class BookController {
 
     public async createBookHandler(request: FastifyRequest<CreateBookRequest.Type>, reply: FastifyReply): Promise<FastifyReply> {
         
-        const creationResult = await this.bookService.createBook({
+        const createResult = await this.bookService.createBook({
             createdBy: String(request.locals.userId),
             picture: request.body.picture,
             subject: request.body.subject,
@@ -22,61 +22,61 @@ export class BookController {
             title: request.body.title
         })
 
-        if (creationResult.failed())
-            return badRequest(reply, creationResult.value)
+        if (createResult.failed())
+            return badRequest(reply, createResult.value)
 
-        const book = creationResult.value
+        const bookCreated = createResult.value
 
-        return created(reply, book.to())
+        return created(reply, bookCreated.to())
 
     }
 
-    public async getBookByIdHandler(request: FastifyRequest<GetBookByIdRequest.Type>, reply: FastifyReply): Promise<FastifyReply> {
+    public async findBookByIdHandler(request: FastifyRequest<FindBookByIdRequest.Type>, reply: FastifyReply): Promise<FastifyReply> {
         
-        const findResult = await this.bookService.findBookById(request.params.id)
+        const findResult = await this.bookService.findBookById(request.params.bookId)
 
         if (findResult.failed())
             return badRequest(reply, findResult.value)
 
-        const book = findResult.value
+        const bookFound = findResult.value
 
-        return ok(reply, book.to())
+        return ok(reply, bookFound.to())
 
     }
 
     public async updateBookHandler(request: FastifyRequest<UpdateBookRequest.Type>, reply: FastifyReply): Promise<FastifyReply> {
         
-        const updateResult = await this.bookService.updateBook({ ...request.body, bookId: request.params.id })
+        const updateResult = await this.bookService.updateBook({ ...request.body, ...request.params })
 
         if (updateResult.failed())
             return badRequest(reply, updateResult.value)
 
-        const book = updateResult.value
+        const updatedBook = updateResult.value
 
-        return ok(reply, book.to())
+        return ok(reply, updatedBook.to())
 
     }
 
     public async deleteBookHandler(request: FastifyRequest<DeleteBookRequest.Type>, reply: FastifyReply): Promise<FastifyReply> {
         
-        const deleteResult = await this.bookService.deleteBook(request.params.id)
+        const deleteResult = await this.bookService.deleteBook(request.params.bookId)
 
         if (deleteResult.failed())
             return badRequest(reply, deleteResult.value)
 
-        const book = deleteResult.value
+        const deletedBook = deleteResult.value
 
-        return ok(reply, book.to())
+        return ok(reply, deletedBook.to())
 
     }
 
-    public async getAllBooksHandler(request: FastifyRequest, reply: FastifyReply): Promise<FastifyReply> {
+    public async findAllBooksHandler(request: FastifyRequest, reply: FastifyReply): Promise<FastifyReply> {
         
-        const books = await this.bookService.findAllBooks()
+        const booksFound = await this.bookService.findAllBooks()
 
-        const booksTo = books.map(book => book.to())
+        const booksFoundTo = booksFound.map(bookFound => bookFound.to())
 
-        return ok(reply, booksTo)
+        return ok(reply, booksFoundTo)
 
     }
 

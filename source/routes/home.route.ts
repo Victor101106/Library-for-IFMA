@@ -5,7 +5,7 @@ import { z } from 'zod'
 module.exports = (instance: FastifyTypedInstance) => {
     instance.get('/', {
         schema: {
-            tags: ['View'],
+            tags: ['Views'],
             summary: 'Test view of the Sign in with Google button',
             response: {
                 200: z.string()

@@ -20,7 +20,7 @@ export namespace DeleteBookRequest {
 
     export const Schema = z.object({
         Params: z.object({
-            id: z.string()
+            bookId: z.string()
         })
     })
     
@@ -28,11 +28,11 @@ export namespace DeleteBookRequest {
 
 }
 
-export namespace GetBookByIdRequest {
+export namespace FindBookByIdRequest {
 
     export const Schema = z.object({
         Params: z.object({
-            id: z.string()
+            bookId: z.string()
         })
     })
 
@@ -51,7 +51,7 @@ export namespace UpdateBookRequest {
             title: z.string().optional()
         }),
         Params: z.object({
-            id: z.string()
+            bookId: z.string()
         })
     })
 

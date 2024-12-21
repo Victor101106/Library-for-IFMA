@@ -5,8 +5,10 @@ export namespace CreateUnitRequest {
     export const Schema = z.object({
         Body: z.object({
             available: z.boolean(),
-            bookId: z.string(),
             code: z.number()
+        }),
+        Params: z.object({
+            bookId: z.string()
         })
     })
     
@@ -18,7 +20,7 @@ export namespace DeleteUnitByCodeRequest {
 
     export const Schema = z.object({
         Params: z.object({
-            code: z.coerce.number()
+            unitCode: z.coerce.number()
         })
     })
     
@@ -26,11 +28,11 @@ export namespace DeleteUnitByCodeRequest {
 
 }
 
-export namespace GetUnitByCodeRequest {
+export namespace FindUnitByCodeRequest {
 
     export const Schema = z.object({
         Params: z.object({
-            code: z.coerce.number()
+            unitCode: z.coerce.number()
         })
     })
 
@@ -38,11 +40,11 @@ export namespace GetUnitByCodeRequest {
 
 }
 
-export namespace GetUnitsByBookIdRequest {
+export namespace FindUnitsByBookIdRequest {
 
     export const Schema = z.object({
         Params: z.object({
-            id: z.string()
+            bookId: z.string()
         })
     })
 

@@ -13,26 +13,30 @@ export class LoanController {
 
     public async addBookToCartHandler(request: FastifyRequest<AddBookToCartRequest.Type>, reply: FastifyReply): Promise<FastifyReply> {
         
-        const result = await this.loanService.addBookToCart({
+        const addResult = await this.loanService.addBookToCart({
             userId: String(request.locals.userId),
             bookId: request.params.bookId
         })
 
-        if (result.failed())
-            return badRequest(reply, result.value)
+        if (addResult.failed())
+            return badRequest(reply, addResult.value)
 
-        return ok(reply, result.value.to())
+        const addedCartItem = addResult.value
+
+        return ok(reply, addedCartItem.to())
 
     }
 
-    public async getCartHandler(request: FastifyRequest, reply: FastifyReply): Promise<FastifyReply> {
+    public async getBooksFromCartHandler(request: FastifyRequest, reply: FastifyReply): Promise<FastifyReply> {
         
         const cartBooksResult = await this.loanService.getBooksFromCartByUserId(String(request.locals.userId))
 
         if (cartBooksResult.failed())
             return badRequest(reply, cartBooksResult.value)
 
-        const cartBooksTo = cartBooksResult.value.map(book => book.to())
+        const cartBooks = cartBooksResult.value
+
+        const cartBooksTo = cartBooks.map(cartBook => cartBook.to())
 
         return ok(reply, cartBooksTo)
 

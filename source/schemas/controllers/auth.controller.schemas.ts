@@ -1,6 +1,6 @@
 import { z } from 'zod'
 
-export namespace AuthenticateWithGoogleCallbackRequest {
+export namespace LogInWithGoogleCallbackRequest {
     
     export const Schema = z.object({
         Querystring: z.object({
@@ -12,7 +12,7 @@ export namespace AuthenticateWithGoogleCallbackRequest {
 
 }
 
-export namespace AuthenticateWithGoogleRequest {
+export namespace LogInWithGoogleRequest {
 
     export const Schema = z.object({
         Body: z.object({

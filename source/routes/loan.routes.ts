@@ -7,10 +7,10 @@ import { z } from 'zod'
 
 module.exports = (instance: FastifyTypedInstance) => {
 
-    instance.post('/loan/cart/:bookId', {
+    instance.post('/users/me/cart/:bookId', {
         onRequest: [authMiddleware.ensureAuthenticationHandle],
         schema: {
-            tags: ['Loan'],
+            tags: ['Cart'],
             summary: 'Add book to cart',
             params: AddBookToCartRequest.Schema.shape.Params,
             response: {
@@ -26,10 +26,10 @@ module.exports = (instance: FastifyTypedInstance) => {
         return loanController.addBookToCartHandler(request, reply)
     })
 
-    instance.get('/loan/cart', {
+    instance.get('/users/me/cart', {
         onRequest: [authMiddleware.ensureAuthenticationHandle],
         schema: {
-            tags: ['Loan'],
+            tags: ['Cart'],
             summary: 'Get user cart',
             response: {
                 200: z.array(
@@ -48,7 +48,7 @@ module.exports = (instance: FastifyTypedInstance) => {
             }
         }
     }, async (request: FastifyRequest, reply) => {
-        return loanController.getCartHandler(request, reply)
+        return loanController.getBooksFromCartHandler(request, reply)
     })
 
 }

@@ -1,13 +1,13 @@
 import { FastifyTypedInstance } from '@configs/types'
 import { authController } from '@controllers'
 import { authMiddleware } from '@middlewares/auth.middleware'
-import { AuthenticateWithGoogleCallbackRequest, AuthenticateWithGoogleRequest, CompleteSignUpRequest } from '@schemas/controllers'
+import { CompleteSignUpRequest, LogInWithGoogleCallbackRequest, LogInWithGoogleRequest } from '@schemas/controllers'
 import { FastifyRequest } from 'fastify'
 import { z } from 'zod'
 
 module.exports = (instance: FastifyTypedInstance) => {
 
-    instance.get('/authenticate/google/redirect', {
+    instance.get('/auth/signin/google/redirect', {
         schema: {
             tags: ['Authentication'],
             summary: 'Redirect to Google OAuth2 authentication page',
@@ -19,47 +19,55 @@ module.exports = (instance: FastifyTypedInstance) => {
         return authController.redirectToGoogleAuthorizeURLHandler(request, reply)
     })
 
-    instance.get('/authenticate/google/callback', {
+    instance.get('/auth/signin/google/callback', {
         schema: {
             tags: ['Authentication'],
             summary: 'Authenticate with Google OAuth2 callback in redirect URI',
-            querystring: AuthenticateWithGoogleCallbackRequest.Schema.shape.Querystring,
+            querystring: LogInWithGoogleCallbackRequest.Schema.shape.Querystring,
             response: {
                 200: z.object({
-                    users: z.object({
-                        picture: z.string(),
-                        email: z.string(),
-                        name: z.string(),
-                        id: z.string()
-                    })
+                    registration: z.string().optional(),
+                    createdAt: z.number(),
+                    updatedAt: z.number(),
+                    googleId: z.string(),
+                    picture: z.string(),
+                    siape: z.number().optional(),
+                    email: z.string(),
+                    role: z.string(),
+                    name: z.string(),
+                    id: z.string()
                 })
             }
         }
-    }, async (request: FastifyRequest<AuthenticateWithGoogleCallbackRequest.Type>, reply) => {
-        return authController.authenticateWithGoogleCallbackHandler(request, reply)
+    }, async (request: FastifyRequest<LogInWithGoogleCallbackRequest.Type>, reply) => {
+        return authController.logInWithGoogleCallbackHandler(request, reply)
     })
 
-    instance.post('/authenticate/google', {
+    instance.post('/auth/signin/google', {
         schema: {
             tags: ['Authentication'],
             summary: 'Authenticate with Google OAuth2 credential',
-            body: AuthenticateWithGoogleRequest.Schema.shape.Body,
+            body: LogInWithGoogleRequest.Schema.shape.Body,
             response: {
                 200: z.object({
-                    user: z.object({
-                        picture: z.string(),
-                        email: z.string(),
-                        name: z.string(),
-                        id: z.string()
-                    })
+                    registration: z.string().optional(),
+                    createdAt: z.number(),
+                    updatedAt: z.number(),
+                    googleId: z.string(),
+                    picture: z.string(),
+                    siape: z.number().optional(),
+                    email: z.string(),
+                    role: z.string(),
+                    name: z.string(),
+                    id: z.string()
                 })
             }
         }
-    }, async (request: FastifyRequest<AuthenticateWithGoogleRequest.Type>, reply) => {
-        return authController.authenticateWithGoogleHandler(request, reply)
+    }, async (request: FastifyRequest<LogInWithGoogleRequest.Type>, reply) => {
+        return authController.logInWithGoogleHandler(request, reply)
     })
 
-    instance.post('/signup/complete', {
+    instance.post('/auth/signup/complete', {
         onRequest: [authMiddleware.ensureAuthenticationHandle],
         schema: {
             tags: ['Authentication'],
@@ -77,7 +85,7 @@ module.exports = (instance: FastifyTypedInstance) => {
         return authController.completeSignUpHandler(request, reply)
     })
 
-    instance.get('/logout', {
+    instance.get('/auth/logout', {
         schema: {
             tags: ['Authentication'],
             summary: 'Deauthenticate',

@@ -1,5 +1,5 @@
 import { badRequest, created, ok } from '@helpers'
-import { CreateUnitRequest, DeleteUnitByCodeRequest, GetUnitByCodeRequest, GetUnitsByBookIdRequest } from '@schemas/controllers'
+import { CreateUnitRequest, DeleteUnitByCodeRequest, FindUnitByCodeRequest, FindUnitsByBookIdRequest } from '@schemas/controllers'
 import { unitService, UnitService } from '@services'
 import { FastifyReply, FastifyRequest } from 'fastify'
 
@@ -13,66 +13,66 @@ export class UnitController {
 
     public async createUnitHandler(request: FastifyRequest<CreateUnitRequest.Type>, reply: FastifyReply): Promise<FastifyReply> {
         
-        const creationResult = await this.unitService.createUnit({
+        const createResult = await this.unitService.createUnit({
             createdBy: String(request.locals.userId),
             available: request.body.available,
-            bookId: request.body.bookId,
+            bookId: request.params.bookId,
             code: request.body.code
         })
 
-        if (creationResult.failed())
-            return badRequest(reply, creationResult.value)
+        if (createResult.failed())
+            return badRequest(reply, createResult.value)
 
-        const unit = creationResult.value
+        const unitCreated = createResult.value
 
-        return created(reply, unit.to())
+        return created(reply, unitCreated.to())
 
     }
 
-    public async getUnitByCodeHandler(request: FastifyRequest<GetUnitByCodeRequest.Type>, reply: FastifyReply): Promise<FastifyReply> {
+    public async findUnitByCodeHandler(request: FastifyRequest<FindUnitByCodeRequest.Type>, reply: FastifyReply): Promise<FastifyReply> {
         
-        const findResult = await this.unitService.findUnitByCode(request.params.code)
+        const findResult = await this.unitService.findUnitByCode(request.params.unitCode)
 
         if (findResult.failed())
             return badRequest(reply, findResult.value)
 
-        const unit = findResult.value
+        const unitFound = findResult.value
 
-        return ok(reply, unit.to())
+        return ok(reply, unitFound.to())
 
     }
 
     public async deleteUnitByCodeHandler(request: FastifyRequest<DeleteUnitByCodeRequest.Type>, reply: FastifyReply): Promise<FastifyReply> {
         
-        const deleteResult = await this.unitService.deleteUnitByCode(request.params.code)
+        const deleteResult = await this.unitService.deleteUnitByCode(request.params.unitCode)
 
         if (deleteResult.failed())
             return badRequest(reply, deleteResult.value)
 
-        const unit = deleteResult.value
+        const deletedUnit = deleteResult.value
 
-        return ok(reply, unit.to())
+        return ok(reply, deletedUnit.to())
 
     }
 
     
-    public async getAllUnitsHandler(request: FastifyRequest, reply: FastifyReply): Promise<FastifyReply> {
+    public async findAllUnitsHandler(request: FastifyRequest, reply: FastifyReply): Promise<FastifyReply> {
         
-        const units = await this.unitService.findAllUnits()
+        const unitsFound = await this.unitService.findAllUnits()
 
-        const unitsTo = units.map(unit => unit.to())
+        const unitsFoundTo = unitsFound.map(unitFound => unitFound.to())
 
-        return ok(reply, unitsTo)
+        return ok(reply, unitsFoundTo)
 
     }
 
-    public async findUnitsByBookId(request: FastifyRequest<GetUnitsByBookIdRequest.Type>, reply: FastifyReply): Promise<FastifyReply> {
+    public async findUnitsByBookId(request: FastifyRequest<FindUnitsByBookIdRequest.Type>, reply: FastifyReply): Promise<FastifyReply> {
         
-        const units = await this.unitService.findUnitsByBookId(request.params.id)
+        const unitsFound = await this.unitService.findUnitsByBookId(request.params.bookId)
 
-        const unitsTo = units.map(unit => unit.to())
+        const unitsFoundTo = unitsFound.map(unitFound => unitFound.to())
 
-        return ok(reply, unitsTo)
+        return ok(reply, unitsFoundTo)
 
     }
 

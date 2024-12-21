@@ -1,16 +1,16 @@
 import { FastifyTypedInstance } from '@configs/types'
 import { bookController } from '@controllers/book.controller'
 import { authMiddleware } from '@middlewares/auth.middleware'
-import { CreateBookRequest, DeleteBookRequest, GetBookByIdRequest, UpdateBookRequest } from '@schemas/controllers'
+import { CreateBookRequest, DeleteBookRequest, FindBookByIdRequest, UpdateBookRequest } from '@schemas/controllers'
 import { FastifyRequest } from 'fastify'
 import { z } from 'zod'
 
 module.exports = (instance: FastifyTypedInstance) => {
 
-    instance.post('/book', {
+    instance.post('/books', {
         onRequest: [authMiddleware.ensureAuthenticationHandle],
         schema: {
-            tags: ['Book'],
+            tags: ['Books'],
             summary: 'Create book',
             body: CreateBookRequest.Schema.shape.Body,
             response: {
@@ -31,11 +31,35 @@ module.exports = (instance: FastifyTypedInstance) => {
         return bookController.createBookHandler(request, reply)
     })
 
-    instance.get('/book/:id', {
+    instance.get('/books', {
         schema: {
-            tags: ['Book'],
+            tags: ['Books'],
+            summary: 'Get all books',
+            response: {
+                200: z.array(
+                    z.object({
+                        createdAt: z.number(),
+                        updatedAt: z.number(),
+                        createdBy: z.string(),
+                        picture: z.string().optional(),
+                        subject: z.string(),
+                        author: z.string(),
+                        genre: z.string(),
+                        title: z.string(),
+                        id: z.string()
+                    })
+                )
+            }
+        }
+    }, async (request, reply) => {
+        return bookController.findAllBooksHandler(request, reply)
+    })
+
+    instance.get('/books/:bookId', {
+        schema: {
+            tags: ['Books'],
             summary: 'Get book by id',
-            params: GetBookByIdRequest.Schema.shape.Params,
+            params: FindBookByIdRequest.Schema.shape.Params,
             response: {
                 200: z.object({
                     createdAt: z.number(),
@@ -50,14 +74,14 @@ module.exports = (instance: FastifyTypedInstance) => {
                 })
             }
         }
-    }, async (request: FastifyRequest<GetBookByIdRequest.Type>, reply) => {
-        return bookController.getBookByIdHandler(request, reply)
+    }, async (request: FastifyRequest<FindBookByIdRequest.Type>, reply) => {
+        return bookController.findBookByIdHandler(request, reply)
     })
 
-    instance.put('/book/:id', {
+    instance.put('/books/:bookId', {
         schema: {
-            tags: ['Book'],
-            summary: 'Update book details',
+            tags: ['Books'],
+            summary: 'Update book',
             params: UpdateBookRequest.Schema.shape.Params,
             body: UpdateBookRequest.Schema.shape.Body,
             response: {
@@ -78,9 +102,9 @@ module.exports = (instance: FastifyTypedInstance) => {
         return bookController.updateBookHandler(request, reply)
     })
     
-    instance.delete('/book/:id', {
+    instance.delete('/books/:bookId', {
         schema: {
-            tags: ['Book'],
+            tags: ['Books'],
             summary: 'Delete book',
             params: DeleteBookRequest.Schema.shape.Params,
             response: {
@@ -99,30 +123,6 @@ module.exports = (instance: FastifyTypedInstance) => {
         }
     }, async (request: FastifyRequest<DeleteBookRequest.Type>, reply) => {
         return bookController.deleteBookHandler(request, reply)
-    })
-
-    instance.get('/book/list', {
-        schema: {
-            tags: ['Book'],
-            summary: 'Get all books',
-            response: {
-                200: z.array(
-                    z.object({
-                        createdAt: z.number(),
-                        updatedAt: z.number(),
-                        createdBy: z.string(),
-                        picture: z.string().optional(),
-                        subject: z.string(),
-                        author: z.string(),
-                        genre: z.string(),
-                        title: z.string(),
-                        id: z.string()
-                    })
-                )
-            }
-        }
-    }, async (request, reply) => {
-        return bookController.getAllBooksHandler(request, reply)
     })
 
 }

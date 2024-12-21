@@ -1,17 +1,18 @@
 import { FastifyTypedInstance } from '@configs/types'
 import { unitController } from '@controllers/unit.controller'
 import { authMiddleware } from '@middlewares/auth.middleware'
-import { CreateUnitRequest, DeleteUnitByCodeRequest, GetUnitByCodeRequest, GetUnitsByBookIdRequest } from '@schemas/controllers'
+import { CreateUnitRequest, DeleteUnitByCodeRequest, FindUnitByCodeRequest, FindUnitsByBookIdRequest } from '@schemas/controllers'
 import { FastifyRequest } from 'fastify'
 import { z } from 'zod'
 
 module.exports = (instance: FastifyTypedInstance) => {
 
-    instance.post('/book/unit', {
+    instance.post('/books/:bookId/units', {
         onRequest: [authMiddleware.ensureAuthenticationHandle],
         schema: {
-            tags: ['Unit'],
+            tags: ['Units'],
             summary: 'Create book unit',
+            params: CreateUnitRequest.Schema.shape.Params,
             body: CreateUnitRequest.Schema.shape.Body,
             response: {
                 200: z.object({
@@ -28,49 +29,31 @@ module.exports = (instance: FastifyTypedInstance) => {
         return unitController.createUnitHandler(request, reply)
     })
 
-    instance.get('/book/unit/:code', {
+    instance.get('/books/:bookId/units', {
         schema: {
-            tags: ['Unit'],
-            summary: 'Get book unit by code',
-            params: GetUnitByCodeRequest.Schema.shape.Params,
+            tags: ['Units'],
+            summary: 'Get book units by book id',
+            params: FindUnitsByBookIdRequest.Schema.shape.Params,
             response: {
-                200: z.object({
-                    createdAt: z.number(),
-                    updatedAt: z.number(),
-                    available: z.boolean(),
-                    createdBy: z.string(),
-                    bookId: z.string(),
-                    code: z.number()
-                })
+                200: z.array(
+                    z.object({
+                        createdAt: z.number(),
+                        updatedAt: z.number(),
+                        available: z.boolean(),
+                        createdBy: z.string(),
+                        bookId: z.string(),
+                        code: z.number()
+                    })
+                )
             }
         }
-    }, async (request: FastifyRequest<GetUnitByCodeRequest.Type>, reply) => {
-        return unitController.getUnitByCodeHandler(request, reply)
+    }, async (request: FastifyRequest<FindUnitsByBookIdRequest.Type>, reply) => {
+        return unitController.findUnitsByBookId(request, reply)
     })
 
-    instance.delete('/book/unit/:code', {
+    instance.get('/books/units', {
         schema: {
-            tags: ['Unit'],
-            summary: 'Delete book unit by code',
-            params: DeleteUnitByCodeRequest.Schema.shape.Params,
-            response: {
-                200: z.object({
-                    createdAt: z.number(),
-                    updatedAt: z.number(),
-                    available: z.boolean(),
-                    createdBy: z.string(),
-                    bookId: z.string(),
-                    code: z.number()
-                })
-            }
-        }
-    }, async (request: FastifyRequest<DeleteUnitByCodeRequest.Type>, reply) => {
-        return unitController.deleteUnitByCodeHandler(request, reply)
-    })
-
-    instance.get('/book/unit/list', {
-        schema: {
-            tags: ['Unit'],
+            tags: ['Units'],
             summary: 'Get all book units',
             response: {
                 200: z.array(
@@ -86,28 +69,47 @@ module.exports = (instance: FastifyTypedInstance) => {
             }
         }
     }, async (request, reply) => {
-        return unitController.getAllUnitsHandler(request, reply)
+        return unitController.findAllUnitsHandler(request, reply)
     })
 
-    instance.get('/book/:id/units', {
+    instance.get('/books/units/:unitCode', {
         schema: {
-            tags: ['Unit'],
-            summary: 'Get book units by book id',
+            tags: ['Units'],
+            summary: 'Get book unit by code',
+            params: FindUnitByCodeRequest.Schema.shape.Params,
             response: {
-                200: z.array(
-                    z.object({
-                        createdAt: z.number(),
-                        updatedAt: z.number(),
-                        available: z.boolean(),
-                        createdBy: z.string(),
-                        bookId: z.string(),
-                        code: z.number()
-                    })
-                )
+                200: z.object({
+                    createdAt: z.number(),
+                    updatedAt: z.number(),
+                    available: z.boolean(),
+                    createdBy: z.string(),
+                    bookId: z.string(),
+                    code: z.number()
+                })
             }
         }
-    }, async (request: FastifyRequest<GetUnitsByBookIdRequest.Type>, reply) => {
-        return unitController.findUnitsByBookId(request, reply)
+    }, async (request: FastifyRequest<FindUnitByCodeRequest.Type>, reply) => {
+        return unitController.findUnitByCodeHandler(request, reply)
+    })
+
+    instance.delete('/books/units/:unitCode', {
+        schema: {
+            tags: ['Units'],
+            summary: 'Delete book unit by code',
+            params: DeleteUnitByCodeRequest.Schema.shape.Params,
+            response: {
+                200: z.object({
+                    createdAt: z.number(),
+                    updatedAt: z.number(),
+                    available: z.boolean(),
+                    createdBy: z.string(),
+                    bookId: z.string(),
+                    code: z.number()
+                })
+            }
+        }
+    }, async (request: FastifyRequest<DeleteUnitByCodeRequest.Type>, reply) => {
+        return unitController.deleteUnitByCodeHandler(request, reply)
     })
 
 }

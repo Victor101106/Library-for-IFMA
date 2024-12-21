@@ -10,16 +10,16 @@ export class UserController {
         return new UserController(userService)
     }
 
-    public async profileHandler(request: FastifyRequest, reply: FastifyReply): Promise<FastifyReply> {
+    public async findMeHandler(request: FastifyRequest, reply: FastifyReply): Promise<FastifyReply> {
         
-        const result = await this.userService.findUserById(String(request.locals.userId))
+        const findResult = await this.userService.findUserById(String(request.locals.userId))
 
-        if (result.failed())
-            return unauthorized(reply, result.value)
+        if (findResult.failed())
+            return unauthorized(reply, findResult.value)
 
-        const user = result.value
+        const userFound = findResult.value
 
-        return ok(reply, user.to())
+        return ok(reply, userFound.to())
 
     }
 
