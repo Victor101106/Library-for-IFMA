@@ -8,7 +8,6 @@ export namespace CartItem {
     export type DTO = Request & {
         createdAt: number
         updatedAt: number
-        id       : string
     }
     export type Response = CartItem
 }
@@ -19,8 +18,7 @@ export class CartItem {
         public readonly createdAt: Timestamp,
         public readonly updatedAt: Timestamp,
         public readonly bookId   : Id,
-        public readonly userId   : Id,
-        public readonly id       : Id
+        public readonly userId   : Id
     ) {}
 
     public static create(request: CartItem.Request): CartItem.Response {
@@ -30,9 +28,8 @@ export class CartItem {
 
         const bookId = Id.create(request.bookId)
         const userId = Id.create(request.userId)
-        const id     = Id.create()
         
-        return new CartItem(createdAt, updatedAt, bookId, userId, id)
+        return new CartItem(createdAt, updatedAt, bookId, userId)
 
     }
 
@@ -42,9 +39,8 @@ export class CartItem {
         const updatedAt = Timestamp.with(data.updatedAt)
         const bookId    = Id       .with(data.bookId)
         const userId    = Id       .with(data.userId)
-        const id        = Id       .with(data.id)
         
-        return new CartItem(createdAt, updatedAt, bookId, userId, id)
+        return new CartItem(createdAt, updatedAt, bookId, userId)
 
     }
 
@@ -54,9 +50,8 @@ export class CartItem {
         const updatedAt = this.updatedAt.to()
         const bookId    = this.bookId   .to()
         const userId    = this.userId   .to()
-        const id        = this.id       .to()
 
-        return { createdAt, updatedAt, bookId, userId, id }
+        return { createdAt, updatedAt, bookId, userId }
 
     }
 

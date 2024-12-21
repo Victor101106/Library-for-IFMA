@@ -18,8 +18,7 @@ module.exports = (instance: FastifyTypedInstance) => {
                     createdAt: z.number(),
                     updatedAt: z.number(),
                     bookId: z.string(),
-                    userId: z.string(),
-                    id: z.string()
+                    userId: z.string()
                 })
             }
         }
