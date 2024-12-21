@@ -1,9 +1,8 @@
 import { failure, Result, success } from '@helpers'
 import { Unit } from '@models'
-import { inMemoryUnitRepository } from '@repositories'
-import { UnitRepository } from '@repositories/contracts'
-import { bookService, BookService } from './book.service'
-import { CodeAlreadyInUseError, UnitNotFoundError } from './errors'
+import { inMemoryBookRepository, inMemoryUnitRepository, inMemoryUserRepository } from '@repositories'
+import { BookRepository, UnitRepository, UserRepository } from '@repositories/contracts'
+import { BookNotFoundError, CodeAlreadyInUseError, UnitNotFoundError, UserNotFoundError } from './errors'
 
 export namespace UnitService {
     
@@ -42,58 +41,64 @@ export namespace UnitService {
 export class UnitService {
 
     private constructor (
+        private readonly bookRepository: BookRepository,
         private readonly unitRepository: UnitRepository,
-        private readonly bookService: BookService
+        private readonly userRepository: UserRepository
     ) {}
 
-    public static create(unitRepository: UnitRepository, bookService: BookService): UnitService {
-        return new UnitService(unitRepository, bookService)
+    public static create(bookRepository: BookRepository, unitRepository: UnitRepository, userRepository: UserRepository): UnitService {
+        return new UnitService(bookRepository, unitRepository, userRepository)
     }
 
-    public async createUnit(request: UnitService.CreateUnit.Request): Promise<Result<CodeAlreadyInUseError | Error, UnitService.CreateUnit.Response>> {
+    public async createUnit(request: UnitService.CreateUnit.Request): Promise<Result<BookNotFoundError | CodeAlreadyInUseError | UserNotFoundError, UnitService.CreateUnit.Response>> {
 
-        const bookResult = await this.bookService.findBookById(request.bookId)
+        const unitFound = await this.unitRepository.findByCode(request.code)
 
-        if (bookResult.failed())
-            return failure(bookResult.value)
-
-        const unitExists = await this.findUnitByCode(request.code)
-
-        if (unitExists.successfully())
+        if (unitFound)
             return failure(new CodeAlreadyInUseError())
 
-        const creationResult = Unit.create({
+        const bookFound = await this.bookRepository.findById(request.bookId)
+
+        if (!bookFound)
+            return failure(new BookNotFoundError())
+
+        const userFound = await this.userRepository.findById(request.createdBy)
+
+        if (!userFound)
+            return failure(new UserNotFoundError())
+
+        const createResult = Unit.create({
             createdBy: request.createdBy,
             available: request.available,
             bookId: request.bookId,
             code: request.code
         })
 
-        if (creationResult.failed())
-            return failure(creationResult.value)
+        if (createResult.failed())
+            return failure(createResult.value)
 
-        const unit = creationResult.value
+        const unitCreated = createResult.value
 
-        await this.unitRepository.saveOne(unit)
+        await this.unitRepository.saveOne(unitCreated)
 
-        return success(unit)
+        return success(unitCreated)
 
     }
 
-    public async findUnitByCode(code: UnitService.FindUnitByCode.Request): Promise<Result<UnitNotFoundError, UnitService.FindUnitByCode.Response>> {
+    public async findUnitByCode(unitCode: UnitService.FindUnitByCode.Request): Promise<Result<UnitNotFoundError, UnitService.FindUnitByCode.Response>> {
         
-        const bookFound = await this.unitRepository.findByCode(code)
+        const unitFound = await this.unitRepository.findByCode(unitCode)
 
-        if (!bookFound)
+        if (!unitFound)
             return failure(new UnitNotFoundError())
 
-        return success(bookFound)
+        return success(unitFound)
 
     }
 
-    public async deleteUnitByCode(code: UnitService.DeleteUnitByCode.Request): Promise<Result<UnitNotFoundError, UnitService.DeleteUnitByCode.Response>> {
+    public async deleteUnitByCode(unitCode: UnitService.DeleteUnitByCode.Request): Promise<Result<UnitNotFoundError, UnitService.DeleteUnitByCode.Response>> {
         
-        const deletedUnit = await this.unitRepository.deleteByCode(code)
+        const deletedUnit = await this.unitRepository.deleteByCode(unitCode)
 
         if (!deletedUnit)
             return failure(new UnitNotFoundError())
@@ -112,4 +117,8 @@ export class UnitService {
 
 }
 
-export const unitService = UnitService.create(inMemoryUnitRepository, bookService)
+export const unitService = UnitService.create(
+    inMemoryBookRepository,
+    inMemoryUnitRepository,
+    inMemoryUserRepository
+)

@@ -27,7 +27,7 @@ export class LoanController {
 
     public async getCartHandler(request: FastifyRequest, reply: FastifyReply): Promise<FastifyReply> {
         
-        const cartBooksResult = await this.loanService.getCartByUserId(String(request.locals.userId))
+        const cartBooksResult = await this.loanService.getBooksFromCartByUserId(String(request.locals.userId))
 
         if (cartBooksResult.failed())
             return badRequest(reply, cartBooksResult.value)

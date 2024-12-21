@@ -2,7 +2,7 @@ import { failure, Result, success } from '@helpers'
 import { RoleEnum, User } from '@models'
 import { inMemoryUserRepository } from '@repositories'
 import { UserRepository } from '@repositories/contracts'
-import { UserAlreadyHasRoleError, UserNotFoundError } from './errors'
+import { GoogleIdAlreadyInUseError, UserAlreadyHasRoleError, UserNotFoundError } from './errors'
 
 export namespace UserService {
     
@@ -26,7 +26,7 @@ export namespace UserService {
         export type Response = User
     }
     
-    export namespace CompleteSignUp {
+    export namespace AssignRoleToUser {
         export type Request = {
             registration: string
             userId: string
@@ -66,25 +66,32 @@ export class UserService {
         if (userFound)
             return success(userFound)
             
-        const creationResult = await this.createUser({
+        const createResult = await this.createUser({
             googleId: String(request.googleId),
             picture: String(request.picture),
             email: String(request.email),
             name: String(request.name)
         })
 
-        if (creationResult.failed())
-            return failure(creationResult.value)
+        if (createResult.failed())
+            return failure(createResult.value)
 
-        const user = creationResult.value
+        const userCreated = createResult.value
 
-        return success(user)
+        await this.userRepository.saveOne(userCreated)
+
+        return success(userCreated)
 
     }
 
-    public async createUser(request: UserService.CreateUser.Request): Promise<Result<UserNotFoundError, UserService.CreateUser.Response>> {
+    public async createUser(request: UserService.CreateUser.Request): Promise<Result<GoogleIdAlreadyInUseError | UserNotFoundError, UserService.CreateUser.Response>> {
 
-        const creationResult = User.create({
+        const userFound = await this.userRepository.findByGoogleId(request.googleId)
+
+        if (userFound)
+            return failure(new GoogleIdAlreadyInUseError())
+
+        const createResult = User.create({
             googleId: request.googleId,
             picture: request.picture,
             email: request.email,
@@ -92,30 +99,28 @@ export class UserService {
             role: RoleEnum.Unverified
         })
 
-        if (creationResult.failed())
-            return failure(creationResult.value)
+        if (createResult.failed())
+            return failure(createResult.value)
 
-        const user = creationResult.value
+        const userCreated = createResult.value
 
-        await this.userRepository.saveOne(user)
+        await this.userRepository.saveOne(userCreated)
 
-        return success(user)
+        return success(userCreated)
 
     }
 
-    public async completeSignUp(request: UserService.CompleteSignUp.Request): Promise<Result<UserAlreadyHasRoleError, UserService.CompleteSignUp.Response>> {
+    public async assignRoleToUser(request: UserService.AssignRoleToUser.Request): Promise<Result<UserAlreadyHasRoleError | UserNotFoundError, UserService.AssignRoleToUser.Response>> {
 
-        const userResult = await this.findUserById(request.userId)
+        const userFound = await this.userRepository.findById(request.userId)
 
-        if (userResult.failed())
-            return failure(userResult.value)
+        if (!userFound)
+            return failure(new UserNotFoundError())
 
-        const user = userResult.value
-
-        if (user.role.value !== RoleEnum.Unverified)
+        if (userFound.role.value !== RoleEnum.Unverified)
             return failure(new UserAlreadyHasRoleError())
 
-        const updateResult = user.update({
+        const updateResult = userFound.update({
             registration: request.registration,
             siape: request.siape,
             role: request.registration ? RoleEnum.Student : RoleEnum.Employee
@@ -124,9 +129,11 @@ export class UserService {
         if (updateResult.failed())
             return failure(updateResult.value)
 
-        await this.userRepository.saveOne(user)
+        const updatedUser = updateResult.value
 
-        return success(user)
+        await this.userRepository.updateOne(updatedUser)
+
+        return success(updatedUser)
 
     }
     

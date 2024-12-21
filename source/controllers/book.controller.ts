@@ -46,7 +46,7 @@ export class BookController {
 
     public async updateBookHandler(request: FastifyRequest<UpdateBookRequest.Type>, reply: FastifyReply): Promise<FastifyReply> {
         
-        const updateResult = await this.bookService.updateBook({ ...request.body, ...request.params })
+        const updateResult = await this.bookService.updateBook({ ...request.body, bookId: request.params.id })
 
         if (updateResult.failed())
             return badRequest(reply, updateResult.value)

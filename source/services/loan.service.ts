@@ -1,10 +1,8 @@
 import { failure, Result, success } from '@helpers/result'
 import { Book, CartItem } from '@models'
-import { inMemoryCartItemRepository } from '@repositories'
-import { CartItemRepository } from '@repositories/contracts'
-import { bookService, BookService } from './book.service'
-import { BookAlreadyInCartError } from './errors'
-import { UserService, userService } from './user.service'
+import { inMemoryBookRepository, inMemoryCartItemRepository, inMemoryUserRepository } from '@repositories'
+import { BookRepository, CartItemRepository, UserRepository } from '@repositories/contracts'
+import { BookAlreadyInCartError, BookNotFoundError, UserNotFoundError } from './errors'
 
 export namespace LoanService {
     
@@ -16,7 +14,7 @@ export namespace LoanService {
         export type Response = CartItem
     }
     
-    export namespace GetCartByUserId {
+    export namespace GetBooksFromCartByUserId {
         export type Request = string
         export type Response = Array<Book>
     }
@@ -27,55 +25,56 @@ export class LoanService {
 
     private constructor (
         private readonly cartItemRepository: CartItemRepository,
-        private readonly bookService: BookService,
-        private readonly userService: UserService
+        private readonly bookRepository: BookRepository,
+        private readonly userRepository: UserRepository
     ) {}
 
-    public static create(cartItemRepository: CartItemRepository, bookService: BookService, userService: UserService): LoanService {
-        return new LoanService(cartItemRepository, bookService, userService)
+    public static create(cartItemRepository: CartItemRepository, bookRepository: BookRepository, userRepository: UserRepository): LoanService {
+        return new LoanService(cartItemRepository, bookRepository, userRepository)
     }
 
-    public async addBookToCart(request: LoanService.AddBookToCart.Request): Promise<Result<BookAlreadyInCartError | Error, LoanService.AddBookToCart.Response>> {
+    public async addBookToCart(request: LoanService.AddBookToCart.Request): Promise<Result<BookAlreadyInCartError | BookNotFoundError | UserNotFoundError, LoanService.AddBookToCart.Response>> {
 
-        const bookAlreadyInCart = await this.cartItemRepository.findByIds(request.bookId, request.userId)
+        const cartItemFound = await this.cartItemRepository.findByIds(request.bookId, request.userId)
 
-        if (bookAlreadyInCart)
+        if (cartItemFound)
             return failure(new BookAlreadyInCartError())
         
-        const bookResult = await this.bookService.findBookById(request.bookId)
-        
-        if (bookResult.failed())
-            return failure(bookResult.value)
+        const bookFound = await this.bookRepository.findById(request.bookId)
 
-        const userResult = await this.userService.findUserById(request.userId)
+        if (!bookFound)
+            return failure(new BookNotFoundError())
 
-        if (userResult.failed())
-            return failure(userResult.value)
+        const userFound = await this.userRepository.findById(request.userId)
 
-        const cartItem = CartItem.create({
-            bookId: request.bookId,
-            userId: request.userId
+        if (!userFound)
+            return failure(new UserNotFoundError())
+
+        const cartItemCreated = CartItem.create({
+            bookId: bookFound.id.value,
+            userId: userFound.id.value
         })
 
-        await this.cartItemRepository.saveOne(cartItem)
+        await this.cartItemRepository.saveOne(cartItemCreated)
 
-        return success(cartItem)
+        return success(cartItemCreated)
 
     }
 
-    public async getCartByUserId(userId: LoanService.GetCartByUserId.Request): Promise<Result<Error, LoanService.GetCartByUserId.Response>> {
+    public async getBooksFromCartByUserId(userId: LoanService.GetBooksFromCartByUserId.Request): Promise<Result<BookNotFoundError, LoanService.GetBooksFromCartByUserId.Response>> {
         
-        const cartItems = await this.cartItemRepository.findManyByUserId(userId)
+        const cartItemsFound = await this.cartItemRepository.findManyByUserId(userId)
+
         const cartBooks = new Array<Book>()
 
-        for (const cartItem of cartItems) {
+        for (const cartItemFound of cartItemsFound) {
 
-            const bookResult = await this.bookService.findBookById(cartItem.bookId.value)
+            const bookFound = await this.bookRepository.findById(cartItemFound.bookId.value)
 
-            if (bookResult.failed())
-                return failure(bookResult.value)
+            if (!bookFound)
+                return failure(new BookNotFoundError())
 
-            cartBooks.push(bookResult.value)
+            cartBooks.push(bookFound)
 
         }
 
@@ -85,4 +84,8 @@ export class LoanService {
 
 }
 
-export const loanService = LoanService.create(inMemoryCartItemRepository, bookService, userService)
+export const loanService = LoanService.create(
+    inMemoryCartItemRepository,
+    inMemoryBookRepository,
+    inMemoryUserRepository
+)

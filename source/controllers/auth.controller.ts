@@ -18,7 +18,7 @@ export class AuthController {
 
     public async completeSignUpHandler(request: FastifyRequest<CompleteSignUpRequest.Type>, reply: FastifyReply): Promise<FastifyReply> {
 
-        const completedSignUp = await userService.completeSignUp({ 
+        const completedSignUp = await userService.assignRoleToUser({ 
             ...request.body,
             userId: String(request.locals.userId)
         })

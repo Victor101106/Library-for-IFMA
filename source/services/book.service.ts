@@ -25,7 +25,7 @@ export namespace BookService {
             author?: string
             genre?: string
             title?: string
-            id: string
+            bookId: string
         }
         export type Response = Book
     }
@@ -60,7 +60,7 @@ export class BookService {
 
     public async createBook(request: BookService.CreateBook.Request): Promise<Result<Error, BookService.CreateBook.Response>> {
 
-        const creationResult = Book.create({
+        const createResult = Book.create({
             createdBy: request.createdBy,
             picture: request.picture,
             subject: request.subject,
@@ -69,20 +69,20 @@ export class BookService {
             title: request.title
         })
 
-        if (creationResult.failed())
-            return failure(creationResult.value)
+        if (createResult.failed())
+            return failure(createResult.value)
 
-        const book = creationResult.value
+        const createdBook = createResult.value
 
-        await this.bookRepository.saveOne(book)
+        await this.bookRepository.saveOne(createdBook)
 
-        return success(book)
+        return success(createdBook)
 
     }
 
     public async updateBook(request: BookService.UpdateBook.Request): Promise<Result<BookNotFoundError, BookService.UpdateBook.Response>> {
         
-        const bookFound = await this.bookRepository.findById(request.id)
+        const bookFound = await this.bookRepository.findById(request.bookId)
         
         if (!bookFound)
             return failure(new BookNotFoundError())
@@ -98,11 +98,11 @@ export class BookService {
         if (updateResult.failed())
             return failure(updateResult.value)
 
-        const book = updateResult.value
+        const updatedBook = updateResult.value
 
-        await this.bookRepository.updateOne(book)
+        await this.bookRepository.updateOne(updatedBook)
 
-        return success(book)
+        return success(updatedBook)
 
     }
 
@@ -119,9 +119,9 @@ export class BookService {
 
     }
 
-    public async findBookById(id: BookService.FindBookById.Request): Promise<Result<BookNotFoundError, BookService.FindBookById.Response>> {
+    public async findBookById(bookId: BookService.FindBookById.Request): Promise<Result<BookNotFoundError, BookService.FindBookById.Response>> {
         
-        const bookFound = await this.bookRepository.findById(id)
+        const bookFound = await this.bookRepository.findById(bookId)
 
         if (!bookFound)
             return failure(new BookNotFoundError())
