@@ -1,3 +1,4 @@
+export * from './book.already.in.cart.error'
 export * from './book.not.found.error'
 export * from './code.already.in.use.error'
 export * from './invalid.access.token.error'
