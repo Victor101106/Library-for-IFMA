@@ -97,7 +97,7 @@ export class UserService {
 
         const user = creationResult.value
 
-        await this.userRepository.save(user)
+        await this.userRepository.saveOne(user)
 
         return success(user)
 
@@ -124,7 +124,7 @@ export class UserService {
         if (updateResult.failed())
             return failure(updateResult.value)
 
-        await this.userRepository.save(user)
+        await this.userRepository.saveOne(user)
 
         return success(user)
 

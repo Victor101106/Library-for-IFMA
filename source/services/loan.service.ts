@@ -37,7 +37,7 @@ export class LoanService {
 
     public async addBookToCart(request: LoanService.AddBookToCart.Request): Promise<Result<BookAlreadyInCartError | Error, LoanService.AddBookToCart.Response>> {
 
-        const bookAlreadyInCart = await this.cartItemRepository.findByUserAndBookId(request.bookId, request.userId)
+        const bookAlreadyInCart = await this.cartItemRepository.findByIds(request.bookId, request.userId)
 
         if (bookAlreadyInCart)
             return failure(new BookAlreadyInCartError())
@@ -57,7 +57,7 @@ export class LoanService {
             userId: request.userId
         })
 
-        await this.cartItemRepository.save(cartItem)
+        await this.cartItemRepository.saveOne(cartItem)
 
         return success(cartItem)
 

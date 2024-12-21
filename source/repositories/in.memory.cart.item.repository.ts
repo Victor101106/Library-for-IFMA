@@ -11,16 +11,16 @@ export class InMemoryCartItemRepository implements CartItemRepository {
         return new InMemoryCartItemRepository(new Array())
     }
 
-    public async findByUserAndBookId(bookId: string, userId: string): Promise<CartItem | void> {
-        return this.database.find(cartItem => cartItem.userId.value == userId && cartItem.bookId.value == bookId)
-    }
-
-    public async save(cartitem: CartItem): Promise<void> {
-        this.database.push(cartitem)
-    }
-
     public async findManyByUserId(userId: string): Promise<Array<CartItem>> {
-        return this.database.filter(cartItem => cartItem.userId.value == userId)
+        return this.database.filter(cartItemFound => cartItemFound.userId.value == userId)
+    }
+
+    public async findByIds(bookId: string, userId: string): Promise<CartItem | void> {
+        return this.database.find(cartItemFound => cartItemFound.bookId.value == bookId && cartItemFound.userId.value == userId)
+    }
+
+    public async saveOne(cartItem: CartItem): Promise<void> {
+        this.database.push(cartItem)
     }
 
 }

@@ -1,9 +1,15 @@
 import { Book } from '@models'
 
 export interface BookRepository {
-    findById(id: string): Promise<Book | void>
+
+    findById(bookId: string): Promise<Book | void>
+
     findAll(): Promise<Array<Book>>
-    delete(id: string): Promise<Book | void>
-    update(book: Book): Promise<void>
-    save(book: Book): Promise<void>
+    
+    deleteById(bookId: string): Promise<Book | void>
+    
+    updateOne(book: Book): Promise<void>
+    
+    saveOne(book: Book): Promise<void>
+
 }

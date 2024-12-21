@@ -74,7 +74,7 @@ export class BookService {
 
         const book = creationResult.value
 
-        await this.bookRepository.save(book)
+        await this.bookRepository.saveOne(book)
 
         return success(book)
 
@@ -100,20 +100,20 @@ export class BookService {
 
         const book = updateResult.value
 
-        await this.bookRepository.update(book)
+        await this.bookRepository.updateOne(book)
 
         return success(book)
 
     }
 
-    public async deleteBook(id: BookService.DeleteBook.Request): Promise<Result<BookNotFoundError, BookService.DeleteBook.Response>> {
+    public async deleteBook(bookId: BookService.DeleteBook.Request): Promise<Result<BookNotFoundError, BookService.DeleteBook.Response>> {
         
-        const deletedBook = await this.bookRepository.delete(id)
+        const deletedBook = await this.bookRepository.deleteById(bookId)
 
         if (!deletedBook)
             return failure(new BookNotFoundError())
 
-        await this.unitRepository.deleteAllByBookId(deletedBook.id.value)
+        await this.unitRepository.deleteManyByBookId(deletedBook.id.value)
 
         return success(deletedBook)
 

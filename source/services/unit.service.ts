@@ -74,7 +74,7 @@ export class UnitService {
 
         const unit = creationResult.value
 
-        await this.unitRepository.save(unit)
+        await this.unitRepository.saveOne(unit)
 
         return success(unit)
 

@@ -11,44 +11,45 @@ export class InMemoryUnitRepository implements UnitRepository {
         return new InMemoryUnitRepository(new Array())
     }
 
-    public async save(unit: Unit): Promise<void> {
-        this.database.push(unit)
-    }
+    public async deleteManyByBookId(bookId: string): Promise<Array<Unit>> {
+        
+        const unitsFound = this.database.filter(unitFound => unitFound.bookId.value == bookId)
 
-    public async findByCode(code: number): Promise<Unit | void> {
-        return this.database.find(unit => unit.code.value == code)
-    }
+        unitsFound.forEach(
+            unitFound => this.deleteByCode(unitFound.code.value)
+        )
 
-    public async findAll(): Promise<Array<Unit>> {
-        return this.database
+        return unitsFound
+
     }
 
     public async findManyByBookId(bookId: string): Promise<Array<Unit>> {
-        return this.database.filter(unit => unit.bookId.value == bookId)
+        return this.database.filter(unitFound => unitFound.bookId.value == bookId)
     }
 
-    public async deleteByCode(code: number): Promise<Unit | void> {
+    public async findAll(): Promise<Array<Unit>> {
+        return this.database.map(unitFound => unitFound)
+    }
 
-        const index = this.database.findIndex(unit => unit.code.value === code)
+    public async deleteByCode(unitCode: number): Promise<Unit | void> {
+        
+        const index = this.database.findIndex(unitFound => unitFound.code.value == unitCode)
 
-        if (index == -1)
+        if (index === -1)
             return
 
         return this.database.splice(index, 1)[0]
 
     }
 
-    public async deleteAllByBookId(bookId: string): Promise<Array<Unit>> {
-
-        const units = this.database.filter(unit => unit.bookId.value == bookId)
-
-        for (const unit of units)
-            await this.deleteByCode(unit.code.value)
-
-        return units
-
+    public async findByCode(unitCode: number): Promise<Unit | void> {
+        return this.database.find(unitFound => unitFound.code.value == unitCode)
     }
 
+    public async saveOne(unit: Unit): Promise<void> {
+        this.database.push(unit)
+    }
+    
 }
 
 export const inMemoryUnitRepository = InMemoryUnitRepository.create()

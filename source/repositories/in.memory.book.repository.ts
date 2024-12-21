@@ -3,46 +3,44 @@ import { BookRepository } from './contracts'
 
 export class InMemoryBookRepository implements BookRepository {
     
-    private constructor (
-        private readonly database: Array<Book>
-    ) {}
+    private constructor (private readonly database: Array<Book>) {}
 
     public static create(): InMemoryBookRepository {
         return new InMemoryBookRepository(new Array())
     }
 
-    public async save(book: Book): Promise<void> {
-        this.database.push(book)
-    }
-    
-    public async findById(id: string): Promise<Book | void> {
-        return this.database.find(book => book.id.value === id)
+    public async findById(bookId: string): Promise<Book | void> {
+        return this.database.find(bookFound => bookFound.id.value == bookId)
     }
 
     public async findAll(): Promise<Array<Book>> {
-        return this.database
+        return this.database.map(bookFound => bookFound)
     }
 
-    public async update(book: Book): Promise<void> {
+    public async deleteById(bookId: string): Promise<Book | void> {
         
-        const index = this.database.findIndex(found => found.id.value === book.id.value)
+        const index = this.database.findIndex(bookFound => bookFound.id.value == bookId)
 
-        if (index == -1)
-            return
-
-        this.database[index] = book
-
-    }
-
-    public async delete(id: string): Promise<Book | void> {
-
-        const index = this.database.findIndex(book => book.id.value === id)
-
-        if (index == -1)
+        if (index === -1)
             return
 
         return this.database.splice(index, 1)[0]
 
+    }
+
+    public async updateOne(book: Book): Promise<void> {
+
+        const index = this.database.findIndex(bookFound => bookFound.id.value == book.id.value)
+
+        if (index === -1)
+            return
+
+        this.database[index] = book
+        
+    }
+
+    public async saveOne(book: Book): Promise<void> {
+        this.database.push(book)
     }
 
 }
