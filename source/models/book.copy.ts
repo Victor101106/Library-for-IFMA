@@ -81,6 +81,8 @@ export class BookCopy {
         if (request.available)
             this.available.update(request.available)
 
+        this.updatedAt.update(new Date())
+
         return success(this)
 
     }

@@ -115,6 +115,8 @@ export class Book {
         for (const result of results)
             if (result?.failed())
                 return failure(result.value)
+        
+        this.updatedAt.update(new Date())
 
         return success(this)
 
