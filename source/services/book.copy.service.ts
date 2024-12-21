@@ -32,6 +32,11 @@ export namespace BookCopyService {
         export type Response = BookCopy
     }
 
+    export namespace FindBookCopiesByBookId {
+        export type Request = string
+        export type Response = Array<BookCopy>
+    }
+
 }
 
 export class BookCopyService {
@@ -99,6 +104,10 @@ export class BookCopyService {
 
     public async findAllBookCopies(): Promise<BookCopyService.FindAllBookCopies.Response> {
         return await this.bookCopyRepository.findAll()
+    }
+
+    public async findBookCopiesByBookId(bookId: BookCopyService.FindBookCopiesByBookId.Request): Promise<BookCopyService.FindBookCopiesByBookId.Response> {
+        return await this.bookCopyRepository.findManyByBookId(bookId)
     }
 
 }

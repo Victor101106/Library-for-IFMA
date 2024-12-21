@@ -1,7 +1,7 @@
 import { FastifyTypedInstance } from '@configs/types'
 import { bookCopyController } from '@controllers/book.copy.controller'
 import { authMiddleware } from '@middlewares/auth.middleware'
-import { CreateBookCopyRequest, DeleteBookCopyByCodeRequest, GetBookCopyByCodeRequest } from '@schemas/controllers'
+import { CreateBookCopyRequest, DeleteBookCopyByCodeRequest, GetBookCopiesByBookIdRequest, GetBookCopyByCodeRequest } from '@schemas/controllers'
 import { FastifyRequest } from 'fastify'
 import { z } from 'zod'
 
@@ -91,6 +91,28 @@ module.exports = (instance: FastifyTypedInstance) => {
         }
     }, async (request, reply) => {
         return bookCopyController.getAllBookCopiesHandler(request, reply)
+    })
+
+    instance.get('/book/:id/copies', {
+        schema: {
+            tags: ['Book Copy'],
+            summary: 'Get book copies by book id',
+            response: {
+                200: z.array(
+                    z.object({
+                        createdAt: z.number(),
+                        updatedAt: z.number(),
+                        available: z.boolean(),
+                        createdBy: z.string(),
+                        bookId: z.string(),
+                        code: z.number(),
+                        id: z.string()
+                    })
+                )
+            }
+        }
+    }, async (request: FastifyRequest<GetBookCopiesByBookIdRequest.Type>, reply) => {
+        return bookCopyController.findBookCopiesByBookId(request, reply)
     })
 
 }

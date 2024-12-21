@@ -37,3 +37,15 @@ export namespace GetBookCopyByCodeRequest {
     export type Type = z.infer<typeof Schema>
 
 }
+
+export namespace GetBookCopiesByBookIdRequest {
+
+    export const Schema = z.object({
+        Params: z.object({
+            id: z.string()
+        })
+    })
+
+    export type Type = z.infer<typeof Schema>
+
+}

@@ -1,5 +1,5 @@
 import { badRequest, created, ok } from '@helpers'
-import { CreateBookCopyRequest, DeleteBookCopyByCodeRequest, GetBookCopyByCodeRequest } from '@schemas/controllers'
+import { CreateBookCopyRequest, DeleteBookCopyByCodeRequest, GetBookCopiesByBookIdRequest, GetBookCopyByCodeRequest } from '@schemas/controllers'
 import { bookCopyService, BookCopyService } from '@services'
 import { FastifyReply, FastifyRequest } from 'fastify'
 
@@ -66,6 +66,15 @@ export class BookCopyController {
 
     }
 
+    public async findBookCopiesByBookId(request: FastifyRequest<GetBookCopiesByBookIdRequest.Type>, reply: FastifyReply): Promise<FastifyReply> {
+        
+        const bookCopies = await this.bookCopyService.findBookCopiesByBookId(request.params.id)
+
+        const bookCopiesTo = bookCopies.map(bookCopy => bookCopy.to())
+
+        return ok(reply, bookCopiesTo)
+
+    }
 
 }
 

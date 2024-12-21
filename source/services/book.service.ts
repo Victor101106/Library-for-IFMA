@@ -40,7 +40,7 @@ export namespace BookService {
         export type Response = Book
     }
 
-    export namespace FindAllBookCopies {
+    export namespace FindAllBooks {
         export type Request = void
         export type Response = Array<Book>
     }
@@ -130,7 +130,7 @@ export class BookService {
 
     }
 
-    public async findAllBooks(): Promise<BookService.FindAllBookCopies.Response> {
+    public async findAllBooks(): Promise<BookService.FindAllBooks.Response> {
         return await this.bookRepository.findAll()
     }
 
