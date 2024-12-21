@@ -1,5 +1,5 @@
 import { badRequest, created, ok } from '@helpers'
-import { createBookRequestSchema, deleteBookRequestSchema, getBookByIdRequestSchema, updateBookRequestSchema } from '@schemas/controllers/book'
+import { CreateBookRequest, DeleteBookRequest, GetBookByIdRequest, UpdateBookRequest } from '@schemas/controllers'
 import { bookService, BookService } from '@services'
 import { FastifyReply, FastifyRequest } from 'fastify'
 
@@ -11,22 +11,15 @@ export class BookController {
         return new BookController(bookService)
     }
 
-    public async createBookHandler(request: FastifyRequest, reply: FastifyReply): Promise<FastifyReply> {
-        
-        const validationResult = createBookRequestSchema.validateSafe(request)
-
-        if (validationResult.failed())
-            return badRequest(reply, validationResult.value)
-
-        const { body, locals } = validationResult.value
+    public async createBookHandler(request: FastifyRequest<CreateBookRequest.Type>, reply: FastifyReply): Promise<FastifyReply> {
         
         const creationResult = await this.bookService.createBook({
-            createdBy: locals.userId,
-            picture: body.picture,
-            subject: body.subject,
-            author: body.author,
-            genre: body.genre,
-            title: body.title
+            createdBy: String(request.locals.userId),
+            picture: request.body.picture,
+            subject: request.body.subject,
+            author: request.body.author,
+            genre: request.body.genre,
+            title: request.body.title
         })
 
         if (creationResult.failed())
@@ -38,16 +31,9 @@ export class BookController {
 
     }
 
-    public async getBookByIdHandler(request: FastifyRequest, reply: FastifyReply): Promise<FastifyReply> {
+    public async getBookByIdHandler(request: FastifyRequest<GetBookByIdRequest.Type>, reply: FastifyReply): Promise<FastifyReply> {
         
-        const validationResult = getBookByIdRequestSchema.validateSafe(request)
-
-        if (validationResult.failed())
-            return badRequest(reply, validationResult.value)
-
-        const { id } = validationResult.value.params
-        
-        const findResult = await this.bookService.findBookById(id)
+        const findResult = await this.bookService.findBookById(request.params.id)
 
         if (findResult.failed())
             return badRequest(reply, findResult.value)
@@ -58,16 +44,9 @@ export class BookController {
 
     }
 
-    public async updateBookHandler(request: FastifyRequest, reply: FastifyReply): Promise<FastifyReply> {
+    public async updateBookHandler(request: FastifyRequest<UpdateBookRequest.Type>, reply: FastifyReply): Promise<FastifyReply> {
         
-        const validationResult = updateBookRequestSchema.validateSafe(request)
-
-        if (validationResult.failed())
-            return badRequest(reply, validationResult.value)
-
-        const { params, body } = validationResult.value
-        
-        const updateResult = await this.bookService.updateBook({ ...body, ...params })
+        const updateResult = await this.bookService.updateBook({ ...request.body, ...request.params })
 
         if (updateResult.failed())
             return badRequest(reply, updateResult.value)
@@ -78,16 +57,9 @@ export class BookController {
 
     }
 
-    public async deleteBookHandler(request: FastifyRequest, reply: FastifyReply): Promise<FastifyReply> {
+    public async deleteBookHandler(request: FastifyRequest<DeleteBookRequest.Type>, reply: FastifyReply): Promise<FastifyReply> {
         
-        const validationResult = deleteBookRequestSchema.validateSafe(request)
-
-        if (validationResult.failed())
-            return badRequest(reply, validationResult.value)
-
-        const { id } = validationResult.value.params
-        
-        const deleteResult = await this.bookService.deleteBook(id)
+        const deleteResult = await this.bookService.deleteBook(request.params.id)
 
         if (deleteResult.failed())
             return badRequest(reply, deleteResult.value)

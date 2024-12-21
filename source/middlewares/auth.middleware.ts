@@ -7,9 +7,9 @@ import { AccessTokenMissingError } from './errors'
 
 export class AuthMiddleware {
 
-    private constructor (
-        private readonly tokenService: TokenService
-    ) {}
+    private constructor (private readonly tokenService: TokenService) {
+        this.ensureAuthenticationHandle = this.ensureAuthenticationHandle.bind(this)
+    }
 
     public static create(tokenService: TokenService): AuthMiddleware {
         return new AuthMiddleware(tokenService)

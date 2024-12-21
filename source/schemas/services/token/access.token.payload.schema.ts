@@ -1,13 +1,7 @@
 import { Schema } from '@schemas'
 import { z, ZodSchema } from 'zod'
 
-export const AccessTokenPayloadSchemaByZod = z.object({
-    sub: z.string()
-})
-
-export type AccessTokenPayloadSchemaType = z.infer<typeof AccessTokenPayloadSchemaByZod>
-
-export class AccessTokenPayloadSchema extends Schema<AccessTokenPayloadSchemaType> {
+export class AccessTokenPayloadSchema extends Schema<AccessTokenPayloadSchema.Type> {
 
     private constructor () {
         super()
@@ -17,9 +11,19 @@ export class AccessTokenPayloadSchema extends Schema<AccessTokenPayloadSchemaTyp
         return new AccessTokenPayloadSchema()
     }
 
-    protected generateSchema(): ZodSchema<AccessTokenPayloadSchemaType> {
-        return AccessTokenPayloadSchemaByZod
+    protected generateSchema(): ZodSchema<AccessTokenPayloadSchema.Type> {
+        return AccessTokenPayloadSchema.Schema
     }
+
+}
+
+export namespace AccessTokenPayloadSchema {
+    
+    export const Schema = z.object({
+        sub: z.string()
+    })
+    
+    export type Type = z.infer<typeof Schema>
 
 }
 

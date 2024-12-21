@@ -1,15 +1,7 @@
 import { Schema } from '@schemas'
 import { z, ZodSchema } from 'zod'
 
-export const EnsureAuthenticationRequestSchemaByZod = z.object({
-    headers: z.object({
-        cookie: z.string()
-    })
-})
-
-export type EnsureAuthenticationRequestSchemaType = z.infer<typeof EnsureAuthenticationRequestSchemaByZod>
-
-export class EnsureAuthenticationRequestSchema extends Schema<EnsureAuthenticationRequestSchemaType> {
+export class EnsureAuthenticationRequestSchema extends Schema<EnsureAuthenticationRequestSchema.Type> {
 
     private constructor () {
         super()
@@ -19,9 +11,21 @@ export class EnsureAuthenticationRequestSchema extends Schema<EnsureAuthenticati
         return new EnsureAuthenticationRequestSchema()
     }
 
-    protected generateSchema(): ZodSchema<EnsureAuthenticationRequestSchemaType> {
-        return EnsureAuthenticationRequestSchemaByZod
+    protected generateSchema(): ZodSchema<EnsureAuthenticationRequestSchema.Type> {
+        return EnsureAuthenticationRequestSchema.Schema
     }
+
+}
+
+export namespace EnsureAuthenticationRequestSchema {
+    
+    export const Schema = z.object({
+        headers: z.object({
+            cookie: z.string()
+        })
+    })
+    
+    export type Type = z.infer<typeof Schema>
 
 }
 

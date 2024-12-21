@@ -1,17 +1,18 @@
 import { FastifyTypedInstance } from '@configs/types'
 import { bookController } from '@controllers/book.controller'
 import { authMiddleware } from '@middlewares/auth.middleware'
-import { CreateBookRequestSchemaByZod, DeleteBookRequestSchemaByZod, GetBookByIdRequestSchemaByZod, UpdateBookRequestSchemaByZod } from '@schemas/controllers/book'
+import { CreateBookRequest, DeleteBookRequest, GetBookByIdRequest, UpdateBookRequest } from '@schemas/controllers'
+import { FastifyRequest } from 'fastify'
 import { z } from 'zod'
 
 module.exports = (instance: FastifyTypedInstance) => {
 
     instance.post('/book', {
-        onRequest: (request, reply) => authMiddleware.ensureAuthenticationHandle(request, reply),
+        onRequest: [authMiddleware.ensureAuthenticationHandle],
         schema: {
             tags: ['Book'],
             summary: 'Create book',
-            body: CreateBookRequestSchemaByZod.shape.body,
+            body: CreateBookRequest.Schema.shape.Body,
             response: {
                 200: z.object({
                     createdAt: z.number(),
@@ -26,7 +27,7 @@ module.exports = (instance: FastifyTypedInstance) => {
                 })
             }
         }
-    }, async (request, reply) => {
+    }, async (request: FastifyRequest<CreateBookRequest.Type>, reply) => {
         return bookController.createBookHandler(request, reply)
     })
 
@@ -34,7 +35,7 @@ module.exports = (instance: FastifyTypedInstance) => {
         schema: {
             tags: ['Book'],
             summary: 'Get book by id',
-            params: GetBookByIdRequestSchemaByZod.shape.params,
+            params: GetBookByIdRequest.Schema.shape.Params,
             response: {
                 200: z.object({
                     createdAt: z.number(),
@@ -49,7 +50,7 @@ module.exports = (instance: FastifyTypedInstance) => {
                 })
             }
         }
-    }, async (request, reply) => {
+    }, async (request: FastifyRequest<GetBookByIdRequest.Type>, reply) => {
         return bookController.getBookByIdHandler(request, reply)
     })
 
@@ -57,8 +58,8 @@ module.exports = (instance: FastifyTypedInstance) => {
         schema: {
             tags: ['Book'],
             summary: 'Update book details',
-            params: UpdateBookRequestSchemaByZod.shape.params,
-            body: UpdateBookRequestSchemaByZod.shape.body,
+            params: UpdateBookRequest.Schema.shape.Params,
+            body: UpdateBookRequest.Schema.shape.Body,
             response: {
                 200: z.object({
                     createdAt: z.number(),
@@ -73,7 +74,7 @@ module.exports = (instance: FastifyTypedInstance) => {
                 })
             }
         }
-    }, async (request, reply) => {
+    }, async (request: FastifyRequest<UpdateBookRequest.Type>, reply) => {
         return bookController.updateBookHandler(request, reply)
     })
     
@@ -81,7 +82,7 @@ module.exports = (instance: FastifyTypedInstance) => {
         schema: {
             tags: ['Book'],
             summary: 'Delete book',
-            params: DeleteBookRequestSchemaByZod.shape.params,
+            params: DeleteBookRequest.Schema.shape.Params,
             response: {
                 200: z.object({
                     createdAt: z.number(),
@@ -96,7 +97,7 @@ module.exports = (instance: FastifyTypedInstance) => {
                 })
             }
         }
-    }, async (request, reply) => {
+    }, async (request: FastifyRequest<DeleteBookRequest.Type>, reply) => {
         return bookController.deleteBookHandler(request, reply)
     })
 

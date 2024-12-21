@@ -2,7 +2,7 @@ import { FastifyTypedInstance } from '@configs/types'
 
 declare module 'fastify' {
     interface FastifyRequest {
-        locals: Object
+        locals: Record<string, unknown>
     }
 }
 

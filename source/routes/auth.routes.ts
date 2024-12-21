@@ -1,7 +1,8 @@
 import { FastifyTypedInstance } from '@configs/types'
 import { authController } from '@controllers'
 import { authMiddleware } from '@middlewares/auth.middleware'
-import { AuthenticateWithGoogleCallbackRequestSchemaByZod, AuthenticateWithGoogleRequestSchemaByZod, CompleteSignUpRequestSchemaByZod } from '@schemas/controllers/auth'
+import { AuthenticateWithGoogleCallbackRequest, AuthenticateWithGoogleRequest, CompleteSignUpRequest } from '@schemas/controllers'
+import { FastifyRequest } from 'fastify'
 import { z } from 'zod'
 
 module.exports = (instance: FastifyTypedInstance) => {
@@ -22,7 +23,7 @@ module.exports = (instance: FastifyTypedInstance) => {
         schema: {
             tags: ['Authentication'],
             summary: 'Authenticate with Google OAuth2 callback in redirect URI',
-            querystring: AuthenticateWithGoogleCallbackRequestSchemaByZod.shape.query,
+            querystring: AuthenticateWithGoogleCallbackRequest.Schema.shape.Querystring,
             response: {
                 200: z.object({
                     users: z.object({
@@ -34,7 +35,7 @@ module.exports = (instance: FastifyTypedInstance) => {
                 })
             }
         }
-    }, async (request, reply) => {
+    }, async (request: FastifyRequest<AuthenticateWithGoogleCallbackRequest.Type>, reply) => {
         return authController.authenticateWithGoogleCallbackHandler(request, reply)
     })
 
@@ -42,7 +43,7 @@ module.exports = (instance: FastifyTypedInstance) => {
         schema: {
             tags: ['Authentication'],
             summary: 'Authenticate with Google OAuth2 credential',
-            body: AuthenticateWithGoogleRequestSchemaByZod.shape.body,
+            body: AuthenticateWithGoogleRequest.Schema.shape.Body,
             response: {
                 200: z.object({
                     user: z.object({
@@ -54,16 +55,16 @@ module.exports = (instance: FastifyTypedInstance) => {
                 })
             }
         }
-    }, async (request, reply) => {
+    }, async (request: FastifyRequest<AuthenticateWithGoogleRequest.Type>, reply) => {
         return authController.authenticateWithGoogleHandler(request, reply)
     })
 
     instance.post('/signup/complete', {
-        onRequest: (request, reply) => authMiddleware.ensureAuthenticationHandle(request, reply),
+        onRequest: [authMiddleware.ensureAuthenticationHandle],
         schema: {
             tags: ['Authentication'],
             summary: 'Complete user signup to purchase role',
-            body: CompleteSignUpRequestSchemaByZod.shape.body,
+            body: CompleteSignUpRequest.Schema.shape.Body,
             response: {
                 200: z.object({
                     registration: z.string().optional(),
@@ -72,7 +73,7 @@ module.exports = (instance: FastifyTypedInstance) => {
                 })
             }
         }
-    }, async (request, reply) => {
+    }, async (request: FastifyRequest<CompleteSignUpRequest.Type>, reply) => {
         return authController.completeSignUpHandler(request, reply)
     })
 

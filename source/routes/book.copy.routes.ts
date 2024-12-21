@@ -1,17 +1,18 @@
 import { FastifyTypedInstance } from '@configs/types'
 import { bookCopyController } from '@controllers/book.copy.controller'
 import { authMiddleware } from '@middlewares/auth.middleware'
-import { CreateBookCopyRequestSchemaByZod, DeleteBookCopyByCodeRequestSchemaByZod, GetBookCopyByCodeRequestSchemaByZod } from '@schemas/controllers/book.copy'
+import { CreateBookCopyRequest, DeleteBookCopyByCodeRequest, GetBookCopyByCodeRequest } from '@schemas/controllers'
+import { FastifyRequest } from 'fastify'
 import { z } from 'zod'
 
 module.exports = (instance: FastifyTypedInstance) => {
 
     instance.post('/book/copy', {
-        onRequest: (request, reply) => authMiddleware.ensureAuthenticationHandle(request, reply),
+        onRequest: [authMiddleware.ensureAuthenticationHandle],
         schema: {
             tags: ['Book Copy'],
             summary: 'Create book copy',
-            body: CreateBookCopyRequestSchemaByZod.shape.body,
+            body: CreateBookCopyRequest.Schema.shape.Body,
             response: {
                 200: z.object({
                     createdAt: z.number(),
@@ -24,7 +25,7 @@ module.exports = (instance: FastifyTypedInstance) => {
                 })
             }
         }
-    }, async (request, reply) => {
+    }, async (request: FastifyRequest<CreateBookCopyRequest.Type>, reply) => {
         return bookCopyController.createBookCopyHandler(request, reply)
     })
 
@@ -32,7 +33,7 @@ module.exports = (instance: FastifyTypedInstance) => {
         schema: {
             tags: ['Book Copy'],
             summary: 'Get book copy by code',
-            params: GetBookCopyByCodeRequestSchemaByZod.shape.params,
+            params: GetBookCopyByCodeRequest.Schema.shape.Params,
             response: {
                 200: z.object({
                     createdAt: z.number(),
@@ -45,7 +46,7 @@ module.exports = (instance: FastifyTypedInstance) => {
                 })
             }
         }
-    }, async (request, reply) => {
+    }, async (request: FastifyRequest<GetBookCopyByCodeRequest.Type>, reply) => {
         return bookCopyController.getBookCopyByCodeHandler(request, reply)
     })
 
@@ -53,7 +54,7 @@ module.exports = (instance: FastifyTypedInstance) => {
         schema: {
             tags: ['Book Copy'],
             summary: 'Delete book copy by code',
-            params: DeleteBookCopyByCodeRequestSchemaByZod.shape.params,
+            params: DeleteBookCopyByCodeRequest.Schema.shape.Params,
             response: {
                 200: z.object({
                     createdAt: z.number(),
@@ -66,7 +67,7 @@ module.exports = (instance: FastifyTypedInstance) => {
                 })
             }
         }
-    }, async (request, reply) => {
+    }, async (request: FastifyRequest<DeleteBookCopyByCodeRequest.Type>, reply) => {
         return bookCopyController.deleteBookCopyByCodeHandler(request, reply)
     })
 

@@ -1,5 +1,5 @@
 import { badRequest, created, ok } from '@helpers'
-import { createBookCopyRequestSchema, deleteBookCopyByCodeRequestSchema, getBookCopyByCodeRequestSchema } from '@schemas/controllers/book.copy'
+import { CreateBookCopyRequest, DeleteBookCopyByCodeRequest, GetBookCopyByCodeRequest } from '@schemas/controllers'
 import { bookCopyService, BookCopyService } from '@services'
 import { FastifyReply, FastifyRequest } from 'fastify'
 
@@ -11,20 +11,13 @@ export class BookCopyController {
         return new BookCopyController(bookCopyService)
     }
 
-    public async createBookCopyHandler(request: FastifyRequest, reply: FastifyReply): Promise<FastifyReply> {
-        
-        const validationResult = createBookCopyRequestSchema.validateSafe(request)
-
-        if (validationResult.failed())
-            return badRequest(reply, validationResult.value)
-
-        const { body, locals } = validationResult.value
+    public async createBookCopyHandler(request: FastifyRequest<CreateBookCopyRequest.Type>, reply: FastifyReply): Promise<FastifyReply> {
         
         const creationResult = await this.bookCopyService.createBookCopy({
-            createdBy: locals.userId,
-            available: body.available,
-            bookId: body.bookId,
-            code: body.code
+            createdBy: String(request.locals.userId),
+            available: request.body.available,
+            bookId: request.body.bookId,
+            code: request.body.code
         })
 
         if (creationResult.failed())
@@ -36,16 +29,9 @@ export class BookCopyController {
 
     }
 
-    public async getBookCopyByCodeHandler(request: FastifyRequest, reply: FastifyReply): Promise<FastifyReply> {
+    public async getBookCopyByCodeHandler(request: FastifyRequest<GetBookCopyByCodeRequest.Type>, reply: FastifyReply): Promise<FastifyReply> {
         
-        const validationResult = getBookCopyByCodeRequestSchema.validateSafe(request)
-
-        if (validationResult.failed())
-            return badRequest(reply, validationResult.value)
-
-        const { code } = validationResult.value.params
-        
-        const findResult = await this.bookCopyService.findBookCopyByCode(code)
+        const findResult = await this.bookCopyService.findBookCopyByCode(request.params.code)
 
         if (findResult.failed())
             return badRequest(reply, findResult.value)
@@ -56,16 +42,9 @@ export class BookCopyController {
 
     }
 
-    public async deleteBookCopyByCodeHandler(request: FastifyRequest, reply: FastifyReply): Promise<FastifyReply> {
+    public async deleteBookCopyByCodeHandler(request: FastifyRequest<DeleteBookCopyByCodeRequest.Type>, reply: FastifyReply): Promise<FastifyReply> {
         
-        const validationResult = deleteBookCopyByCodeRequestSchema.validateSafe(request)
-
-        if (validationResult.failed())
-            return badRequest(reply, validationResult.value)
-
-        const { code } = validationResult.value.params
-        
-        const deleteResult = await this.bookCopyService.deleteBookCopyByCode(code)
+        const deleteResult = await this.bookCopyService.deleteBookCopyByCode(request.params.code)
 
         if (deleteResult.failed())
             return badRequest(reply, deleteResult.value)

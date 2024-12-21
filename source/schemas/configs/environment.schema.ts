@@ -1,17 +1,7 @@
 import { Schema } from '@schemas'
 import { z, ZodSchema } from 'zod'
 
-export const EnvironmentSchemaByZod = z.object({
-    ACCESS_TOKEN_SECRET_KEY: z.string(),
-    GOOGLE_CLIENT_SECRET_KEY: z.string(),
-    GOOGLE_REDIRECT_URI: z.string(),
-    GOOGLE_CLIENT_ID: z.string(),
-    PORT: z.number()
-})
-
-export type EnvironmentSchemaType = z.infer<typeof EnvironmentSchemaByZod>
-
-export class EnvironmentSchema extends Schema<EnvironmentSchemaType> {
+export class EnvironmentSchema extends Schema<EnvironmentSchema.Type> {
 
     private constructor () {
         super()
@@ -21,9 +11,23 @@ export class EnvironmentSchema extends Schema<EnvironmentSchemaType> {
         return new EnvironmentSchema()
     }
 
-    protected generateSchema(): ZodSchema<EnvironmentSchemaType> {
-        return EnvironmentSchemaByZod
+    protected generateSchema(): ZodSchema<EnvironmentSchema.Type> {
+        return EnvironmentSchema.Schema
     }
+
+}
+
+export namespace EnvironmentSchema {
+    
+    export const Schema = z.object({
+        ACCESS_TOKEN_SECRET_KEY: z.string(),
+        GOOGLE_CLIENT_SECRET_KEY: z.string(),
+        GOOGLE_REDIRECT_URI: z.string(),
+        GOOGLE_CLIENT_ID: z.string(),
+        PORT: z.number()
+    })
+    
+    export type Type = z.infer<typeof Schema>
 
 }
 

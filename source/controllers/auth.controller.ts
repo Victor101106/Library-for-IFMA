@@ -1,5 +1,5 @@
 import { ACCESS_TOKEN_COOKIE, badRequest, ok, serializeCookie } from '@helpers'
-import { authenticateWithGoogleCallbackRequestSchema, authenticateWithGoogleRequestSchema, completeSignUpRequestSchema } from '@schemas/controllers/auth'
+import { AuthenticateWithGoogleCallbackRequest, AuthenticateWithGoogleRequest, CompleteSignUpRequest } from '@schemas/controllers'
 import { authService, AuthService, tokenService, TokenService, userService, UserService } from '@services'
 import { FastifyReply, FastifyRequest } from 'fastify'
 import { TokenPayload } from 'google-auth-library'
@@ -16,16 +16,12 @@ export class AuthController {
         return new AuthController(authService, tokenService, userService)
     }
 
-    public async completeSignUpHandler(request: FastifyRequest, reply: FastifyReply): Promise<FastifyReply> {
+    public async completeSignUpHandler(request: FastifyRequest<CompleteSignUpRequest.Type>, reply: FastifyReply): Promise<FastifyReply> {
 
-        const validationResult = completeSignUpRequestSchema.validateSafe(request)
-
-        if (validationResult.failed())
-            return badRequest(reply, validationResult.value)
-
-        const { body, locals } = validationResult.value
-
-        const completedSignUp = await userService.completeSignUp({ ...locals, ...body })
+        const completedSignUp = await userService.completeSignUp({ 
+            ...request.body,
+            userId: String(request.locals.userId)
+        })
 
         if (completedSignUp.failed())
             return badRequest(reply, completedSignUp.value)
@@ -56,16 +52,9 @@ export class AuthController {
 
     }
 
-    public async authenticateWithGoogleCallbackHandler(request: FastifyRequest, reply: FastifyReply): Promise<FastifyReply> {
+    public async authenticateWithGoogleCallbackHandler(request: FastifyRequest<AuthenticateWithGoogleCallbackRequest.Type>, reply: FastifyReply): Promise<FastifyReply> {
         
-        const validationResult = authenticateWithGoogleCallbackRequestSchema.validateSafe(request)
-
-        if (validationResult.failed())
-            return badRequest(reply, validationResult.value)
-
-        const { code } = validationResult.value.query
-
-        const verificationResult = await this.authService.verifyGoogleCode(code)
+        const verificationResult = await this.authService.verifyGoogleCode(request.query.code)
 
         if (verificationResult.failed())
             return badRequest(reply, verificationResult.value)
@@ -76,16 +65,9 @@ export class AuthController {
 
     }
 
-    public async authenticateWithGoogleHandler(request: FastifyRequest, reply: FastifyReply): Promise<FastifyReply> {
+    public async authenticateWithGoogleHandler(request: FastifyRequest<AuthenticateWithGoogleRequest.Type>, reply: FastifyReply): Promise<FastifyReply> {
 
-        const validationResult = authenticateWithGoogleRequestSchema.validateSafe(request)
-
-        if (validationResult.failed())
-            return badRequest(reply, validationResult.value)
-
-        const { credential } = validationResult.value.body
-
-        const verificationResult = await this.authService.verifyGoogleCredential(credential)
+        const verificationResult = await this.authService.verifyGoogleCredential(request.body.credential)
 
         if (verificationResult.failed())
             return badRequest(reply, verificationResult.value)
