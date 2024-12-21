@@ -2,7 +2,7 @@ import { failure, Result, success } from '@helpers'
 import { Available } from './available'
 import { Code, Id, Timestamp } from './index'
 
-export namespace BookCopy {
+export namespace Replica {
     
     export type Request = {
         available: boolean
@@ -17,18 +17,18 @@ export namespace BookCopy {
         id       : string
     }
     
-    export type Response = BookCopy
+    export type Response = Replica
 
     export namespace Update {
         export type Request = {
             available?: boolean | void
         }
-        export type Response = BookCopy
+        export type Response = Replica
     }
 
 }
 
-export class BookCopy {
+export class Replica {
 
     private constructor (
         public readonly createdAt: Timestamp,
@@ -40,7 +40,7 @@ export class BookCopy {
         public readonly id       : Id
     ) {}
 
-    public static create(request: BookCopy.Request): Result<Error, BookCopy.Response> {
+    public static create(request: Replica.Request): Result<Error, Replica.Response> {
 
         const codeResult = Code.create(request.code)
         
@@ -58,11 +58,11 @@ export class BookCopy {
         const bookId    = Id.create(request.bookId)
         const id        = Id.create()
         
-        return success(new BookCopy(createdAt, updatedAt, available, createdBy, bookId, code, id))
+        return success(new Replica(createdAt, updatedAt, available, createdBy, bookId, code, id))
 
     }
 
-    public static with(data: BookCopy.DTO): BookCopy.Response {
+    public static with(data: Replica.DTO): Replica.Response {
         
         const createdAt = Timestamp.with(data.createdAt)
         const updatedAt = Timestamp.with(data.updatedAt)
@@ -72,11 +72,11 @@ export class BookCopy {
         const code      = Code     .with(data.code)
         const id        = Id       .with(data.id)
         
-        return new BookCopy(createdAt, updatedAt, available, createdBy, bookId, code, id)
+        return new Replica(createdAt, updatedAt, available, createdBy, bookId, code, id)
 
     }
 
-    public update(request: BookCopy.Update.Request): Result<Error, BookCopy.Update.Response> {
+    public update(request: Replica.Update.Request): Result<Error, Replica.Update.Response> {
 
         if (request.available)
             this.available.update(request.available)
@@ -87,7 +87,7 @@ export class BookCopy {
 
     }
 
-    public to(): BookCopy.DTO {
+    public to(): Replica.DTO {
 
         const createdAt = this.createdAt.to()
         const updatedAt = this.updatedAt.to()

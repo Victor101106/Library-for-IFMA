@@ -1,6 +1,6 @@
 import { z } from 'zod'
 
-export namespace CreateBookCopyRequest {
+export namespace CreateReplicaRequest {
     
     export const Schema = z.object({
         Body: z.object({
@@ -14,7 +14,7 @@ export namespace CreateBookCopyRequest {
 
 }
 
-export namespace DeleteBookCopyByCodeRequest {
+export namespace DeleteReplicaByCodeRequest {
 
     export const Schema = z.object({
         Params: z.object({
@@ -26,7 +26,7 @@ export namespace DeleteBookCopyByCodeRequest {
 
 }
 
-export namespace GetBookCopyByCodeRequest {
+export namespace GetReplicaByCodeRequest {
 
     export const Schema = z.object({
         Params: z.object({
@@ -38,7 +38,7 @@ export namespace GetBookCopyByCodeRequest {
 
 }
 
-export namespace GetBookCopiesByBookIdRequest {
+export namespace GetReplicasByBookIdRequest {
 
     export const Schema = z.object({
         Params: z.object({
