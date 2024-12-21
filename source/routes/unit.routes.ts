@@ -1,18 +1,18 @@
 import { FastifyTypedInstance } from '@configs/types'
-import { replicaController } from '@controllers/replica.controller'
+import { unitController } from '@controllers/unit.controller'
 import { authMiddleware } from '@middlewares/auth.middleware'
-import { CreateReplicaRequest, DeleteReplicaByCodeRequest, GetReplicaByCodeRequest, GetReplicasByBookIdRequest } from '@schemas/controllers'
+import { CreateUnitRequest, DeleteUnitByCodeRequest, GetUnitByCodeRequest, GetUnitsByBookIdRequest } from '@schemas/controllers'
 import { FastifyRequest } from 'fastify'
 import { z } from 'zod'
 
 module.exports = (instance: FastifyTypedInstance) => {
 
-    instance.post('/book/replica', {
+    instance.post('/book/unit', {
         onRequest: [authMiddleware.ensureAuthenticationHandle],
         schema: {
-            tags: ['Replica'],
-            summary: 'Create book replica',
-            body: CreateReplicaRequest.Schema.shape.Body,
+            tags: ['Unit'],
+            summary: 'Create book unit',
+            body: CreateUnitRequest.Schema.shape.Body,
             response: {
                 200: z.object({
                     createdAt: z.number(),
@@ -25,15 +25,15 @@ module.exports = (instance: FastifyTypedInstance) => {
                 })
             }
         }
-    }, async (request: FastifyRequest<CreateReplicaRequest.Type>, reply) => {
-        return replicaController.createReplicaHandler(request, reply)
+    }, async (request: FastifyRequest<CreateUnitRequest.Type>, reply) => {
+        return unitController.createUnitHandler(request, reply)
     })
 
-    instance.get('/book/replica/:code', {
+    instance.get('/book/unit/:code', {
         schema: {
-            tags: ['Replica'],
-            summary: 'Get book replica by code',
-            params: GetReplicaByCodeRequest.Schema.shape.Params,
+            tags: ['Unit'],
+            summary: 'Get book unit by code',
+            params: GetUnitByCodeRequest.Schema.shape.Params,
             response: {
                 200: z.object({
                     createdAt: z.number(),
@@ -46,15 +46,15 @@ module.exports = (instance: FastifyTypedInstance) => {
                 })
             }
         }
-    }, async (request: FastifyRequest<GetReplicaByCodeRequest.Type>, reply) => {
-        return replicaController.getReplicaByCodeHandler(request, reply)
+    }, async (request: FastifyRequest<GetUnitByCodeRequest.Type>, reply) => {
+        return unitController.getUnitByCodeHandler(request, reply)
     })
 
-    instance.delete('/book/replica/:code', {
+    instance.delete('/book/unit/:code', {
         schema: {
-            tags: ['Replica'],
-            summary: 'Delete book replica by code',
-            params: DeleteReplicaByCodeRequest.Schema.shape.Params,
+            tags: ['Unit'],
+            summary: 'Delete book unit by code',
+            params: DeleteUnitByCodeRequest.Schema.shape.Params,
             response: {
                 200: z.object({
                     createdAt: z.number(),
@@ -67,14 +67,14 @@ module.exports = (instance: FastifyTypedInstance) => {
                 })
             }
         }
-    }, async (request: FastifyRequest<DeleteReplicaByCodeRequest.Type>, reply) => {
-        return replicaController.deleteReplicaByCodeHandler(request, reply)
+    }, async (request: FastifyRequest<DeleteUnitByCodeRequest.Type>, reply) => {
+        return unitController.deleteUnitByCodeHandler(request, reply)
     })
 
-    instance.get('/book/replica/list', {
+    instance.get('/book/unit/list', {
         schema: {
-            tags: ['Replica'],
-            summary: 'Get all book replicas',
+            tags: ['Unit'],
+            summary: 'Get all book units',
             response: {
                 200: z.array(
                     z.object({
@@ -90,13 +90,13 @@ module.exports = (instance: FastifyTypedInstance) => {
             }
         }
     }, async (request, reply) => {
-        return replicaController.getAllReplicasHandler(request, reply)
+        return unitController.getAllUnitsHandler(request, reply)
     })
 
-    instance.get('/book/:id/replicas', {
+    instance.get('/book/:id/units', {
         schema: {
-            tags: ['Replica'],
-            summary: 'Get book replicas by book id',
+            tags: ['Unit'],
+            summary: 'Get book units by book id',
             response: {
                 200: z.array(
                     z.object({
@@ -111,8 +111,8 @@ module.exports = (instance: FastifyTypedInstance) => {
                 )
             }
         }
-    }, async (request: FastifyRequest<GetReplicasByBookIdRequest.Type>, reply) => {
-        return replicaController.findReplicasByBookId(request, reply)
+    }, async (request: FastifyRequest<GetUnitsByBookIdRequest.Type>, reply) => {
+        return unitController.findUnitsByBookId(request, reply)
     })
 
 }

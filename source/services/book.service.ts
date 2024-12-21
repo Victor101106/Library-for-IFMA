@@ -1,7 +1,7 @@
 import { failure, Result, success } from '@helpers'
 import { Book } from '@models'
-import { inMemoryBookRepository, inMemoryReplicaRepository } from '@repositories'
-import { BookRepository, ReplicaRepository } from '@repositories/contracts'
+import { inMemoryBookRepository, inMemoryUnitRepository } from '@repositories'
+import { BookRepository, UnitRepository } from '@repositories/contracts'
 import { BookNotFoundError } from './errors'
 
 export namespace BookService {
@@ -51,11 +51,11 @@ export class BookService {
 
     private constructor (
         private readonly bookRepository: BookRepository,
-        private readonly replicaRepository: ReplicaRepository
+        private readonly unitRepository: UnitRepository
     ) {}
 
-    public static create(bookRepository: BookRepository, replicaRepository: ReplicaRepository): BookService {
-        return new BookService(bookRepository, replicaRepository)
+    public static create(bookRepository: BookRepository, unitRepository: UnitRepository): BookService {
+        return new BookService(bookRepository, unitRepository)
     }
 
     public async createBook(request: BookService.CreateBook.Request): Promise<Result<Error, BookService.CreateBook.Response>> {
@@ -113,7 +113,7 @@ export class BookService {
         if (!deletedBook)
             return failure(new BookNotFoundError())
 
-        await this.replicaRepository.deleteAllByBookId(deletedBook.id.value)
+        await this.unitRepository.deleteAllByBookId(deletedBook.id.value)
 
         return success(deletedBook)
 
@@ -136,4 +136,4 @@ export class BookService {
 
 }
 
-export const bookService = BookService.create(inMemoryBookRepository, inMemoryReplicaRepository)
+export const bookService = BookService.create(inMemoryBookRepository, inMemoryUnitRepository)

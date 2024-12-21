@@ -1,6 +1,6 @@
 export class CodeAlreadyInUseError extends Error {
     constructor() {
-        super('The replica code is already in use.')
+        super('The unit code is already in use.')
         this.name = 'CodeAlreadyInUseError'
     }
 }

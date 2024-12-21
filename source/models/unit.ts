@@ -2,7 +2,7 @@ import { failure, Result, success } from '@helpers'
 import { Available } from './available'
 import { Code, Id, Timestamp } from './index'
 
-export namespace Replica {
+export namespace Unit {
     
     export type Request = {
         available: boolean
@@ -17,18 +17,18 @@ export namespace Replica {
         id       : string
     }
     
-    export type Response = Replica
+    export type Response = Unit
 
     export namespace Update {
         export type Request = {
             available?: boolean | void
         }
-        export type Response = Replica
+        export type Response = Unit
     }
 
 }
 
-export class Replica {
+export class Unit {
 
     private constructor (
         public readonly createdAt: Timestamp,
@@ -40,7 +40,7 @@ export class Replica {
         public readonly id       : Id
     ) {}
 
-    public static create(request: Replica.Request): Result<Error, Replica.Response> {
+    public static create(request: Unit.Request): Result<Error, Unit.Response> {
 
         const codeResult = Code.create(request.code)
         
@@ -58,11 +58,11 @@ export class Replica {
         const bookId    = Id.create(request.bookId)
         const id        = Id.create()
         
-        return success(new Replica(createdAt, updatedAt, available, createdBy, bookId, code, id))
+        return success(new Unit(createdAt, updatedAt, available, createdBy, bookId, code, id))
 
     }
 
-    public static with(data: Replica.DTO): Replica.Response {
+    public static with(data: Unit.DTO): Unit.Response {
         
         const createdAt = Timestamp.with(data.createdAt)
         const updatedAt = Timestamp.with(data.updatedAt)
@@ -72,11 +72,11 @@ export class Replica {
         const code      = Code     .with(data.code)
         const id        = Id       .with(data.id)
         
-        return new Replica(createdAt, updatedAt, available, createdBy, bookId, code, id)
+        return new Unit(createdAt, updatedAt, available, createdBy, bookId, code, id)
 
     }
 
-    public update(request: Replica.Update.Request): Result<Error, Replica.Update.Response> {
+    public update(request: Unit.Update.Request): Result<Error, Unit.Update.Response> {
 
         if (request.available)
             this.available.update(request.available)
@@ -87,7 +87,7 @@ export class Replica {
 
     }
 
-    public to(): Replica.DTO {
+    public to(): Unit.DTO {
 
         const createdAt = this.createdAt.to()
         const updatedAt = this.updatedAt.to()

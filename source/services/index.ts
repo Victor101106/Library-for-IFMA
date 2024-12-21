@@ -1,6 +1,6 @@
 export * from './auth.service'
 export * from './book.service'
 export * from './loan.service'
-export * from './replica.service'
 export * from './token.service'
+export * from './unit.service'
 export * from './user.service'
