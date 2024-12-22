@@ -25,6 +25,27 @@ export namespace UserService {
         }
         export type Response = User
     }
+
+    export namespace UpdateUser {
+        export type Request = {
+            registration?: string
+            picture?: string
+            siape?: number
+            name?: string
+            role?: string
+            userId: string
+        }
+        export type Response = User
+    }
+
+    export namespace UpdateMe {
+        export type Request = {
+            picture?: string
+            name?: string
+            userId: string
+        }
+        export type Response = User
+    }
     
     export namespace AssignRoleToUser {
         export type Request = {
@@ -107,6 +128,55 @@ export class UserService {
         await this.userRepository.saveOne(userCreated)
 
         return success(userCreated)
+
+    }
+
+    public async updateUser(request: UserService.UpdateUser.Request): Promise<Result<UserNotFoundError, UserService.UpdateUser.Response>> {
+
+        const userFound = await this.userRepository.findById(request.userId)
+
+        if (!userFound)
+            return failure(new UserNotFoundError())
+
+        const updateResult = userFound.update({
+            registration: request.registration,
+            picture: request.picture,
+            siape: request.siape,
+            role: request.role,
+            name: request.name
+        })
+
+        if (updateResult.failed())
+            return failure(updateResult.value)
+
+        const updatedUser = updateResult.value
+
+        await this.userRepository.updateOne(updatedUser)
+
+        return success(updatedUser)
+
+    }
+
+    public async updateMe(request: UserService.UpdateMe.Request): Promise<Result<UserNotFoundError, UserService.UpdateMe.Response>> {
+
+        const userFound = await this.userRepository.findById(request.userId)
+
+        if (!userFound)
+            return failure(new UserNotFoundError())
+
+        const updateResult = userFound.update({
+            picture: request.picture,
+            name: request.name
+        })
+
+        if (updateResult.failed())
+            return failure(updateResult.value)
+
+        const updatedUser = updateResult.value
+
+        await this.userRepository.updateOne(updatedUser)
+
+        return success(updatedUser)
 
     }
 
