@@ -19,6 +19,10 @@ export class InMemoryUserRepository implements UserRepository {
         return this.database.find(userFound => userFound.id.value == userId)
     }
 
+    public async findAll(): Promise<Array<User>> {
+        return this.database.map(userFound => userFound)
+    }
+
     public async deleteById(userId: string): Promise<User | void> {
         
         const index = this.database.findIndex(userFound => userFound.id.value == userId)

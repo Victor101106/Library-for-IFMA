@@ -39,6 +39,16 @@ export class UserController {
 
     }
 
+    public async findAllUsersHandler(request: FastifyRequest, reply: FastifyReply): Promise<FastifyReply> {
+        
+        const usersFound = await this.userService.findAllUsers()
+
+        const usersFoundTo = usersFound.map(userFound => userFound.to())
+
+        return ok(reply, usersFoundTo)
+
+    }
+
     public async findUserByIdHandler(request: FastifyRequest<FindUserByIdRequest.Type>, reply: FastifyReply): Promise<FastifyReply> {
 
         const findResult = await this.userService.findUserById(request.params.userId)

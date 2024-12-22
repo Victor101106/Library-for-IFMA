@@ -60,6 +60,11 @@ export namespace UserService {
         export type Response = User
     }
     
+    export namespace FindAllUsers {
+        export type Request = void
+        export type Response = Array<User>
+    }
+    
     export namespace FindUserByGoogleId {
         export type Request = string
         export type Response = User
@@ -205,6 +210,10 @@ export class UserService {
 
         return success(updatedUser)
 
+    }
+
+    public async findAllUsers(): Promise<UserService.FindAllUsers.Response> {
+        return await this.userRepository.findAll()
     }
     
     public async findUserByGoogleId(googleId: UserService.FindUserByGoogleId.Request): Promise<Result<UserNotFoundError, UserService.FindUserByGoogleId.Response>> {

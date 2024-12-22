@@ -31,6 +31,31 @@ module.exports = (instance: FastifyTypedInstance) => {
         return userController.findMeHandler(request, reply)
     })
 
+    instance.get('/users/', {
+        schema: {
+            tags: ['Users'],
+            summary: 'Get all users',
+            response: {
+                200: z.array(
+                    z.object({
+                        registration: z.string().optional(),
+                        createdAt: z.number(),
+                        updatedAt: z.number(),
+                        googleId: z.string(),
+                        picture: z.string(),
+                        siape: z.number().optional(),
+                        email: z.string(),
+                        role: z.string(),
+                        name: z.string(),
+                        id: z.string()
+                    })
+                )
+            }
+        }
+    }, async (request: FastifyRequest, reply) => {
+        return userController.findAllUsersHandler(request, reply)
+    })
+
     instance.get('/users/:userId', {
         schema: {
             tags: ['Users'],
