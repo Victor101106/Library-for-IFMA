@@ -1,7 +1,7 @@
 import { FastifyTypedInstance } from '@configs/types'
 import { unitController } from '@controllers/unit.controller'
 import { authMiddleware } from '@middlewares/auth.middleware'
-import { CreateUnitRequest, DeleteUnitByCodeRequest, FindUnitByCodeRequest, FindUnitsByBookIdRequest } from '@schemas/controllers'
+import { CreateUnitRequest, DeleteUnitByCodeRequest, FindUnitByCodeRequest, FindUnitsByBookIdRequest, UpdateUnitRequest } from '@schemas/controllers'
 import { FastifyRequest } from 'fastify'
 import { z } from 'zod'
 
@@ -90,6 +90,27 @@ module.exports = (instance: FastifyTypedInstance) => {
         }
     }, async (request: FastifyRequest<FindUnitByCodeRequest.Type>, reply) => {
         return unitController.findUnitByCodeHandler(request, reply)
+    })
+
+    instance.put('/books/units/:unitCode', {
+        schema: {
+            tags: ['Units'],
+            summary: 'Update book unit',
+            params: UpdateUnitRequest.Schema.shape.Params,
+            body: UpdateUnitRequest.Schema.shape.Body,
+            response: {
+                200: z.object({
+                    createdAt: z.number(),
+                    updatedAt: z.number(),
+                    available: z.boolean(),
+                    createdBy: z.string(),
+                    bookId: z.string(),
+                    code: z.number()
+                })
+            }
+        }
+    }, async (request: FastifyRequest<UpdateUnitRequest.Type>, reply) => {
+        return unitController.updateUnitHandler(request, reply)
     })
 
     instance.delete('/books/units/:unitCode', {

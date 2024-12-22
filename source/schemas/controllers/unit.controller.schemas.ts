@@ -16,6 +16,21 @@ export namespace CreateUnitRequest {
 
 }
 
+export namespace UpdateUnitRequest {
+    
+    export const Schema = z.object({
+        Body: z.object({
+            available: z.boolean().optional()
+        }),
+        Params: z.object({
+            unitCode: z.coerce.number()
+        })
+    })
+    
+    export type Type = z.infer<typeof Schema>
+
+}
+
 export namespace DeleteUnitByCodeRequest {
 
     export const Schema = z.object({

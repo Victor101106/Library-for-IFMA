@@ -46,6 +46,17 @@ export class InMemoryUnitRepository implements UnitRepository {
         return this.database.find(unitFound => unitFound.code.value == unitCode)
     }
 
+    public async updateOne(unit: Unit): Promise<void> {
+        
+        const index = this.database.findIndex(unitFound => unitFound.code.value == unit.code.value)
+
+        if (index === - 1)
+            return
+
+        this.database[index] = unit
+
+    }
+
     public async saveOne(unit: Unit): Promise<void> {
         this.database.push(unit)
     }

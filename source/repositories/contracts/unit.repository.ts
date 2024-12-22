@@ -12,6 +12,8 @@ export interface UnitRepository {
     
     findByCode(unitCode: number): Promise<Unit | void>
 
+    updateOne(unit: Unit): Promise<void>
+
     saveOne(unit: Unit): Promise<void>
 
 }

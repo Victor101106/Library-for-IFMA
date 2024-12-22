@@ -10,8 +10,16 @@ export namespace UnitService {
         export type Request = {
             available: boolean
             createdBy: string
-            bookId   : string
-            code     : number
+            bookId: string
+            code: number
+        }
+        export type Response = Unit
+    }
+
+    export namespace UpdateUnit {
+        export type Request = {
+            available?: boolean
+            unitCode: number
         }
         export type Response = Unit
     }
@@ -82,6 +90,28 @@ export class UnitService {
         await this.unitRepository.saveOne(unitCreated)
 
         return success(unitCreated)
+
+    }
+
+    public async updateUnit(request: UnitService.UpdateUnit.Request): Promise<Result<UnitNotFoundError, UnitService.UpdateUnit.Response>> {
+
+        const unitFound = await this.unitRepository.findByCode(request.unitCode)
+
+        if (!unitFound)
+            return failure(new UnitNotFoundError())
+
+        const updateResult = unitFound.update({
+            available: request.available
+        })
+
+        if (updateResult.failed())
+            return failure(updateResult.value)
+
+        const updatedUnit = updateResult.value
+
+        await this.unitRepository.updateOne(updatedUnit)
+
+        return success(updatedUnit)
 
     }
 

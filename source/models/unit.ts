@@ -74,7 +74,7 @@ export class Unit {
 
     public update(request: Unit.Update.Request): Result<Error, Unit.Update.Response> {
 
-        if (request.available)
+        if (typeof request.available === 'boolean')
             this.available.update(request.available)
 
         this.updatedAt.update(new Date())

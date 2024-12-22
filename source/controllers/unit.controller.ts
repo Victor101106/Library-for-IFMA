@@ -1,5 +1,5 @@
 import { badRequest, created, ok } from '@helpers'
-import { CreateUnitRequest, DeleteUnitByCodeRequest, FindUnitByCodeRequest, FindUnitsByBookIdRequest } from '@schemas/controllers'
+import { CreateUnitRequest, DeleteUnitByCodeRequest, FindUnitByCodeRequest, FindUnitsByBookIdRequest, UpdateUnitRequest } from '@schemas/controllers'
 import { unitService, UnitService } from '@services'
 import { FastifyReply, FastifyRequest } from 'fastify'
 
@@ -26,6 +26,19 @@ export class UnitController {
         const unitCreated = createResult.value
 
         return created(reply, unitCreated.to())
+
+    }
+
+    public async updateUnitHandler(request: FastifyRequest<UpdateUnitRequest.Type>, reply: FastifyReply): Promise<FastifyReply> {
+
+        const updateResult = await this.unitService.updateUnit({...request.body, ...request.params})
+
+        if (updateResult.failed())
+            return badRequest(reply, updateResult.value)
+
+        const updatedUnit = updateResult.value
+
+        return ok(reply, updatedUnit.to())
 
     }
 
