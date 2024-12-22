@@ -2,11 +2,19 @@ import { failure, Result, success } from '@helpers/result'
 import { Book, CartItem } from '@models'
 import { inMemoryBookRepository, inMemoryCartItemRepository, inMemoryUserRepository } from '@repositories'
 import { BookRepository, CartItemRepository, UserRepository } from '@repositories/contracts'
-import { BookAlreadyInCartError, BookNotFoundError, UserNotFoundError } from './errors'
+import { BookAlreadyInCartError, BookNotFoundError, CartItemNotFoundError, UserNotFoundError } from './errors'
 
 export namespace LoanService {
     
     export namespace AddBookToCart {
+        export type Request = {
+            bookId: string
+            userId: string
+        }
+        export type Response = CartItem
+    }
+
+    export namespace RemoveBookFromCart {
         export type Request = {
             bookId: string
             userId: string
@@ -58,6 +66,17 @@ export class LoanService {
         await this.cartItemRepository.saveOne(cartItemCreated)
 
         return success(cartItemCreated)
+
+    }
+
+    public async removeBookFromCart(request: LoanService.RemoveBookFromCart.Request): Promise<Result<CartItemNotFoundError, LoanService.RemoveBookFromCart.Response>> {
+
+        const deletedCartItem = await this.cartItemRepository.deleteByIds(request.bookId, request.userId)
+
+        if (!deletedCartItem)
+            return failure(new CartItemNotFoundError())
+
+        return success(deletedCartItem)
 
     }
 

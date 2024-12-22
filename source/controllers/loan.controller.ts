@@ -1,5 +1,5 @@
 import { badRequest, ok } from '@helpers/reply'
-import { AddBookToCartRequest } from '@schemas/controllers'
+import { AddBookToCartRequest, RemoveBookFromCartRequest } from '@schemas/controllers'
 import { loanService, LoanService } from '@services'
 import { FastifyReply, FastifyRequest } from 'fastify'
 
@@ -24,6 +24,21 @@ export class LoanController {
         const addedCartItem = addResult.value
 
         return ok(reply, addedCartItem.to())
+
+    }
+
+    public async removeBookFromCartHandler(request: FastifyRequest<RemoveBookFromCartRequest.Type>, reply: FastifyReply): Promise<FastifyReply> {
+
+        const authenticatedUserId = String(request.locals.userId)
+
+        const deleteResult = await this.loanService.removeBookFromCart({ ...request.params, userId: authenticatedUserId })
+
+        if (deleteResult.failed())
+            return badRequest(reply, deleteResult.value)
+
+        const deletedCartItem = deleteResult.value
+
+        return ok(reply, deletedCartItem.to())
 
     }
 

@@ -1,7 +1,7 @@
 import { FastifyTypedInstance } from '@configs/types'
 import { loanController } from '@controllers/loan.controller'
 import { authMiddleware } from '@middlewares/auth.middleware'
-import { AddBookToCartRequest } from '@schemas/controllers'
+import { AddBookToCartRequest, RemoveBookFromCartRequest } from '@schemas/controllers'
 import { FastifyRequest } from 'fastify'
 import { z } from 'zod'
 
@@ -49,6 +49,25 @@ module.exports = (instance: FastifyTypedInstance) => {
         }
     }, async (request: FastifyRequest, reply) => {
         return loanController.getBooksFromCartHandler(request, reply)
+    })
+
+    instance.delete('/users/me/cart/:bookId', {
+        onRequest: [authMiddleware.ensureAuthenticationHandle],
+        schema: {
+            tags: ['Cart'],
+            summary: 'Remove book from cart',
+            params: RemoveBookFromCartRequest.Schema.shape.Params,
+            response: {
+                200: z.object({
+                    createdAt: z.number(),
+                    updatedAt: z.number(),
+                    bookId: z.string(),
+                    userId: z.string()
+                })
+            }
+        }
+    }, async (request: FastifyRequest<RemoveBookFromCartRequest.Type>, reply) => {
+        return loanController.removeBookFromCartHandler(request, reply)
     })
 
 }

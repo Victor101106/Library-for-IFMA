@@ -6,6 +6,8 @@ export interface CartItemRepository {
 
     findManyByUserId(userId: string): Promise<Array<CartItem>>
 
+    deleteByIds(bookId: string, userId: string): Promise<CartItem | void>
+
     saveOne(cartItem: CartItem): Promise<void>
 
 }

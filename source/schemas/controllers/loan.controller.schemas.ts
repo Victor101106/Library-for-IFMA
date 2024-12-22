@@ -11,3 +11,15 @@ export namespace AddBookToCartRequest {
     export type Type = z.infer<typeof Schema>
 
 }
+
+export namespace RemoveBookFromCartRequest {
+    
+    export const Schema = z.object({
+        Params: z.object({
+            bookId: z.string()
+        })
+    })
+    
+    export type Type = z.infer<typeof Schema>
+
+}
