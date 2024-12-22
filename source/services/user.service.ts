@@ -109,8 +109,6 @@ export class UserService {
 
         const userCreated = createResult.value
 
-        await this.userRepository.saveOne(userCreated)
-
         return success(userCreated)
 
     }
