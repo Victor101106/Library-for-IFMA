@@ -1,7 +1,7 @@
 import { FastifyTypedInstance } from '@configs/types'
 import { userController } from '@controllers'
 import { authMiddleware } from '@middlewares'
-import { FindUserByIdRequest, UpdateMeRequest, UpdateUserRequest } from '@schemas/controllers'
+import { DeleteUserRequest, FindUserByIdRequest, UpdateMeRequest, UpdateUserRequest } from '@schemas/controllers'
 import { FastifyRequest } from 'fastify'
 import { z } from 'zod'
 
@@ -128,6 +128,31 @@ module.exports = (instance: FastifyTypedInstance) => {
         }
     }, async (request: FastifyRequest<UpdateMeRequest.Type>, reply) => {
         return userController.updateMeHandler(request, reply)
+    })
+
+    instance.delete('/users/:userId', {
+        onRequest: [authMiddleware.ensureAuthenticationHandle],
+        schema: {
+            tags: ['Users'],
+            summary: 'Delete user',
+            params: DeleteUserRequest.Schema.shape.Params,
+            response: {
+                200: z.object({
+                    registration: z.string().optional(),
+                    createdAt: z.number(),
+                    updatedAt: z.number(),
+                    googleId: z.string(),
+                    picture: z.string(),
+                    siape: z.number().optional(),
+                    email: z.string(),
+                    role: z.string(),
+                    name: z.string(),
+                    id: z.string()
+                })
+            }
+        }
+    }, async (request: FastifyRequest<DeleteUserRequest.Type>, reply) => {
+        return userController.deleteUserHandler(request, reply)
     })
 
 }

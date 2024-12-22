@@ -1,5 +1,5 @@
 import { badRequest, ok, unauthorized } from '@helpers'
-import { FindUserByIdRequest, UpdateMeRequest, UpdateUserRequest } from '@schemas/controllers'
+import { DeleteUserRequest, FindUserByIdRequest, UpdateMeRequest, UpdateUserRequest } from '@schemas/controllers'
 import { userService, UserService } from '@services'
 import { FastifyReply, FastifyRequest } from 'fastify'
 
@@ -36,6 +36,19 @@ export class UserController {
         const updatedUser = updateResult.value
 
         return ok(reply, updatedUser.to())
+
+    }
+
+    public async deleteUserHandler(request: FastifyRequest<DeleteUserRequest.Type>, reply: FastifyReply): Promise<FastifyReply> {
+
+        const deleteResult = await this.userService.deleteUser(request.params.userId)
+
+        if (deleteResult.failed())
+            return badRequest(reply, deleteResult.value)
+
+        const deletedUser = deleteResult.value
+
+        return ok(reply, deletedUser.to())
 
     }
 

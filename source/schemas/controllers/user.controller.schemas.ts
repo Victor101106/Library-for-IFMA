@@ -43,3 +43,15 @@ export namespace UpdateMeRequest {
     export type Type = z.infer<typeof Schema>
 
 }
+
+export namespace DeleteUserRequest {
+    
+    export const Schema = z.object({
+        Params: z.object({
+            userId: z.string()
+        })
+    })
+    
+    export type Type = z.infer<typeof Schema>
+
+}

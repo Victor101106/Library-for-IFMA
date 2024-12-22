@@ -46,6 +46,11 @@ export namespace UserService {
         }
         export type Response = User
     }
+
+    export namespace DeleteUser {
+        export type Request = string
+        export type Response = User
+    }
     
     export namespace AssignRoleToUser {
         export type Request = {
@@ -159,6 +164,17 @@ export class UserService {
         await this.userRepository.updateOne(updatedUser)
 
         return success(updatedUser)
+
+    }
+
+    public async deleteUser(userId: UserService.DeleteUser.Request): Promise<Result<UserNotFoundError, UserService.DeleteUser.Response>> {
+
+        const deletedUser = await this.userRepository.deleteById(userId)
+
+        if (!deletedUser)
+            return failure(new UserNotFoundError())
+
+        return success(deletedUser)
 
     }
 
