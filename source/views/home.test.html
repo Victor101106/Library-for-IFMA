@@ -62,7 +62,7 @@
                 if (data.error || response.status != 200)
                     return alert('Autenticação falhou!')
 
-                alert(`Autenticado como ${data.user.name} (${data.user.email})!`)
+                alert(`Autenticado como ${data.name} (${data.email})!`)
 
             } catch (error) {
                 alert('Autenticação falhou!')
