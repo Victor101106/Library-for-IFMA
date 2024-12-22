@@ -1,5 +1,5 @@
 import { badRequest, ok, unauthorized } from '@helpers'
-import { UpdateMeRequest, UpdateUserRequest } from '@schemas/controllers'
+import { FindUserByIdRequest, UpdateMeRequest, UpdateUserRequest } from '@schemas/controllers'
 import { userService, UserService } from '@services'
 import { FastifyReply, FastifyRequest } from 'fastify'
 
@@ -36,6 +36,19 @@ export class UserController {
         const updatedUser = updateResult.value
 
         return ok(reply, updatedUser.to())
+
+    }
+
+    public async findUserByIdHandler(request: FastifyRequest<FindUserByIdRequest.Type>, reply: FastifyReply): Promise<FastifyReply> {
+
+        const findResult = await this.userService.findUserById(request.params.userId)
+
+        if (findResult.failed())
+            return badRequest(reply,findResult.value)
+
+        const userFound = findResult.value
+
+        return ok(reply, userFound.to())
 
     }
 

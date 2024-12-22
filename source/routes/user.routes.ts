@@ -1,7 +1,7 @@
 import { FastifyTypedInstance } from '@configs/types'
 import { userController } from '@controllers'
 import { authMiddleware } from '@middlewares'
-import { UpdateMeRequest, UpdateUserRequest } from '@schemas/controllers'
+import { FindUserByIdRequest, UpdateMeRequest, UpdateUserRequest } from '@schemas/controllers'
 import { FastifyRequest } from 'fastify'
 import { z } from 'zod'
 
@@ -29,6 +29,30 @@ module.exports = (instance: FastifyTypedInstance) => {
         }
     }, async (request, reply) => {
         return userController.findMeHandler(request, reply)
+    })
+
+    instance.get('/users/:userId', {
+        schema: {
+            tags: ['Users'],
+            summary: 'Get user',
+            params: FindUserByIdRequest.Schema.shape.Params,
+            response: {
+                200: z.object({
+                    registration: z.string().optional(),
+                    createdAt: z.number(),
+                    updatedAt: z.number(),
+                    googleId: z.string(),
+                    picture: z.string(),
+                    siape: z.number().optional(),
+                    email: z.string(),
+                    role: z.string(),
+                    name: z.string(),
+                    id: z.string()
+                })
+            }
+        }
+    }, async (request: FastifyRequest<FindUserByIdRequest.Type>, reply) => {
+        return userController.findUserByIdHandler(request, reply)
     })
 
     instance.put('/users/:userId', {

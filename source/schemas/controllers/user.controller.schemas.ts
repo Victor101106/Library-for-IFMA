@@ -1,5 +1,17 @@
 import { z } from 'zod'
 
+export namespace FindUserByIdRequest {
+    
+    export const Schema = z.object({
+        Params: z.object({
+            userId: z.string()
+        })
+    })
+    
+    export type Type = z.infer<typeof Schema>
+
+}
+
 export namespace UpdateUserRequest {
     
     export const Schema = z.object({
