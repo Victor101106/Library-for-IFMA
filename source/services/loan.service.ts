@@ -2,7 +2,7 @@ import { failure, Result, success } from '@helpers/result'
 import { Book, CartItem } from '@models'
 import { inMemoryBookRepository, inMemoryCartItemRepository, inMemoryUserRepository } from '@repositories'
 import { BookRepository, CartItemRepository, UserRepository } from '@repositories/contracts'
-import { BookAlreadyInCartError, BookNotFoundError, CartItemNotFoundError, UserNotFoundError } from './errors'
+import { BookAlreadyInCartError, BookNotFoundError, CartItemNotFoundError, EmptyCartError, UserNotFoundError } from './errors'
 
 export namespace LoanService {
     
@@ -12,6 +12,11 @@ export namespace LoanService {
             userId: string
         }
         export type Response = CartItem
+    }
+
+    export namespace RemoveAllBooksFromCart {
+        export type Request = string
+        export type Response = Array<CartItem>
     }
 
     export namespace RemoveBookFromCart {
@@ -66,6 +71,17 @@ export class LoanService {
         await this.cartItemRepository.saveOne(cartItemCreated)
 
         return success(cartItemCreated)
+
+    }
+
+    public async removeAllBooksFromCart(userId: LoanService.RemoveAllBooksFromCart.Request): Promise<Result<EmptyCartError, LoanService.RemoveAllBooksFromCart.Response>> {
+        
+        const deletedCartItems = await this.cartItemRepository.deleteManyByUserId(userId)
+
+        if (!deletedCartItems.length)
+            return failure(new EmptyCartError())
+
+        return success(deletedCartItems)
 
     }
 

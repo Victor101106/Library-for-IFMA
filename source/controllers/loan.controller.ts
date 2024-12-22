@@ -27,18 +27,35 @@ export class LoanController {
 
     }
 
+    public async removeAllBooksFromCartHandler(request: FastifyRequest, reply: FastifyReply): Promise<FastifyReply> {
+
+        const authenticatedUserId = String(request.locals.userId)
+
+        const removeResult = await this.loanService.removeAllBooksFromCart(authenticatedUserId)
+
+        if (removeResult.failed())
+            return badRequest(reply, removeResult.value)
+
+        const removedCartItems = removeResult.value
+
+        const removedCartItemsTo = removedCartItems.map(removedCartItem => removedCartItem.to())
+
+        return ok(reply, removedCartItemsTo)
+
+    }
+
     public async removeBookFromCartHandler(request: FastifyRequest<RemoveBookFromCartRequest.Type>, reply: FastifyReply): Promise<FastifyReply> {
 
         const authenticatedUserId = String(request.locals.userId)
 
-        const deleteResult = await this.loanService.removeBookFromCart({ ...request.params, userId: authenticatedUserId })
+        const removeResult = await this.loanService.removeBookFromCart({ ...request.params, userId: authenticatedUserId })
 
-        if (deleteResult.failed())
-            return badRequest(reply, deleteResult.value)
+        if (removeResult.failed())
+            return badRequest(reply, removeResult.value)
 
-        const deletedCartItem = deleteResult.value
+        const removedCartItem = removeResult.value
 
-        return ok(reply, deletedCartItem.to())
+        return ok(reply, removedCartItem.to())
 
     }
 

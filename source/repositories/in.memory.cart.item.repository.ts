@@ -19,6 +19,18 @@ export class InMemoryCartItemRepository implements CartItemRepository {
         return this.database.find(cartItemFound => cartItemFound.bookId.value == bookId && cartItemFound.userId.value == userId)
     }
 
+    public async deleteManyByUserId(userId: string): Promise<Array<CartItem>> {
+        
+        const cartItemsFound = this.database.filter(cartItemFound => cartItemFound.userId.value == userId)
+
+        cartItemsFound.forEach(
+            cartItemFound => this.deleteByIds(cartItemFound.bookId.value, cartItemFound.userId.value)
+        )
+
+        return cartItemsFound
+        
+    }
+
     public async deleteByIds(bookId: string, userId: string): Promise<CartItem | void> {
         
         const index = this.database.findIndex(cartItemFound => cartItemFound.bookId.value == bookId && cartItemFound.userId.value == userId)

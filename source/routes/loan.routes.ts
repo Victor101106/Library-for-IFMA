@@ -51,6 +51,26 @@ module.exports = (instance: FastifyTypedInstance) => {
         return loanController.getBooksFromCartHandler(request, reply)
     })
 
+    instance.delete('/users/me/cart', {
+        onRequest: [authMiddleware.ensureAuthenticationHandle],
+        schema: {
+            tags: ['Cart'],
+            summary: 'Remove all books from cart',
+            response: {
+                200: z.array(
+                    z.object({
+                        createdAt: z.number(),
+                        updatedAt: z.number(),
+                        bookId: z.string(),
+                        userId: z.string()
+                    })
+                )
+            }
+        }
+    }, async (request: FastifyRequest, reply) => {
+        return loanController.removeAllBooksFromCartHandler(request, reply)
+    })
+
     instance.delete('/users/me/cart/:bookId', {
         onRequest: [authMiddleware.ensureAuthenticationHandle],
         schema: {
