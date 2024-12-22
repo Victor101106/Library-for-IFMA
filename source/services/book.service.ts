@@ -35,6 +35,14 @@ export namespace BookService {
         export type Response = Book
     }
 
+    export namespace SearchBooks {
+        export type Request = {
+            query?: string
+            page?: number
+        }
+        export type Response = Array<Book>
+    }
+
     export namespace FindBookById {
         export type Request = string
         export type Response = Book
@@ -116,6 +124,17 @@ export class BookService {
         await this.unitRepository.deleteManyByBookId(deletedBook.id.value)
 
         return success(deletedBook)
+
+    }
+
+    public async searchBooks(request: BookService.SearchBooks.Request): Promise<Result<BookNotFoundError, BookService.SearchBooks.Response>> {
+
+        const booksResearched = await this.bookRepository.searchBooks(request.query, request.page)
+
+        if (!booksResearched.length)
+            return failure(new BookNotFoundError())
+
+        return success(booksResearched)
 
     }
 

@@ -1,5 +1,5 @@
-import { Book } from '@models'
-import { BookRepository } from './contracts'
+import { Book } from '@models';
+import { BookRepository } from './contracts';
 
 export class InMemoryBookRepository implements BookRepository {
     
@@ -7,6 +7,26 @@ export class InMemoryBookRepository implements BookRepository {
 
     public static create(): InMemoryBookRepository {
         return new InMemoryBookRepository(new Array())
+    }
+
+    public async searchBooks(query?: string, page?: number): Promise<Array<Book>> {
+        
+        const BOOK_COUNT_PER_PAGE = 10
+
+        const normalizedQuery = query?.trim().toLowerCase()
+
+        const matchingBooks = this.database.filter(
+            book => [book.title, book.author, book.subject, book.genre].some(
+                attribute => attribute.value.toLowerCase().includes(normalizedQuery || '')
+            )
+        )
+
+        const startIndex = (page ? page - 1 : 0) * BOOK_COUNT_PER_PAGE
+
+        const paginatedBooks = matchingBooks.slice(startIndex, startIndex + BOOK_COUNT_PER_PAGE)
+
+        return paginatedBooks
+
     }
 
     public async findById(bookId: string): Promise<Book | void> {

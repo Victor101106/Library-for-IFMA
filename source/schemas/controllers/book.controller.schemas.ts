@@ -28,6 +28,19 @@ export namespace DeleteBookRequest {
 
 }
 
+export namespace SearchBooksRequest {
+
+    export const Schema = z.object({
+        Querystring: z.object({
+            page: z.coerce.number().optional(),
+            query: z.string().optional()
+        })
+    })
+
+    export type Type = z.infer<typeof Schema>
+
+}
+
 export namespace FindBookByIdRequest {
 
     export const Schema = z.object({

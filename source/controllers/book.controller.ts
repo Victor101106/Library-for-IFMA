@@ -1,5 +1,5 @@
 import { badRequest, created, ok } from '@helpers'
-import { CreateBookRequest, DeleteBookRequest, FindBookByIdRequest, UpdateBookRequest } from '@schemas/controllers'
+import { CreateBookRequest, DeleteBookRequest, FindBookByIdRequest, SearchBooksRequest, UpdateBookRequest } from '@schemas/controllers'
 import { bookService, BookService } from '@services'
 import { FastifyReply, FastifyRequest } from 'fastify'
 
@@ -67,6 +67,21 @@ export class BookController {
         const deletedBook = deleteResult.value
 
         return ok(reply, deletedBook.to())
+
+    }
+
+    public async searchBooksHandler(request: FastifyRequest<SearchBooksRequest.Type>, reply: FastifyReply): Promise<FastifyReply> {
+
+        const searchResult = await this.bookService.searchBooks({...request.query})
+
+        if (searchResult.failed())
+            return badRequest(reply, searchResult.value)
+
+        const booksResearched = searchResult.value
+        
+        const booksResearchedTo = booksResearched.map(bookResearched => bookResearched.to())
+
+        return ok(reply, booksResearchedTo)
 
     }
 
