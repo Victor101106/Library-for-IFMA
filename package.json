@@ -61,6 +61,7 @@
     "fastify-type-provider-zod": "^4.0.2",
     "google-auth-library": "^9.15.0",
     "jsonwebtoken": "^9.0.2",
+    "swagger-themes": "^1.4.3",
     "uuid": "^11.0.3",
     "zod": "^3.24.1"
   },

@@ -2,6 +2,7 @@ import { FastifyTypedInstance } from '@configs/types'
 import fastifySwagger from '@fastify/swagger'
 import fastifySwaggerUi from '@fastify/swagger-ui'
 import { jsonSchemaTransform, serializerCompiler, validatorCompiler } from 'fastify-type-provider-zod'
+import { SwaggerTheme, SwaggerThemeNameEnum } from 'swagger-themes'
 
 export default (instance: FastifyTypedInstance): void => {
 
@@ -21,7 +22,15 @@ export default (instance: FastifyTypedInstance): void => {
     })
 
     instance.register(fastifySwaggerUi, {
-        routePrefix: '/documentation'
+        routePrefix: '/documentation',
+        theme: {
+            css: [
+                { 
+                    filename: 'theme.css',
+                    content: new SwaggerTheme().getBuffer(SwaggerThemeNameEnum.DARK)
+                }
+            ]
+        }
     })
 
 }
