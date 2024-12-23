@@ -1,6 +1,7 @@
 export * from './authentication.service'
 export * from './authorization.service'
 export * from './book.service'
+export * from './experimental.service'
 export * from './loan.service'
 export * from './token.service'
 export * from './unit.service'

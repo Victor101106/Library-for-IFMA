@@ -1,5 +1,6 @@
 export * from './authentication.controller'
 export * from './book.controller'
+export * from './experimental.controller'
 export * from './loan.controller'
 export * from './unit.controller'
 export * from './user.controller'

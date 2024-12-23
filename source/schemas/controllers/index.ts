@@ -1,5 +1,6 @@
 export * from './authentication.controller.schemas'
 export * from './book.controller.schemas'
+export * from './experimenal.controller.schemas'
 export * from './loan.controller.schemas'
 export * from './unit.controller.schemas'
 export * from './user.controller.schemas'
