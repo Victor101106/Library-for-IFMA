@@ -5,6 +5,18 @@ import { FastifyRequest } from 'fastify'
 import { z } from 'zod'
 
 module.exports = (instance: FastifyTypedInstance) => {
+    
+    instance.get('/', {
+        schema: {
+            tags: ['Experimental'],
+            summary: 'Experimental view of the Sign in with Google button',
+            response: {
+                200: z.string()
+            }
+        }
+    }, async (request, reply) => {
+        return experimentalController.homeHandler(request, reply)
+    })
 
     instance.post('/users/assign/admin/:userId', {
         schema: {
