@@ -77,8 +77,8 @@ Follow the step-by-step instructions to set up and run the project:
 
 ### Book Loans
 
-- [ ] It should allow users to add books to a cart;
-- [ ] It should allow users to review selected books;
+- [x] It should allow users to add books to a cart;
+- [x] It should allow users to review selected books;
 - [ ] It should allow users to choose loan options, including a return date (maximum of one week);
 - [ ] It should allow users to choose pickup and return time slots (morning: 08:00-12:00; afternoon: 14:00-18:00);
 - [ ] It should allow users to renew loans if more time is needed to finish reading a book;
@@ -87,9 +87,9 @@ Follow the step-by-step instructions to set up and run the project:
 
 ### Book Search
 
-- [ ] It should allow users to search for books using keywords;
+- [x] It should allow users to search for books using keywords;
 - [ ] It should allow users to search for books using categories;
-- [ ] It should allow users to filter books by book code, title, author, genre, or subject.
+- [x] It should allow users to filter books by title, author, genre, or subject.
 
 ### Email Notifications
 
@@ -102,16 +102,16 @@ Follow the step-by-step instructions to set up and run the project:
 
 ### Stock Management
 
-- [ ] It should allow administrators to add books to the inventory;
-- [ ] It should allow administrators to update book details in the inventory;
-- [ ] It should allow administrators to delete books from the inventory;
-- [ ] It should allow administrators to track the quantity of each book in the inventory.
+- [x] It should allow administrators to add books to the inventory;
+- [x] It should allow administrators to update book details in the inventory;
+- [x] It should allow administrators to delete books from the inventory;
+- [x] It should allow administrators to track the quantity of each book in the inventory.
 
 ### Access Control
 
-- [ ] It should implement different access levels for administrators;
-- [ ] It should implement different access levels for employees;
-- [ ] It should implement different access levels for students.
+- [x] It should implement different access levels for administrators;
+- [x] It should implement different access levels for employees;
+- [x] It should implement different access levels for students.
 
 ### Reporting
 
