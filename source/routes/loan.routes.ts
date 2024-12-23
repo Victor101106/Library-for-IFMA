@@ -16,7 +16,6 @@ module.exports = (instance: FastifyTypedInstance) => {
             response: {
                 200: z.object({
                     createdAt: z.number(),
-                    updatedAt: z.number(),
                     bookId: z.string(),
                     userId: z.string()
                 })
@@ -61,7 +60,6 @@ module.exports = (instance: FastifyTypedInstance) => {
                 200: z.array(
                     z.object({
                         createdAt: z.number(),
-                        updatedAt: z.number(),
                         bookId: z.string(),
                         userId: z.string()
                     })
@@ -81,7 +79,6 @@ module.exports = (instance: FastifyTypedInstance) => {
             response: {
                 200: z.object({
                     createdAt: z.number(),
-                    updatedAt: z.number(),
                     bookId: z.string(),
                     userId: z.string()
                 })
