@@ -16,7 +16,7 @@ export class InMemoryBookRepository implements BookRepository {
         const normalizedQuery = query?.trim().toLowerCase()
 
         const matchingBooks = this.database.filter(
-            book => [book.title, book.author, book.subject, book.genre].some(
+            book => [book.title, book.author, book.subject, book.genre, book.isbn].some(
                 attribute => attribute.value.toLowerCase().includes(normalizedQuery || '')
             )
         )
