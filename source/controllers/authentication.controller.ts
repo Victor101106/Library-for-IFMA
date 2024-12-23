@@ -1,24 +1,24 @@
 import { ACCESS_TOKEN_COOKIE, badRequest, ok, serializeCookie } from '@helpers'
 import { CompleteSignUpRequest, LogInWithGoogleCallbackRequest, LogInWithGoogleRequest } from '@schemas/controllers'
-import { authService, AuthService, tokenService, TokenService, userService, UserService } from '@services'
+import { authenticationService, AuthenticationService, tokenService, TokenService, userService, UserService } from '@services'
 import { FastifyReply, FastifyRequest } from 'fastify'
 import { TokenPayload } from 'google-auth-library'
 
-export class AuthController {
+export class AuthenticationController {
 
     private constructor (
-        private readonly authService: AuthService,
+        private readonly authenticationService: AuthenticationService,
         private readonly tokenService: TokenService,
         private readonly userService: UserService
     ) {}
 
-    public static create(authService: AuthService, tokenService: TokenService, userService: UserService): AuthController {
-        return new AuthController(authService, tokenService, userService)
+    public static create(authenticationService: AuthenticationService, tokenService: TokenService, userService: UserService): AuthenticationController {
+        return new AuthenticationController(authenticationService, tokenService, userService)
     }
 
     public async redirectToGoogleAuthorizeURLHandler(request: FastifyRequest, reply: FastifyReply): Promise<FastifyReply> {
 
-        const redirectURL = authService.generateGoogleAuthorizeURL()
+        const redirectURL = authenticationService.generateGoogleAuthorizeURL()
 
         return reply.redirect(redirectURL)
 
@@ -26,7 +26,7 @@ export class AuthController {
 
     public async logInWithGoogleCallbackHandler(request: FastifyRequest<LogInWithGoogleCallbackRequest.Type>, reply: FastifyReply): Promise<FastifyReply> {
         
-        const verifyResult = await this.authService.verifyGoogleCode(request.query.code)
+        const verifyResult = await this.authenticationService.verifyGoogleCode(request.query.code)
 
         if (verifyResult.failed())
             return badRequest(reply, verifyResult.value)
@@ -39,7 +39,7 @@ export class AuthController {
 
     public async logInWithGoogleHandler(request: FastifyRequest<LogInWithGoogleRequest.Type>, reply: FastifyReply): Promise<FastifyReply> {
 
-        const verifyResult = await this.authService.verifyGoogleCredential(request.body.credential)
+        const verifyResult = await this.authenticationService.verifyGoogleCredential(request.body.credential)
 
         if (verifyResult.failed())
             return badRequest(reply, verifyResult.value)
@@ -102,4 +102,4 @@ export class AuthController {
 
 }
 
-export const authController = AuthController.create(authService, tokenService, userService)
+export const authenticationController = AuthenticationController.create(authenticationService, tokenService, userService)

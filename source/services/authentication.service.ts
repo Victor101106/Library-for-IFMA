@@ -3,7 +3,7 @@ import { failure, Result, success } from '@helpers'
 import { OAuth2Client, TokenPayload } from 'google-auth-library'
 import { InvalidGoogleCodeError, InvalidGoogleCredentialError } from './errors'
 
-export namespace AuthService {
+export namespace AuthenticationService {
 
     export namespace CreateOAuth2Client {
         export type Request = void
@@ -27,15 +27,15 @@ export namespace AuthService {
 
 }
 
-export class AuthService {
+export class AuthenticationService {
 
     private constructor () {}
 
-    public static create(): AuthService {
-        return new AuthService()
+    public static create(): AuthenticationService {
+        return new AuthenticationService()
     }
 
-    public createOAuth2Client(): AuthService.CreateOAuth2Client.Response {
+    public createOAuth2Client(): AuthenticationService.CreateOAuth2Client.Response {
         return new OAuth2Client(
             environment.GOOGLE_CLIENT_ID,
             environment.GOOGLE_CLIENT_SECRET_KEY,
@@ -43,7 +43,7 @@ export class AuthService {
         )
     }
 
-    public generateGoogleAuthorizeURL(): AuthService.GenerateGoogleAuthorizeURL.Response {
+    public generateGoogleAuthorizeURL(): AuthenticationService.GenerateGoogleAuthorizeURL.Response {
 
         const client = this.createOAuth2Client()
 
@@ -57,7 +57,7 @@ export class AuthService {
 
     }
 
-    public async verifyGoogleCredential(credential: AuthService.VerifyGoogleCredential.Request): Promise<Result<InvalidGoogleCredentialError, AuthService.VerifyGoogleCredential.Response>> {
+    public async verifyGoogleCredential(credential: AuthenticationService.VerifyGoogleCredential.Request): Promise<Result<InvalidGoogleCredentialError, AuthenticationService.VerifyGoogleCredential.Response>> {
         
         const client = this.createOAuth2Client()
         
@@ -75,7 +75,7 @@ export class AuthService {
 
     }
 
-    public async verifyGoogleCode(code: AuthService.VerifyGoogleCode.Request): Promise<Result<InvalidGoogleCodeError, AuthService.VerifyGoogleCode.Response>> {
+    public async verifyGoogleCode(code: AuthenticationService.VerifyGoogleCode.Request): Promise<Result<InvalidGoogleCodeError, AuthenticationService.VerifyGoogleCode.Response>> {
 
         const client = this.createOAuth2Client()
 
@@ -90,4 +90,4 @@ export class AuthService {
 
 }
 
-export const authService = AuthService.create()
+export const authenticationService = AuthenticationService.create()

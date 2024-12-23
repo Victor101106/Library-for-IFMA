@@ -1,4 +1,4 @@
-export * from './auth.service'
+export * from './authentication.service'
 export * from './authorization.service'
 export * from './book.service'
 export * from './loan.service'

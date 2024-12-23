@@ -1,6 +1,6 @@
 import { FastifyTypedInstance } from '@configs/types'
-import { authController } from '@controllers'
-import { authMiddleware } from '@middlewares/auth.middleware'
+import { authenticationController } from '@controllers'
+import { authMiddleware } from '@middlewares/authentication.middleware'
 import { CompleteSignUpRequest, LogInWithGoogleCallbackRequest, LogInWithGoogleRequest } from '@schemas/controllers'
 import { FastifyRequest } from 'fastify'
 import { z } from 'zod'
@@ -16,7 +16,7 @@ module.exports = (instance: FastifyTypedInstance) => {
             }
         }
     }, async (request, reply) => {
-        return authController.redirectToGoogleAuthorizeURLHandler(request, reply)
+        return authenticationController.redirectToGoogleAuthorizeURLHandler(request, reply)
     })
 
     instance.get('/auth/signin/google/callback', {
@@ -40,7 +40,7 @@ module.exports = (instance: FastifyTypedInstance) => {
             }
         }
     }, async (request: FastifyRequest<LogInWithGoogleCallbackRequest.Type>, reply) => {
-        return authController.logInWithGoogleCallbackHandler(request, reply)
+        return authenticationController.logInWithGoogleCallbackHandler(request, reply)
     })
 
     instance.post('/auth/signin/google', {
@@ -64,7 +64,7 @@ module.exports = (instance: FastifyTypedInstance) => {
             }
         }
     }, async (request: FastifyRequest<LogInWithGoogleRequest.Type>, reply) => {
-        return authController.logInWithGoogleHandler(request, reply)
+        return authenticationController.logInWithGoogleHandler(request, reply)
     })
 
     instance.post('/auth/signup/complete', {
@@ -82,7 +82,7 @@ module.exports = (instance: FastifyTypedInstance) => {
             }
         }
     }, async (request: FastifyRequest<CompleteSignUpRequest.Type>, reply) => {
-        return authController.completeSignUpHandler(request, reply)
+        return authenticationController.completeSignUpHandler(request, reply)
     })
 
     instance.get('/auth/logout', {
@@ -94,7 +94,7 @@ module.exports = (instance: FastifyTypedInstance) => {
             }
         }
     }, async (request, reply) => {
-        return authController.logoutHandler(request, reply)
+        return authenticationController.logoutHandler(request, reply)
     })
 
 }

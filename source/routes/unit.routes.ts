@@ -1,6 +1,6 @@
 import { FastifyTypedInstance } from '@configs/types'
 import { unitController } from '@controllers/unit.controller'
-import { authMiddleware } from '@middlewares/auth.middleware'
+import { authMiddleware } from '@middlewares/authentication.middleware'
 import { CreateUnitRequest, DeleteUnitByCodeRequest, FindUnitByCodeRequest, FindUnitsByBookIdRequest, UpdateUnitRequest } from '@schemas/controllers'
 import { FastifyRequest } from 'fastify'
 import { z } from 'zod'

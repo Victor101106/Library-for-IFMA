@@ -1,4 +1,4 @@
-export * from './auth.controller'
+export * from './authentication.controller'
 export * from './book.controller'
 export * from './loan.controller'
 export * from './unit.controller'
