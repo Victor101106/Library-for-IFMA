@@ -8,8 +8,8 @@ export namespace BookService {
     
     export namespace CreateBook {
         export type Request = {
+            coverImage?: string
             createdBy: string
-            picture?: string
             subject: string
             author: string
             genre: string
@@ -20,7 +20,7 @@ export namespace BookService {
 
     export namespace UpdateBook {
         export type Request = {
-            picture?: string
+            coverImage?: string
             subject?: string
             author?: string
             genre?: string
@@ -70,7 +70,7 @@ export class BookService {
 
         const createResult = Book.create({
             createdBy: request.createdBy,
-            picture: request.picture,
+            coverImage: request.coverImage,
             subject: request.subject,
             author: request.author,
             genre: request.genre,
@@ -96,7 +96,7 @@ export class BookService {
             return failure(new BookNotFoundError())
 
         const updateResult = bookFound.update({
-            picture: request.picture,
+            coverImage: request.coverImage,
             subject: request.subject,
             author: request.author,
             genre: request.genre,

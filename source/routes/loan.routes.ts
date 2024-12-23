@@ -37,7 +37,7 @@ module.exports = (instance: FastifyTypedInstance) => {
                         createdAt: z.number(),
                         updatedAt: z.number(),
                         createdBy: z.string(),
-                        picture: z.string().optional(),
+                        coverImage: z.string().optional(),
                         subject: z.string(),
                         author: z.string(),
                         genre: z.string(),

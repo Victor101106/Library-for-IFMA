@@ -28,7 +28,7 @@ export class BookController {
         
         const createResult = await this.bookService.createBook({
             createdBy: String(request.locals.userId),
-            picture: request.body.picture,
+            coverImage: request.body.coverImage,
             subject: request.body.subject,
             author: request.body.author,
             genre: request.body.genre,

@@ -4,7 +4,7 @@ export namespace CreateBookRequest {
     
     export const Schema = z.object({
         Body: z.object({
-            picture: z.string().url().optional(),
+            coverImage: z.string().url().optional(),
             subject: z.string(),
             author: z.string(),
             genre: z.string(),
@@ -57,7 +57,7 @@ export namespace UpdateBookRequest {
 
     export const Schema = z.object({
         Body: z.object({
-            picture: z.string().url().optional(),
+            coverImage: z.string().url().optional(),
             subject: z.string().optional(),
             author: z.string().optional(),
             genre: z.string().optional(),
