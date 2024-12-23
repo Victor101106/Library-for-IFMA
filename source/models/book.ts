@@ -1,5 +1,5 @@
 import { failure, Result, success } from '@helpers'
-import { Attribute, Id, Timestamp, URL } from './index'
+import { Attribute, Id, ISBN, Timestamp, URL } from './index'
 
 export namespace Book {
     
@@ -10,6 +10,7 @@ export namespace Book {
         author     : string
         genre      : string
         title      : string
+        isbn       : string
     }
     
     export type DTO = Request & {
@@ -27,6 +28,7 @@ export namespace Book {
             author    ?: string | void
             genre     ?: string | void
             title     ?: string | void
+            isbn      ?: string | void
         }
         export type Response = Book
     }
@@ -44,6 +46,7 @@ export class Book {
         public readonly author    : Attribute,
         public readonly genre     : Attribute,
         public readonly title     : Attribute,
+        public readonly isbn      : ISBN,
         public readonly id        : Id
     ) {}
 
@@ -54,6 +57,7 @@ export class Book {
         const authorResult     = Attribute.create(request.author)
         const genreResult      = Attribute.create(request.genre)
         const titleResult      = Attribute.create(request.title)
+        const isbnResult       = ISBN     .create(request.isbn)
         
         if (coverImageResult.failed())
             return failure(coverImageResult.value)
@@ -69,12 +73,16 @@ export class Book {
         
         if (titleResult.failed())
             return failure(titleResult.value)
+
+        if (isbnResult.failed())
+            return failure(isbnResult.value)
         
         const coverImage = coverImageResult.value
         const subject    = subjectResult   .value
         const author     = authorResult    .value
         const genre      = genreResult     .value
         const title      = titleResult     .value
+        const isbn       = isbnResult      .value
         
         const createdAt = Timestamp.create()
         const updatedAt = Timestamp.create()
@@ -82,7 +90,7 @@ export class Book {
         const createdBy = Id.create(request.createdBy)
         const id        = Id.create()
         
-        return success(new Book(createdAt, updatedAt, createdBy, coverImage, subject, author, genre, title, id))
+        return success(new Book(createdAt, updatedAt, createdBy, coverImage, subject, author, genre, title, isbn, id))
 
     }
 
@@ -96,9 +104,10 @@ export class Book {
         const author     = Attribute.with(data.author)
         const genre      = Attribute.with(data.genre)
         const title      = Attribute.with(data.title)
+        const isbn       = ISBN     .with(data.isbn)
         const id         = Id       .with(data.id)
         
-        return new Book(createdAt, updatedAt, createdBy, coverImage, subject, author, genre, title, id)
+        return new Book(createdAt, updatedAt, createdBy, coverImage, subject, author, genre, title, isbn, id)
 
     }
 
@@ -132,9 +141,10 @@ export class Book {
         const author     = this.author    .to()
         const genre      = this.genre     .to()
         const title      = this.title     .to()
+        const isbn       = this.isbn      .to()
         const id         = this.id        .to()
 
-        return { createdAt, updatedAt, createdBy, coverImage, subject, author, genre, title, id }
+        return { createdAt, updatedAt, createdBy, coverImage, subject, author, genre, title, isbn, id }
 
     }
 

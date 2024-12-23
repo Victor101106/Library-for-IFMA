@@ -8,7 +8,8 @@ export namespace CreateBookRequest {
             subject: z.string(),
             author: z.string(),
             genre: z.string(),
-            title: z.string()
+            title: z.string(),
+            isbn: z.string()
         })
     })
     
@@ -61,7 +62,8 @@ export namespace UpdateBookRequest {
             subject: z.string().optional(),
             author: z.string().optional(),
             genre: z.string().optional(),
-            title: z.string().optional()
+            title: z.string().optional(),
+            isbn: z.string().optional()
         }),
         Params: z.object({
             bookId: z.string()

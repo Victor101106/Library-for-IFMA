@@ -1,6 +1,7 @@
 export * from './invalid.attribute.error'
 export * from './invalid.code.error'
 export * from './invalid.email.error'
+export * from './invalid.isbn.error'
 export * from './invalid.name.error'
 export * from './invalid.oauth.id.error'
 export * from './invalid.registration.error'

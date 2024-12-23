@@ -42,6 +42,7 @@ module.exports = (instance: FastifyTypedInstance) => {
                         author: z.string(),
                         genre: z.string(),
                         title: z.string(),
+                        isbn: z.string(),
                         id: z.string()
                     })
                 )

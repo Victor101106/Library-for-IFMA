@@ -14,6 +14,7 @@ export namespace BookService {
             author: string
             genre: string
             title: string
+            isbn: string
         }
         export type Response = Book
     }
@@ -25,6 +26,7 @@ export namespace BookService {
             author?: string
             genre?: string
             title?: string
+            isbn?: string
             bookId: string
         }
         export type Response = Book
@@ -74,7 +76,8 @@ export class BookService {
             subject: request.subject,
             author: request.author,
             genre: request.genre,
-            title: request.title
+            title: request.title,
+            isbn: request.isbn
         })
 
         if (createResult.failed())
@@ -100,7 +103,8 @@ export class BookService {
             subject: request.subject,
             author: request.author,
             genre: request.genre,
-            title: request.title
+            title: request.title,
+            isbn: request.isbn
         })
 
         if (updateResult.failed())

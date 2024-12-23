@@ -32,7 +32,8 @@ export class BookController {
             subject: request.body.subject,
             author: request.body.author,
             genre: request.body.genre,
-            title: request.body.title
+            title: request.body.title,
+            isbn: request.body.isbn
         })
 
         if (createResult.failed())
