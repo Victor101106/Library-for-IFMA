@@ -32,6 +32,7 @@ module.exports = (instance: FastifyTypedInstance) => {
     })
 
     instance.get('/users/', {
+        onRequest: [authMiddleware.ensureAuthenticationHandle],
         schema: {
             tags: ['Users'],
             summary: 'Get all users',
@@ -57,6 +58,7 @@ module.exports = (instance: FastifyTypedInstance) => {
     })
 
     instance.get('/users/:userId', {
+        onRequest: [authMiddleware.ensureAuthenticationHandle],
         schema: {
             tags: ['Users'],
             summary: 'Get user',
@@ -81,6 +83,7 @@ module.exports = (instance: FastifyTypedInstance) => {
     })
 
     instance.put('/users/:userId', {
+        onRequest: [authMiddleware.ensureAuthenticationHandle],
         schema: {
             tags: ['Users'],
             summary: 'Update user',

@@ -1,6 +1,6 @@
 import { FastifyReply } from 'fastify'
 import { ACCESS_TOKEN_COOKIE, serializeCookie } from './cookie'
-import { UnauthorizedError } from './errors'
+import { ForbiddenError, UnauthorizedError } from './errors'
 
 export function ok(reply: FastifyReply, payload?: unknown): FastifyReply {
     return reply.status(200).send(payload)
@@ -12,6 +12,15 @@ export function created(reply: FastifyReply, payload?: unknown): FastifyReply {
 
 export function badRequest(reply: FastifyReply, error: Error): FastifyReply {
     return reply.status(400).send(error)
+}
+
+export function forbidden(reply: FastifyReply, error?: Error): FastifyReply {
+
+    reply.status(403)
+    reply.send(new ForbiddenError(error?.message))
+    
+    return reply
+
 }
 
 export function unauthorized(reply: FastifyReply, error?: Error): FastifyReply {

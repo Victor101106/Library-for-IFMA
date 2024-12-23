@@ -1,17 +1,30 @@
-import { badRequest, created, ok } from '@helpers'
+import { badRequest, created, forbidden, ok } from '@helpers'
 import { CreateUnitRequest, DeleteUnitByCodeRequest, FindUnitByCodeRequest, FindUnitsByBookIdRequest, UpdateUnitRequest } from '@schemas/controllers'
-import { unitService, UnitService } from '@services'
+import { authorizationService, AuthorizationService, unitService, UnitService } from '@services'
 import { FastifyReply, FastifyRequest } from 'fastify'
 
 export class UnitController {
 
-    private constructor (private readonly unitService: UnitService) {}
+    private constructor (
+        private readonly authorizationService: AuthorizationService,
+        private readonly unitService: UnitService
+    ) {}
 
-    public static create(unitService: UnitService): UnitController {
-        return new UnitController(unitService)
+    public static create(authorizationService: AuthorizationService, unitService: UnitService): UnitController {
+        return new UnitController(authorizationService, unitService)
     }
 
     public async createUnitHandler(request: FastifyRequest<CreateUnitRequest.Type>, reply: FastifyReply): Promise<FastifyReply> {
+
+        const permissionsResult = await this.authorizationService.getPermissionsByUserId(String(request.locals.userId))
+        
+        if (permissionsResult.failed())
+            return forbidden(reply, permissionsResult.value)
+        
+        const permissions = permissionsResult.value
+
+        if (permissions.cannot('create', 'Unit'))
+            return forbidden(reply)
         
         const createResult = await this.unitService.createUnit({
             createdBy: String(request.locals.userId),
@@ -31,6 +44,16 @@ export class UnitController {
 
     public async updateUnitHandler(request: FastifyRequest<UpdateUnitRequest.Type>, reply: FastifyReply): Promise<FastifyReply> {
 
+        const permissionsResult = await this.authorizationService.getPermissionsByUserId(String(request.locals.userId))
+        
+        if (permissionsResult.failed())
+            return forbidden(reply, permissionsResult.value)
+        
+        const permissions = permissionsResult.value
+
+        if (permissions.cannot('update', 'Unit'))
+            return forbidden(reply)
+
         const updateResult = await this.unitService.updateUnit({...request.body, ...request.params})
 
         if (updateResult.failed())
@@ -44,6 +67,16 @@ export class UnitController {
 
     public async findUnitByCodeHandler(request: FastifyRequest<FindUnitByCodeRequest.Type>, reply: FastifyReply): Promise<FastifyReply> {
         
+        const permissionsResult = await this.authorizationService.getPermissionsByUserId(String(request.locals.userId))
+        
+        if (permissionsResult.failed())
+            return forbidden(reply, permissionsResult.value)
+        
+        const permissions = permissionsResult.value
+
+        if (permissions.cannot('get', 'Unit'))
+            return forbidden(reply)
+
         const findResult = await this.unitService.findUnitByCode(request.params.unitCode)
 
         if (findResult.failed())
@@ -57,6 +90,16 @@ export class UnitController {
 
     public async deleteUnitByCodeHandler(request: FastifyRequest<DeleteUnitByCodeRequest.Type>, reply: FastifyReply): Promise<FastifyReply> {
         
+        const permissionsResult = await this.authorizationService.getPermissionsByUserId(String(request.locals.userId))
+        
+        if (permissionsResult.failed())
+            return forbidden(reply, permissionsResult.value)
+        
+        const permissions = permissionsResult.value
+
+        if (permissions.cannot('delete', 'Unit'))
+            return forbidden(reply)
+
         const deleteResult = await this.unitService.deleteUnitByCode(request.params.unitCode)
 
         if (deleteResult.failed())
@@ -70,6 +113,16 @@ export class UnitController {
 
     
     public async findAllUnitsHandler(request: FastifyRequest, reply: FastifyReply): Promise<FastifyReply> {
+
+        const permissionsResult = await this.authorizationService.getPermissionsByUserId(String(request.locals.userId))
+        
+        if (permissionsResult.failed())
+            return forbidden(reply, permissionsResult.value)
+        
+        const permissions = permissionsResult.value
+
+        if (permissions.cannot('get-all', 'Unit'))
+            return forbidden(reply)
         
         const unitsFound = await this.unitService.findAllUnits()
 
@@ -80,6 +133,16 @@ export class UnitController {
     }
 
     public async findUnitsByBookId(request: FastifyRequest<FindUnitsByBookIdRequest.Type>, reply: FastifyReply): Promise<FastifyReply> {
+
+        const permissionsResult = await this.authorizationService.getPermissionsByUserId(String(request.locals.userId))
+        
+        if (permissionsResult.failed())
+            return forbidden(reply, permissionsResult.value)
+        
+        const permissions = permissionsResult.value
+
+        if (permissions.cannot('get', 'Unit'))
+            return forbidden(reply)
         
         const unitsFound = await this.unitService.findUnitsByBookId(request.params.bookId)
 
@@ -91,4 +154,7 @@ export class UnitController {
 
 }
 
-export const unitController = UnitController.create(unitService)
+export const unitController = UnitController.create(
+    authorizationService,
+    unitService
+)

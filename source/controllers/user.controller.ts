@@ -1,18 +1,31 @@
-import { badRequest, ok, unauthorized } from '@helpers'
+import { badRequest, forbidden, ok, unauthorized } from '@helpers'
 import { DeleteUserRequest, FindUserByIdRequest, UpdateMeRequest, UpdateUserRequest } from '@schemas/controllers'
-import { userService, UserService } from '@services'
+import { AuthorizationService, authorizationService, userService, UserService } from '@services'
 import { FastifyReply, FastifyRequest } from 'fastify'
 
 export class UserController {
 
-    private constructor (private readonly userService: UserService) {}
+    private constructor (
+        private readonly authorizationService: AuthorizationService,
+        private readonly userService: UserService
+    ) {}
 
-    public static create(userService: UserService): UserController {
-        return new UserController(userService)
+    public static create(authorizationService: AuthorizationService, userService: UserService): UserController {
+        return new UserController(authorizationService, userService)
     }
 
     public async updateUserHandler(request: FastifyRequest<UpdateUserRequest.Type>, reply: FastifyReply): Promise<FastifyReply> {
 
+        const permissionsResult = await this.authorizationService.getPermissionsByUserId(String(request.locals.userId))
+        
+        if (permissionsResult.failed())
+            return forbidden(reply, permissionsResult.value)
+        
+        const permissions = permissionsResult.value
+
+        if (permissions.cannot('update', 'User'))
+            return forbidden(reply)
+        
         const updateResult = await this.userService.updateUser({...request.body, ...request.params})
 
         if (updateResult.failed())
@@ -41,6 +54,16 @@ export class UserController {
 
     public async deleteUserHandler(request: FastifyRequest<DeleteUserRequest.Type>, reply: FastifyReply): Promise<FastifyReply> {
 
+        const permissionsResult = await this.authorizationService.getPermissionsByUserId(String(request.locals.userId))
+        
+        if (permissionsResult.failed())
+            return forbidden(reply, permissionsResult.value)
+        
+        const permissions = permissionsResult.value
+
+        if (permissions.cannot('delete', 'User'))
+            return forbidden(reply)
+
         const deleteResult = await this.userService.deleteUser(request.params.userId)
 
         if (deleteResult.failed())
@@ -54,6 +77,16 @@ export class UserController {
 
     public async findAllUsersHandler(request: FastifyRequest, reply: FastifyReply): Promise<FastifyReply> {
         
+        const permissionsResult = await this.authorizationService.getPermissionsByUserId(String(request.locals.userId))
+        
+        if (permissionsResult.failed())
+            return forbidden(reply, permissionsResult.value)
+        
+        const permissions = permissionsResult.value
+
+        if (permissions.cannot('get-all', 'User'))
+            return forbidden(reply)
+
         const usersFound = await this.userService.findAllUsers()
 
         const usersFoundTo = usersFound.map(userFound => userFound.to())
@@ -63,6 +96,16 @@ export class UserController {
     }
 
     public async findUserByIdHandler(request: FastifyRequest<FindUserByIdRequest.Type>, reply: FastifyReply): Promise<FastifyReply> {
+
+        const permissionsResult = await this.authorizationService.getPermissionsByUserId(String(request.locals.userId))
+        
+        if (permissionsResult.failed())
+            return forbidden(reply, permissionsResult.value)
+        
+        const permissions = permissionsResult.value
+
+        if (permissions.cannot('get', 'User'))
+            return forbidden(reply)
 
         const findResult = await this.userService.findUserById(request.params.userId)
 
@@ -90,4 +133,7 @@ export class UserController {
 
 }
 
-export const userController = UserController.create(userService)
+export const userController = UserController.create(
+    authorizationService,
+    userService
+)

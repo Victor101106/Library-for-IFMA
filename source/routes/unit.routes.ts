@@ -30,6 +30,7 @@ module.exports = (instance: FastifyTypedInstance) => {
     })
 
     instance.get('/books/:bookId/units', {
+        onRequest: [authMiddleware.ensureAuthenticationHandle],
         schema: {
             tags: ['Units'],
             summary: 'Get book units by book id',
@@ -52,6 +53,7 @@ module.exports = (instance: FastifyTypedInstance) => {
     })
 
     instance.get('/books/units', {
+        onRequest: [authMiddleware.ensureAuthenticationHandle],
         schema: {
             tags: ['Units'],
             summary: 'Get all book units',
@@ -73,6 +75,7 @@ module.exports = (instance: FastifyTypedInstance) => {
     })
 
     instance.get('/books/units/:unitCode', {
+        onRequest: [authMiddleware.ensureAuthenticationHandle],
         schema: {
             tags: ['Units'],
             summary: 'Get book unit by code',
@@ -93,6 +96,7 @@ module.exports = (instance: FastifyTypedInstance) => {
     })
 
     instance.put('/books/units/:unitCode', {
+        onRequest: [authMiddleware.ensureAuthenticationHandle],
         schema: {
             tags: ['Units'],
             summary: 'Update book unit',
@@ -114,6 +118,7 @@ module.exports = (instance: FastifyTypedInstance) => {
     })
 
     instance.delete('/books/units/:unitCode', {
+        onRequest: [authMiddleware.ensureAuthenticationHandle],
         schema: {
             tags: ['Units'],
             summary: 'Delete book unit by code',

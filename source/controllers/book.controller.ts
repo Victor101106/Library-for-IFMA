@@ -1,17 +1,30 @@
-import { badRequest, created, ok } from '@helpers'
+import { badRequest, created, forbidden, ok } from '@helpers'
 import { CreateBookRequest, DeleteBookRequest, FindBookByIdRequest, SearchBooksRequest, UpdateBookRequest } from '@schemas/controllers'
-import { bookService, BookService } from '@services'
+import { authorizationService, AuthorizationService, bookService, BookService } from '@services'
 import { FastifyReply, FastifyRequest } from 'fastify'
 
 export class BookController {
 
-    private constructor (private readonly bookService: BookService) {}
+    private constructor (
+        private readonly authorizationService: AuthorizationService,
+        private readonly bookService: BookService
+    ) {}
 
-    public static create(bookService: BookService): BookController {
-        return new BookController(bookService)
+    public static create(authorizationService: AuthorizationService, bookService: BookService): BookController {
+        return new BookController(authorizationService, bookService)
     }
 
     public async createBookHandler(request: FastifyRequest<CreateBookRequest.Type>, reply: FastifyReply): Promise<FastifyReply> {
+
+        const permissionsResult = await this.authorizationService.getPermissionsByUserId(String(request.locals.userId))
+        
+        if (permissionsResult.failed())
+            return forbidden(reply, permissionsResult.value)
+        
+        const permissions = permissionsResult.value
+
+        if (permissions.cannot('create', 'Book'))
+            return forbidden(reply)
         
         const createResult = await this.bookService.createBook({
             createdBy: String(request.locals.userId),
@@ -33,6 +46,16 @@ export class BookController {
 
     public async findBookByIdHandler(request: FastifyRequest<FindBookByIdRequest.Type>, reply: FastifyReply): Promise<FastifyReply> {
         
+        const permissionsResult = await this.authorizationService.getPermissionsByUserId(String(request.locals.userId))
+        
+        if (permissionsResult.failed())
+            return forbidden(reply, permissionsResult.value)
+        
+        const permissions = permissionsResult.value
+
+        if (permissions.cannot('get', 'Book'))
+            return forbidden(reply)
+
         const findResult = await this.bookService.findBookById(request.params.bookId)
 
         if (findResult.failed())
@@ -45,6 +68,16 @@ export class BookController {
     }
 
     public async updateBookHandler(request: FastifyRequest<UpdateBookRequest.Type>, reply: FastifyReply): Promise<FastifyReply> {
+
+        const permissionsResult = await this.authorizationService.getPermissionsByUserId(String(request.locals.userId))
+        
+        if (permissionsResult.failed())
+            return forbidden(reply, permissionsResult.value)
+        
+        const permissions = permissionsResult.value
+
+        if (permissions.cannot('update', 'Book'))
+            return forbidden(reply)
         
         const updateResult = await this.bookService.updateBook({ ...request.body, ...request.params })
 
@@ -58,6 +91,16 @@ export class BookController {
     }
 
     public async deleteBookHandler(request: FastifyRequest<DeleteBookRequest.Type>, reply: FastifyReply): Promise<FastifyReply> {
+
+        const permissionsResult = await this.authorizationService.getPermissionsByUserId(String(request.locals.userId))
+        
+        if (permissionsResult.failed())
+            return forbidden(reply, permissionsResult.value)
+        
+        const permissions = permissionsResult.value
+
+        if (permissions.cannot('delete', 'Book'))
+            return forbidden(reply)
         
         const deleteResult = await this.bookService.deleteBook(request.params.bookId)
 
@@ -71,6 +114,16 @@ export class BookController {
     }
 
     public async searchBooksHandler(request: FastifyRequest<SearchBooksRequest.Type>, reply: FastifyReply): Promise<FastifyReply> {
+
+        const permissionsResult = await this.authorizationService.getPermissionsByUserId(String(request.locals.userId))
+        
+        if (permissionsResult.failed())
+            return forbidden(reply, permissionsResult.value)
+        
+        const permissions = permissionsResult.value
+
+        if (permissions.cannot('get', 'Book'))
+            return forbidden(reply)
 
         const searchResult = await this.bookService.searchBooks({...request.query})
 
@@ -86,6 +139,16 @@ export class BookController {
     }
 
     public async findAllBooksHandler(request: FastifyRequest, reply: FastifyReply): Promise<FastifyReply> {
+
+        const permissionsResult = await this.authorizationService.getPermissionsByUserId(String(request.locals.userId))
+        
+        if (permissionsResult.failed())
+            return forbidden(reply, permissionsResult.value)
+        
+        const permissions = permissionsResult.value
+
+        if (permissions.cannot('get-all', 'Book'))
+            return forbidden(reply)
         
         const booksFound = await this.bookService.findAllBooks()
 
@@ -97,4 +160,7 @@ export class BookController {
 
 }
 
-export const bookController = BookController.create(bookService)
+export const bookController = BookController.create(
+    authorizationService,
+    bookService
+)
