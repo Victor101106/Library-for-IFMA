@@ -2,13 +2,13 @@ import { failure, Result, success } from '@helpers'
 import { RoleEnum, User } from '@models'
 import { inMemoryUserRepository } from '@repositories'
 import { UserRepository } from '@repositories/contracts'
-import { GoogleIdAlreadyInUseError, UserAlreadyHasRoleError, UserNotFoundError } from './errors'
+import { OAuthIdAlreadyInUseError, UserAlreadyHasRoleError, UserNotFoundError } from './errors'
 
 export namespace UserService {
     
-    export namespace FindByGoogleIdOrCreateUser {
+    export namespace FindByOAuthIdOrCreateUser {
         export type Request = {
-            googleId: string
+            oAuthId: string
             picture?: string
             email?: string
             name?: string
@@ -18,7 +18,7 @@ export namespace UserService {
 
     export namespace CreateUser {
         export type Request = {
-            googleId: string
+            oAuthId: string
             picture: string
             email: string
             name: string
@@ -70,7 +70,7 @@ export namespace UserService {
         export type Response = Array<User>
     }
     
-    export namespace FindUserByGoogleId {
+    export namespace FindUserByOAuthId {
         export type Request = string
         export type Response = User
     }
@@ -90,15 +90,15 @@ export class UserService {
         return new UserService(userRepository)
     }
 
-    public async findByGoogleIdOrCreateUser(request: UserService.FindByGoogleIdOrCreateUser.Request): Promise<Result<Error, UserService.FindByGoogleIdOrCreateUser.Response>> {
+    public async findByOAuthIdOrCreateUser(request: UserService.FindByOAuthIdOrCreateUser.Request): Promise<Result<Error, UserService.FindByOAuthIdOrCreateUser.Response>> {
 
-        const userFound = await this.userRepository.findByGoogleId(request.googleId)
+        const userFound = await this.userRepository.findByOAuthId(request.oAuthId)
 
         if (userFound)
             return success(userFound)
             
         const createResult = await this.createUser({
-            googleId: String(request.googleId),
+            oAuthId: String(request.oAuthId),
             picture: String(request.picture),
             email: String(request.email),
             name: String(request.name)
@@ -113,15 +113,15 @@ export class UserService {
 
     }
 
-    public async createUser(request: UserService.CreateUser.Request): Promise<Result<GoogleIdAlreadyInUseError | UserNotFoundError, UserService.CreateUser.Response>> {
+    public async createUser(request: UserService.CreateUser.Request): Promise<Result<OAuthIdAlreadyInUseError | UserNotFoundError, UserService.CreateUser.Response>> {
 
-        const userFound = await this.userRepository.findByGoogleId(request.googleId)
+        const userFound = await this.userRepository.findByOAuthId(request.oAuthId)
 
         if (userFound)
-            return failure(new GoogleIdAlreadyInUseError())
+            return failure(new OAuthIdAlreadyInUseError())
 
         const createResult = User.create({
-            googleId: request.googleId,
+            oAuthId: request.oAuthId,
             picture: request.picture,
             email: request.email,
             name: request.name,
@@ -230,9 +230,9 @@ export class UserService {
         return await this.userRepository.findAll()
     }
     
-    public async findUserByGoogleId(googleId: UserService.FindUserByGoogleId.Request): Promise<Result<UserNotFoundError, UserService.FindUserByGoogleId.Response>> {
+    public async findUserByOAuthId(oAuthId: UserService.FindUserByOAuthId.Request): Promise<Result<UserNotFoundError, UserService.FindUserByOAuthId.Response>> {
 
-        const userFound = await this.userRepository.findByGoogleId(googleId)
+        const userFound = await this.userRepository.findByOAuthId(oAuthId)
 
         if (!userFound)
             return failure(new UserNotFoundError())

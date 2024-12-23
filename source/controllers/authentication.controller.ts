@@ -52,8 +52,8 @@ export class AuthenticationController {
 
     private async logInWithGoogleCommonHandler(payload: TokenPayload, reply: FastifyReply): Promise<FastifyReply> {
         
-        const result = await this.userService.findByGoogleIdOrCreateUser({
-            googleId: payload.sub,
+        const result = await this.userService.findByOAuthIdOrCreateUser({
+            oAuthId: payload.sub,
             picture: payload.picture,
             email: payload.email,
             name: payload.name

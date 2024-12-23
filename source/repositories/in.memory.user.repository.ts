@@ -11,8 +11,8 @@ export class InMemoryUserRepository implements UserRepository {
         return new InMemoryUserRepository(new Array())
     }
 
-    public async findByGoogleId(googleId: string): Promise<User | void> {
-        return this.database.find(userFound => userFound.googleId.value == googleId)
+    public async findByOAuthId(oAuthId: string): Promise<User | void> {
+        return this.database.find(userFound => userFound.oAuthId.value == oAuthId)
     }
 
     public async findById(userId: string): Promise<User | void> {

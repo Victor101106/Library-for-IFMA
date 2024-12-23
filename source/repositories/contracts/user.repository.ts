@@ -2,7 +2,7 @@ import { User } from '@models'
 
 export interface UserRepository {
 
-    findByGoogleId(googleId: string): Promise<User | void>
+    findByOAuthId(oAuthId: string): Promise<User | void>
 
     findById(userId: string): Promise<User | void>
 

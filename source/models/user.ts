@@ -1,11 +1,11 @@
 import { failure, Result, success } from '@helpers'
-import { Email, GoogleId, Id, Name, Registration, Role, Siape, Timestamp, URL } from './index'
+import { Email, Id, Name, OAuthId, Registration, Role, Siape, Timestamp, URL } from './index'
 
 export namespace User {
     
     export type Request = {
         registration?: string
-        googleId     : string
+        oAuthId      : string
         picture     ?: string
         siape       ?: number
         email        : string
@@ -40,7 +40,7 @@ export class User {
         public readonly registration: Registration,
         public readonly createdAt   : Timestamp,
         public readonly updatedAt   : Timestamp,
-        public readonly googleId    : GoogleId,
+        public readonly oAuthId     : OAuthId,
         public readonly picture     : URL,
         public readonly siape       : Siape,
         public readonly email       : Email,
@@ -52,8 +52,8 @@ export class User {
     public static create(request: User.Request): Result<Error, User.Response> {
         
         const registrationResult = Registration.create(request.registration)
-        const googleIdResult     = GoogleId    .create(request.googleId)
-        const pictureResult      = URL     .create(request.picture)
+        const oAuthIdResult      = OAuthId     .create(request.oAuthId)
+        const pictureResult      = URL         .create(request.picture)
         const siapeResult        = Siape       .create(request.siape)
         const emailResult        = Email       .create(request.email)
         const nameResult         = Name        .create(request.name)
@@ -62,8 +62,8 @@ export class User {
         if (registrationResult.failed())
             return failure(registrationResult.value)
         
-        if (googleIdResult.failed())
-            return failure(googleIdResult.value)
+        if (oAuthIdResult.failed())
+            return failure(oAuthIdResult.value)
         
         if (pictureResult.failed())
             return failure(pictureResult.value)
@@ -81,7 +81,7 @@ export class User {
             return failure(roleResult.value)
         
         const registration = registrationResult.value
-        const googleId     = googleIdResult    .value
+        const oAuthId      = oAuthIdResult     .value
         const picture      = pictureResult     .value
         const siape        = siapeResult       .value
         const email        = emailResult       .value
@@ -92,7 +92,7 @@ export class User {
         const updatedAt = Timestamp.create()
         const id        = Id       .create()
         
-        return success(new User(registration, createdAt, updatedAt, googleId, picture, siape, email, role, name, id))
+        return success(new User(registration, createdAt, updatedAt, oAuthId, picture, siape, email, role, name, id))
 
     }
 
@@ -101,15 +101,15 @@ export class User {
         const registration = Registration.with(data.registration)
         const createdAt    = Timestamp   .with(data.createdAt)
         const updatedAt    = Timestamp   .with(data.updatedAt)
-        const googleId     = GoogleId    .with(data.googleId)
-        const picture      = URL     .with(data.picture)
+        const oAuthId      = OAuthId     .with(data.oAuthId)
+        const picture      = URL         .with(data.picture)
         const siape        = Siape       .with(data.siape)
         const email        = Email       .with(data.email)
         const role         = Role        .with(data.role)
         const name         = Name        .with(data.name)
         const id           = Id          .with(data.id)
         
-        return new User(registration, createdAt, updatedAt, googleId, picture, siape, email, role, name, id)
+        return new User(registration, createdAt, updatedAt, oAuthId, picture, siape, email, role, name, id)
 
     }
 
@@ -138,7 +138,7 @@ export class User {
         const registration = this.registration.to()
         const createdAt    = this.createdAt   .to()
         const updatedAt    = this.updatedAt   .to()
-        const googleId     = this.googleId    .to()
+        const oAuthId      = this.oAuthId     .to()
         const picture      = this.picture     .to()
         const siape        = this.siape       .to()
         const email        = this.email       .to()
@@ -146,7 +146,7 @@ export class User {
         const name         = this.name        .to()
         const id           = this.id          .to()
 
-        return { registration, createdAt, updatedAt, googleId, picture, siape, email, role, name, id }
+        return { registration, createdAt, updatedAt, oAuthId, picture, siape, email, role, name, id }
 
     }
 
