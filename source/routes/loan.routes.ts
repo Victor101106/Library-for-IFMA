@@ -2,6 +2,7 @@ import { FastifyTypedInstance } from '@configs/types'
 import { loanController } from '@controllers/loan.controller'
 import { authMiddleware } from '@middlewares/authentication.middleware'
 import { AddBookToCartRequest, RemoveBookFromCartRequest } from '@schemas/controllers'
+import { BookSchema, CartItemSchema } from '@schemas/models'
 import { FastifyRequest } from 'fastify'
 import { z } from 'zod'
 
@@ -14,11 +15,7 @@ module.exports = (instance: FastifyTypedInstance) => {
             summary: 'Add book to cart',
             params: AddBookToCartRequest.Schema.shape.Params,
             response: {
-                200: z.object({
-                    createdAt: z.number(),
-                    bookId: z.string(),
-                    userId: z.string()
-                })
+                200: CartItemSchema
             }
         }
     }, async (request: FastifyRequest<AddBookToCartRequest.Type>, reply) => {
@@ -31,20 +28,7 @@ module.exports = (instance: FastifyTypedInstance) => {
             tags: ['Cart'],
             summary: 'Get user cart',
             response: {
-                200: z.array(
-                    z.object({
-                        createdAt: z.number(),
-                        updatedAt: z.number(),
-                        createdBy: z.string(),
-                        coverImage: z.string().optional(),
-                        subject: z.string(),
-                        author: z.string(),
-                        genre: z.string(),
-                        title: z.string(),
-                        isbn: z.string(),
-                        id: z.string()
-                    })
-                )
+                200: z.array(BookSchema)
             }
         }
     }, async (request: FastifyRequest, reply) => {
@@ -57,13 +41,7 @@ module.exports = (instance: FastifyTypedInstance) => {
             tags: ['Cart'],
             summary: 'Remove all books from cart',
             response: {
-                200: z.array(
-                    z.object({
-                        createdAt: z.number(),
-                        bookId: z.string(),
-                        userId: z.string()
-                    })
-                )
+                200: z.array(CartItemSchema)
             }
         }
     }, async (request: FastifyRequest, reply) => {
@@ -77,11 +55,7 @@ module.exports = (instance: FastifyTypedInstance) => {
             summary: 'Remove book from cart',
             params: RemoveBookFromCartRequest.Schema.shape.Params,
             response: {
-                200: z.object({
-                    createdAt: z.number(),
-                    bookId: z.string(),
-                    userId: z.string()
-                })
+                200: CartItemSchema
             }
         }
     }, async (request: FastifyRequest<RemoveBookFromCartRequest.Type>, reply) => {

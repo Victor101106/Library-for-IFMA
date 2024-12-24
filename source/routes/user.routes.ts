@@ -2,6 +2,7 @@ import { FastifyTypedInstance } from '@configs/types'
 import { userController } from '@controllers'
 import { authMiddleware } from '@middlewares'
 import { DeleteUserRequest, FindUserByIdRequest, UpdateMeRequest, UpdateUserRequest } from '@schemas/controllers'
+import { UserSchema } from '@schemas/models'
 import { FastifyRequest } from 'fastify'
 import { z } from 'zod'
 
@@ -13,18 +14,7 @@ module.exports = (instance: FastifyTypedInstance) => {
             tags: ['Users'],
             summary: 'Get authenticated user',
             response: {
-                200: z.object({
-                    registration: z.string().optional(),
-                    createdAt: z.number(),
-                    updatedAt: z.number(),
-                    oAuthId: z.string(),
-                    picture: z.string(),
-                    siape: z.number().optional(),
-                    email: z.string(),
-                    role: z.string(),
-                    name: z.string(),
-                    id: z.string()
-                })
+                200: UserSchema
             }
         }
     }, async (request, reply) => {
@@ -37,20 +27,7 @@ module.exports = (instance: FastifyTypedInstance) => {
             tags: ['Users'],
             summary: 'Get all users',
             response: {
-                200: z.array(
-                    z.object({
-                        registration: z.string().optional(),
-                        createdAt: z.number(),
-                        updatedAt: z.number(),
-                        oAuthId: z.string(),
-                        picture: z.string(),
-                        siape: z.number().optional(),
-                        email: z.string(),
-                        role: z.string(),
-                        name: z.string(),
-                        id: z.string()
-                    })
-                )
+                200: z.array(UserSchema)
             }
         }
     }, async (request: FastifyRequest, reply) => {
@@ -64,18 +41,7 @@ module.exports = (instance: FastifyTypedInstance) => {
             summary: 'Get user',
             params: FindUserByIdRequest.Schema.shape.Params,
             response: {
-                200: z.object({
-                    registration: z.string().optional(),
-                    createdAt: z.number(),
-                    updatedAt: z.number(),
-                    oAuthId: z.string(),
-                    picture: z.string(),
-                    siape: z.number().optional(),
-                    email: z.string(),
-                    role: z.string(),
-                    name: z.string(),
-                    id: z.string()
-                })
+                200: UserSchema
             }
         }
     }, async (request: FastifyRequest<FindUserByIdRequest.Type>, reply) => {
@@ -90,18 +56,7 @@ module.exports = (instance: FastifyTypedInstance) => {
             params: UpdateUserRequest.Schema.shape.Params,
             body: UpdateUserRequest.Schema.shape.Body,
             response: {
-                200: z.object({
-                    registration: z.string().optional(),
-                    createdAt: z.number(),
-                    updatedAt: z.number(),
-                    oAuthId: z.string(),
-                    picture: z.string(),
-                    siape: z.number().optional(),
-                    email: z.string(),
-                    role: z.string(),
-                    name: z.string(),
-                    id: z.string()
-                })
+                200: UserSchema
             }
         }
     }, async (request: FastifyRequest<UpdateUserRequest.Type>, reply) => {
@@ -115,18 +70,7 @@ module.exports = (instance: FastifyTypedInstance) => {
             summary: 'Update authenticated user',
             body: UpdateMeRequest.Schema.shape.Body,
             response: {
-                200: z.object({
-                    registration: z.string().optional(),
-                    createdAt: z.number(),
-                    updatedAt: z.number(),
-                    oAuthId: z.string(),
-                    picture: z.string(),
-                    siape: z.number().optional(),
-                    email: z.string(),
-                    role: z.string(),
-                    name: z.string(),
-                    id: z.string()
-                })
+                200: UserSchema
             }
         }
     }, async (request: FastifyRequest<UpdateMeRequest.Type>, reply) => {
@@ -140,18 +84,7 @@ module.exports = (instance: FastifyTypedInstance) => {
             summary: 'Delete user',
             params: DeleteUserRequest.Schema.shape.Params,
             response: {
-                200: z.object({
-                    registration: z.string().optional(),
-                    createdAt: z.number(),
-                    updatedAt: z.number(),
-                    oAuthId: z.string(),
-                    picture: z.string(),
-                    siape: z.number().optional(),
-                    email: z.string(),
-                    role: z.string(),
-                    name: z.string(),
-                    id: z.string()
-                })
+                200: UserSchema
             }
         }
     }, async (request: FastifyRequest<DeleteUserRequest.Type>, reply) => {

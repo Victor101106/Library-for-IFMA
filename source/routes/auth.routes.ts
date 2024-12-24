@@ -2,6 +2,7 @@ import { FastifyTypedInstance } from '@configs/types'
 import { authenticationController } from '@controllers'
 import { authMiddleware } from '@middlewares/authentication.middleware'
 import { CompleteSignUpRequest, LogInWithGoogleCallbackRequest, LogInWithGoogleRequest } from '@schemas/controllers'
+import { UserSchema } from '@schemas/models'
 import { FastifyRequest } from 'fastify'
 import { z } from 'zod'
 
@@ -25,18 +26,7 @@ module.exports = (instance: FastifyTypedInstance) => {
             summary: 'Authenticate with Google OAuth2 callback in redirect URI',
             querystring: LogInWithGoogleCallbackRequest.Schema.shape.Querystring,
             response: {
-                200: z.object({
-                    registration: z.string().optional(),
-                    createdAt: z.number(),
-                    updatedAt: z.number(),
-                    oAuthId: z.string(),
-                    picture: z.string(),
-                    siape: z.number().optional(),
-                    email: z.string(),
-                    role: z.string(),
-                    name: z.string(),
-                    id: z.string()
-                })
+                200: UserSchema
             }
         }
     }, async (request: FastifyRequest<LogInWithGoogleCallbackRequest.Type>, reply) => {
@@ -49,18 +39,7 @@ module.exports = (instance: FastifyTypedInstance) => {
             summary: 'Authenticate with Google OAuth2 credential',
             body: LogInWithGoogleRequest.Schema.shape.Body,
             response: {
-                200: z.object({
-                    registration: z.string().optional(),
-                    createdAt: z.number(),
-                    updatedAt: z.number(),
-                    oAuthId: z.string(),
-                    picture: z.string(),
-                    siape: z.number().optional(),
-                    email: z.string(),
-                    role: z.string(),
-                    name: z.string(),
-                    id: z.string()
-                })
+                200: UserSchema
             }
         }
     }, async (request: FastifyRequest<LogInWithGoogleRequest.Type>, reply) => {

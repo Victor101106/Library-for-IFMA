@@ -2,6 +2,7 @@ import { FastifyTypedInstance } from '@configs/types'
 import { bookController } from '@controllers/book.controller'
 import { authMiddleware } from '@middlewares/authentication.middleware'
 import { CreateBookRequest, DeleteBookRequest, FindBookByIdRequest, SearchBooksRequest, UpdateBookRequest } from '@schemas/controllers'
+import { BookSchema } from '@schemas/models'
 import { FastifyRequest } from 'fastify'
 import { z } from 'zod'
 
@@ -14,18 +15,7 @@ module.exports = (instance: FastifyTypedInstance) => {
             summary: 'Create book',
             body: CreateBookRequest.Schema.shape.Body,
             response: {
-                200: z.object({
-                    createdAt: z.number(),
-                    updatedAt: z.number(),
-                    createdBy: z.string(),
-                    coverImage: z.string().optional(),
-                    subject: z.string(),
-                    author: z.string(),
-                    genre: z.string(),
-                    title: z.string(),
-                    isbn: z.string(),
-                    id: z.string()
-                })
+                200: BookSchema
             }
         }
     }, async (request: FastifyRequest<CreateBookRequest.Type>, reply) => {
@@ -38,20 +28,7 @@ module.exports = (instance: FastifyTypedInstance) => {
             tags: ['Books'],
             summary: 'Get all books',
             response: {
-                200: z.array(
-                    z.object({
-                        createdAt: z.number(),
-                        updatedAt: z.number(),
-                        createdBy: z.string(),
-                        coverImage: z.string().optional(),
-                        subject: z.string(),
-                        author: z.string(),
-                        genre: z.string(),
-                        title: z.string(),
-                        isbn: z.string(),
-                        id: z.string()
-                    })
-                )
+                200: z.array(BookSchema)
             }
         }
     }, async (request, reply) => {
@@ -65,20 +42,7 @@ module.exports = (instance: FastifyTypedInstance) => {
             summary: 'Search books',
             querystring: SearchBooksRequest.Schema.shape.Querystring,
             response: {
-                200: z.array(
-                    z.object({
-                        createdAt: z.number(),
-                        updatedAt: z.number(),
-                        createdBy: z.string(),
-                        coverImage: z.string().optional(),
-                        subject: z.string(),
-                        author: z.string(),
-                        genre: z.string(),
-                        title: z.string(),
-                        isbn: z.string(),
-                        id: z.string()
-                    })
-                )
+                200: z.array(BookSchema)
             }
         }
     }, async (request: FastifyRequest<SearchBooksRequest.Type>, reply) => {
@@ -92,18 +56,7 @@ module.exports = (instance: FastifyTypedInstance) => {
             summary: 'Get book by id',
             params: FindBookByIdRequest.Schema.shape.Params,
             response: {
-                200: z.object({
-                    createdAt: z.number(),
-                    updatedAt: z.number(),
-                    createdBy: z.string(),
-                    coverImage: z.string().optional(),
-                    subject: z.string(),
-                    author: z.string(),
-                    genre: z.string(),
-                    title: z.string(),
-                    isbn: z.string(),
-                    id: z.string()
-                })
+                200: BookSchema
             }
         }
     }, async (request: FastifyRequest<FindBookByIdRequest.Type>, reply) => {
@@ -118,18 +71,7 @@ module.exports = (instance: FastifyTypedInstance) => {
             params: UpdateBookRequest.Schema.shape.Params,
             body: UpdateBookRequest.Schema.shape.Body,
             response: {
-                200: z.object({
-                    createdAt: z.number(),
-                    updatedAt: z.number(),
-                    createdBy: z.string(),
-                    coverImage: z.string().optional(),
-                    subject: z.string(),
-                    author: z.string(),
-                    genre: z.string(),
-                    title: z.string(),
-                    isbn: z.string(),
-                    id: z.string()
-                })
+                200: BookSchema
             }
         }
     }, async (request: FastifyRequest<UpdateBookRequest.Type>, reply) => {
@@ -143,18 +85,7 @@ module.exports = (instance: FastifyTypedInstance) => {
             summary: 'Delete book',
             params: DeleteBookRequest.Schema.shape.Params,
             response: {
-                200: z.object({
-                    createdAt: z.number(),
-                    updatedAt: z.number(),
-                    createdBy: z.string(),
-                    coverImage: z.string().optional(),
-                    subject: z.string(),
-                    author: z.string(),
-                    genre: z.string(),
-                    title: z.string(),
-                    isbn: z.string(),
-                    id: z.string()
-                })
+                200: BookSchema
             }
         }
     }, async (request: FastifyRequest<DeleteBookRequest.Type>, reply) => {

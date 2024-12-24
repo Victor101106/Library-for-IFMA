@@ -1,6 +1,7 @@
 import { FastifyTypedInstance } from '@configs/types'
 import { experimentalController } from '@controllers/experimental.controller'
 import { AssignAdminRoleToUserRequest } from '@schemas/controllers'
+import { UserSchema } from '@schemas/models'
 import { FastifyRequest } from 'fastify'
 import { z } from 'zod'
 
@@ -24,18 +25,7 @@ module.exports = (instance: FastifyTypedInstance) => {
             summary: 'Assign administrator role to user',
             params: AssignAdminRoleToUserRequest.Schema.shape.Params,
             response: {
-                200: z.object({
-                    registration: z.string().optional(),
-                    createdAt: z.number(),
-                    updatedAt: z.number(),
-                    oAuthId: z.string(),
-                    picture: z.string(),
-                    siape: z.number().optional(),
-                    email: z.string(),
-                    role: z.string(),
-                    name: z.string(),
-                    id: z.string()
-                })
+                200: UserSchema
             }
         }
     }, async (request: FastifyRequest<AssignAdminRoleToUserRequest.Type>, reply) => {
