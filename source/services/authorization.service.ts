@@ -1,7 +1,7 @@
 import { failure, Result, success } from '@helpers'
+import { AppAbility, defineAbilityFor } from '@libraries'
 import { User } from '@models'
 import { inMemoryUserRepository, UserRepository } from '@repositories'
-import { AppAbility, defineAbilityFor } from '../authorization'
 import { UserNotFoundError } from './errors'
 
 export namespace AuthorizationService {

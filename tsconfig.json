@@ -33,6 +33,7 @@
         "@repositories": ["./source/repositories"],
         "@middlewares": ["./source/middlewares"],
         "@controllers": ["./source/controllers"],
+        "@libraries": ["./source/libraries"],
         "@services": ["./source/services"],
         "@configs": ["./source/configs"],
         "@helpers": ["./source/helpers"],
