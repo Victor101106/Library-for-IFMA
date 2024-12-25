@@ -1,4 +1,3 @@
-import { environment } from '@configs'
 import { failure, Result, success } from '@helpers'
 import { accessTokenPayloadSchema } from '@schemas/services/token'
 import { sign, verify } from 'jsonwebtoken'
@@ -28,7 +27,7 @@ export class TokenService {
 
     public async signAccessToken(userId: TokenService.SignAccessToken.Request): Promise<TokenService.SignAccessToken.Response> {
 
-        const secretKey = environment.ACCESS_TOKEN_SECRET_KEY
+        const secretKey = process.env.ACCESS_TOKEN_SECRET_KEY
         
         const payload = {
             sub: userId
@@ -42,7 +41,7 @@ export class TokenService {
         
         try {
             
-            const secretKey = environment.ACCESS_TOKEN_SECRET_KEY
+            const secretKey = process.env.ACCESS_TOKEN_SECRET_KEY
 
             const payload = verify(accessToken, secretKey)
 

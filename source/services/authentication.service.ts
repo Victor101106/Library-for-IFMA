@@ -1,4 +1,3 @@
-import { environment } from '@configs'
 import { failure, Result, success } from '@helpers'
 import { OAuth2Client, TokenPayload } from 'google-auth-library'
 import { InvalidGoogleCodeError, InvalidGoogleCredentialError } from './errors'
@@ -37,9 +36,9 @@ export class AuthenticationService {
 
     public createOAuth2Client(): AuthenticationService.CreateOAuth2Client.Response {
         return new OAuth2Client(
-            environment.GOOGLE_CLIENT_ID,
-            environment.GOOGLE_CLIENT_SECRET_KEY,
-            environment.GOOGLE_REDIRECT_URI
+            process.env.GOOGLE_CLIENT_ID,
+            process.env.GOOGLE_CLIENT_SECRET_KEY,
+            process.env.GOOGLE_REDIRECT_URI
         )
     }
 
@@ -62,7 +61,7 @@ export class AuthenticationService {
         const client = this.createOAuth2Client()
         
         const ticket = await client.verifyIdToken({
-            audience: environment.GOOGLE_CLIENT_ID,
+            audience: process.env.GOOGLE_CLIENT_ID,
             idToken: credential
         })
         

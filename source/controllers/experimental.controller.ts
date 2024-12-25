@@ -1,4 +1,3 @@
-import { environment } from '@configs'
 import { badRequest, ok } from '@helpers'
 import { AssignAdminRoleToUserRequest } from '@schemas/controllers'
 import { experimentalService, ExperimentalService } from '@services'
@@ -29,7 +28,7 @@ export class ExperimentalController {
     
     public async homeHandler(request: FastifyRequest, reply: FastifyReply): Promise<FastifyReply> {
         return reply.view('home.experimental.html', {
-            GOOGLE_CLIENT_ID: environment.GOOGLE_CLIENT_ID
+            GOOGLE_CLIENT_ID: process.env.GOOGLE_CLIENT_ID
         })
     }
 
