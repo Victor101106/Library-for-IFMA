@@ -1,7 +1,6 @@
 import { failure, Result, success } from '@helpers'
 import { Book } from '@models'
-import { inMemoryBookRepository, inMemoryUnitRepository } from '@repositories'
-import { BookRepository, UnitRepository } from '@repositories/contracts'
+import { BookRepository, inMemoryBookRepository, inMemoryUnitRepository, UnitRepository } from '@repositories'
 import { BookNotFoundError } from './errors'
 
 export namespace BookService {

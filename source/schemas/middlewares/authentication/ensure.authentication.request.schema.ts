@@ -1,5 +1,5 @@
-import { Schema } from '@schemas'
 import { z, ZodSchema } from 'zod'
+import { Schema } from '../../schema'
 
 export class EnsureAuthenticationRequestSchema extends Schema<EnsureAuthenticationRequestSchema.Type> {
 

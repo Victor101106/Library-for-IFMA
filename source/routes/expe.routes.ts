@@ -1,7 +1,6 @@
-import { FastifyTypedInstance } from '@configs/types'
-import { experimentalController } from '@controllers/experimental.controller'
-import { AssignAdminRoleToUserRequest } from '@schemas/controllers'
-import { UserSchema } from '@schemas/models'
+import { FastifyTypedInstance } from '@configs'
+import { experimentalController } from '@controllers'
+import { AssignAdminRoleToUserRequest, UserSchema } from '@schemas'
 import { FastifyRequest } from 'fastify'
 import { z } from 'zod'
 

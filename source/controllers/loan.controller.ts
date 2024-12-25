@@ -1,5 +1,5 @@
-import { badRequest, ok } from '@helpers/reply'
-import { AddBookToCartRequest, RemoveBookFromCartRequest } from '@schemas/controllers'
+import { badRequest, ok } from '@helpers'
+import { AddBookToCartRequest, RemoveBookFromCartRequest } from '@schemas'
 import { loanService, LoanService } from '@services'
 import { FastifyReply, FastifyRequest } from 'fastify'
 

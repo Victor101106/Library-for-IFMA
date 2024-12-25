@@ -1,8 +1,7 @@
-import { FastifyTypedInstance } from '@configs/types'
+import { FastifyTypedInstance } from '@configs'
 import { authenticationController } from '@controllers'
-import { authMiddleware } from '@middlewares/authentication.middleware'
-import { CompleteSignUpRequest, LogInWithGoogleCallbackRequest, LogInWithGoogleRequest } from '@schemas/controllers'
-import { UserSchema } from '@schemas/models'
+import { authMiddleware } from '@middlewares'
+import { CompleteSignUpRequest, LogInWithGoogleCallbackRequest, LogInWithGoogleRequest, UserSchema } from '@schemas'
 import { FastifyRequest } from 'fastify'
 import { z } from 'zod'
 

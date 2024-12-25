@@ -1,5 +1,5 @@
 import { ACCESS_TOKEN_COOKIE, unauthorized } from '@helpers'
-import { ensureAuthenticationRequestSchema } from '@schemas/middlewares/authentication'
+import { ensureAuthenticationRequestSchema } from '@schemas'
 import { tokenService, TokenService } from '@services'
 import { parse as parseCookie } from 'cookie'
 import { FastifyReply, FastifyRequest } from 'fastify'

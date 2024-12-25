@@ -1,8 +1,7 @@
-import { FastifyTypedInstance } from '@configs/types'
+import { FastifyTypedInstance } from '@configs'
 import { userController } from '@controllers'
 import { authMiddleware } from '@middlewares'
-import { DeleteUserRequest, FindUserByIdRequest, UpdateMeRequest, UpdateUserRequest } from '@schemas/controllers'
-import { UserSchema } from '@schemas/models'
+import { DeleteUserRequest, FindUserByIdRequest, UpdateMeRequest, UpdateUserRequest, UserSchema } from '@schemas'
 import { FastifyRequest } from 'fastify'
 import { z } from 'zod'
 

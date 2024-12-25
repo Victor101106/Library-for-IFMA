@@ -1,5 +1,5 @@
 import { badRequest, forbidden, ok, unauthorized } from '@helpers'
-import { DeleteUserRequest, FindUserByIdRequest, UpdateMeRequest, UpdateUserRequest } from '@schemas/controllers'
+import { DeleteUserRequest, FindUserByIdRequest, UpdateMeRequest, UpdateUserRequest } from '@schemas'
 import { AuthorizationService, authorizationService, userService, UserService } from '@services'
 import { FastifyReply, FastifyRequest } from 'fastify'
 

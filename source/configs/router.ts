@@ -1,4 +1,4 @@
-import { FastifyTypedInstance } from '@configs/types'
+import { FastifyTypedInstance } from '@configs'
 import { existsSync, readdirSync } from 'fs'
 import { join } from 'path'
 

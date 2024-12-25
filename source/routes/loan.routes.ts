@@ -1,8 +1,7 @@
-import { FastifyTypedInstance } from '@configs/types'
-import { loanController } from '@controllers/loan.controller'
-import { authMiddleware } from '@middlewares/authentication.middleware'
-import { AddBookToCartRequest, RemoveBookFromCartRequest } from '@schemas/controllers'
-import { BookSchema, CartItemSchema } from '@schemas/models'
+import { FastifyTypedInstance } from '@configs'
+import { loanController } from '@controllers'
+import { authMiddleware } from '@middlewares'
+import { AddBookToCartRequest, BookSchema, CartItemSchema, RemoveBookFromCartRequest } from '@schemas'
 import { FastifyRequest } from 'fastify'
 import { z } from 'zod'
 

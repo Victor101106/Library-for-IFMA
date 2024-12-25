@@ -1,8 +1,7 @@
-import { FastifyTypedInstance } from '@configs/types'
-import { bookController } from '@controllers/book.controller'
-import { authMiddleware } from '@middlewares/authentication.middleware'
-import { CreateBookRequest, DeleteBookRequest, FindBookByIdRequest, SearchBooksRequest, UpdateBookRequest } from '@schemas/controllers'
-import { BookSchema } from '@schemas/models'
+import { FastifyTypedInstance } from '@configs'
+import { bookController } from '@controllers'
+import { authMiddleware } from '@middlewares'
+import { BookSchema, CreateBookRequest, DeleteBookRequest, FindBookByIdRequest, SearchBooksRequest, UpdateBookRequest } from '@schemas'
 import { FastifyRequest } from 'fastify'
 import { z } from 'zod'
 

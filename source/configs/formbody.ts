@@ -1,4 +1,4 @@
-import { FastifyTypedInstance } from '@configs/types'
+import { FastifyTypedInstance } from '@configs'
 import fastifyFormbody from '@fastify/formbody'
 
 export default (instance: FastifyTypedInstance): void => {

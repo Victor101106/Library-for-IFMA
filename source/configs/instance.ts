@@ -17,3 +17,4 @@ swagger(instance)
 router(instance)
 
 export { instance }
+

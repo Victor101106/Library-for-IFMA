@@ -1,7 +1,6 @@
 import { failure, Result, success } from '@helpers'
 import { Unit } from '@models'
-import { inMemoryBookRepository, inMemoryUnitRepository, inMemoryUserRepository } from '@repositories'
-import { BookRepository, UnitRepository, UserRepository } from '@repositories/contracts'
+import { BookRepository, inMemoryBookRepository, inMemoryUnitRepository, inMemoryUserRepository, UnitRepository, UserRepository } from '@repositories'
 import { BookNotFoundError, CodeAlreadyInUseError, UnitNotFoundError, UserNotFoundError } from './errors'
 
 export namespace UnitService {

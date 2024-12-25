@@ -1,4 +1,4 @@
-import { Environment } from '@schemas/configs'
+import { Environment } from '@schemas'
 
 declare global {
     namespace NodeJS {

@@ -1,5 +1,5 @@
 import { badRequest, created, forbidden, ok } from '@helpers'
-import { CreateUnitRequest, DeleteUnitByCodeRequest, FindUnitByCodeRequest, FindUnitsByBookIdRequest, UpdateUnitRequest } from '@schemas/controllers'
+import { CreateUnitRequest, DeleteUnitByCodeRequest, FindUnitByCodeRequest, FindUnitsByBookIdRequest, UpdateUnitRequest } from '@schemas'
 import { authorizationService, AuthorizationService, unitService, UnitService } from '@services'
 import { FastifyReply, FastifyRequest } from 'fastify'
 

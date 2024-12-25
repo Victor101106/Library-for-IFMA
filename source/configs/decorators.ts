@@ -1,4 +1,4 @@
-import { FastifyTypedInstance } from '@configs/types'
+import { FastifyTypedInstance } from '@configs'
 
 declare module 'fastify' {
     interface FastifyRequest {

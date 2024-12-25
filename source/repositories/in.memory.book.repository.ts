@@ -1,5 +1,5 @@
-import { Book } from '@models';
-import { BookRepository } from './contracts';
+import { Book } from '@models'
+import { BookRepository } from './contracts'
 
 export class InMemoryBookRepository implements BookRepository {
     

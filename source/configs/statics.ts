@@ -1,4 +1,4 @@
-import { FastifyTypedInstance } from '@configs/types'
+import { FastifyTypedInstance } from '@configs'
 import FastifyStatic from '@fastify/static'
 import path from 'path'
 

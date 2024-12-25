@@ -1,7 +1,6 @@
 import { failure, Result, success } from '@helpers'
 import { RoleEnum, User } from '@models'
-import { inMemoryUserRepository } from '@repositories'
-import { UserRepository } from '@repositories/contracts'
+import { inMemoryUserRepository, UserRepository } from '@repositories'
 import { UserNotFoundError } from './errors'
 
 export namespace ExperimentalService {

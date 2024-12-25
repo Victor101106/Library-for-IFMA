@@ -1,5 +1,5 @@
 import { badRequest, ok } from '@helpers'
-import { AssignAdminRoleToUserRequest } from '@schemas/controllers'
+import { AssignAdminRoleToUserRequest } from '@schemas'
 import { experimentalService, ExperimentalService } from '@services'
 import { FastifyReply, FastifyRequest } from 'fastify'
 

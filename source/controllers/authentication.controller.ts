@@ -1,5 +1,5 @@
 import { ACCESS_TOKEN_COOKIE, badRequest, ok, serializeCookie } from '@helpers'
-import { CompleteSignUpRequest, LogInWithGoogleCallbackRequest, LogInWithGoogleRequest } from '@schemas/controllers'
+import { CompleteSignUpRequest, LogInWithGoogleCallbackRequest, LogInWithGoogleRequest } from '@schemas'
 import { authenticationService, AuthenticationService, tokenService, TokenService, userService, UserService } from '@services'
 import { FastifyReply, FastifyRequest } from 'fastify'
 import { TokenPayload } from 'google-auth-library'

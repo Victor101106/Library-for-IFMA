@@ -1,7 +1,6 @@
-import { failure, Result, success } from '@helpers/result'
+import { failure, Result, success } from '@helpers'
 import { Book, CartItem } from '@models'
-import { inMemoryBookRepository, inMemoryCartItemRepository, inMemoryUserRepository } from '@repositories'
-import { BookRepository, CartItemRepository, UserRepository } from '@repositories/contracts'
+import { BookRepository, CartItemRepository, inMemoryBookRepository, inMemoryCartItemRepository, inMemoryUserRepository, UserRepository } from '@repositories'
 import { BookAlreadyInCartError, BookNotFoundError, CartItemNotFoundError, EmptyCartError, UserNotFoundError } from './errors'
 
 export namespace LoanService {

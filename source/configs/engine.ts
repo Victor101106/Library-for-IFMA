@@ -1,4 +1,4 @@
-import { FastifyTypedInstance } from '@configs/types'
+import { FastifyTypedInstance } from '@configs'
 import FastifyView from '@fastify/view'
 
 export default (instance: FastifyTypedInstance) => {

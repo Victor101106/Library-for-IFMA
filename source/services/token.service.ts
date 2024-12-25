@@ -1,5 +1,5 @@
 import { failure, Result, success } from '@helpers'
-import { accessTokenPayloadSchema } from '@schemas/services/token'
+import { accessTokenPayloadSchema } from '@schemas'
 import { sign, verify } from 'jsonwebtoken'
 import { InvalidAccessTokenError } from './errors'
 
