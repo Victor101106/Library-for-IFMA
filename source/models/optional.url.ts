@@ -2,31 +2,31 @@ import { failure, Result, success } from '@helpers'
 import { z } from 'zod'
 import { InvalidURLError } from './errors'
 
-export namespace URL {
+export namespace OptionalURL {
     export type Request = string | undefined
     export type DTO = string | undefined
-    export type Response = URL
+    export type Response = OptionalURL
 }
 
-export class URL {
+export class OptionalURL {
 
     private constructor (
         private url: string | undefined
     ) {}
 
-    public static create(url: URL.Request): Result<InvalidURLError, URL.Response> {
+    public static create(url: OptionalURL.Request): Result<InvalidURLError, OptionalURL.Response> {
         
-        const isInvalidURL = url && !URL.validate(url)
+        const isInvalidURL = url && !OptionalURL.validate(url)
 
         if (isInvalidURL)
             return failure(new InvalidURLError())
         
-        return success(new URL(url))
+        return success(new OptionalURL(url))
 
     }
 
-    public static with(url: URL.DTO): URL.Response {
-        return new URL(url)
+    public static with(url: OptionalURL.DTO): OptionalURL.Response {
+        return new OptionalURL(url)
     }
 
     public static validate(url: string): boolean {
@@ -35,7 +35,7 @@ export class URL {
 
     public update(url: string): Result<InvalidURLError, string> {
 
-        if (!URL.validate(url))
+        if (!OptionalURL.validate(url))
             return failure(new InvalidURLError())
 
         return success(this.url = url)
@@ -46,7 +46,7 @@ export class URL {
         return this.url
     }
     
-    public to(): URL.DTO {
+    public to(): OptionalURL.DTO {
         return this.value
     }
 

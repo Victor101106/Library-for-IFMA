@@ -1,5 +1,5 @@
 import { failure, Result, success } from '@helpers'
-import { Email, Id, Name, OAuthId, Registration, Role, Siape, Timestamp, URL } from './index'
+import { Email, Id, Name, OAuthId, OptionalURL, Registration, Role, Siape, Timestamp } from './index'
 
 export namespace User {
     
@@ -41,7 +41,7 @@ export class User {
         public readonly createdAt   : Timestamp,
         public readonly updatedAt   : Timestamp,
         public readonly oAuthId     : OAuthId,
-        public readonly picture     : URL,
+        public readonly picture     : OptionalURL,
         public readonly siape       : Siape,
         public readonly email       : Email,
         public readonly role        : Role,
@@ -53,7 +53,7 @@ export class User {
         
         const registrationResult = Registration.create(request.registration)
         const oAuthIdResult      = OAuthId     .create(request.oAuthId)
-        const pictureResult      = URL         .create(request.picture)
+        const pictureResult      = OptionalURL .create(request.picture)
         const siapeResult        = Siape       .create(request.siape)
         const emailResult        = Email       .create(request.email)
         const nameResult         = Name        .create(request.name)
@@ -102,7 +102,7 @@ export class User {
         const createdAt    = Timestamp   .with(data.createdAt)
         const updatedAt    = Timestamp   .with(data.updatedAt)
         const oAuthId      = OAuthId     .with(data.oAuthId)
-        const picture      = URL         .with(data.picture)
+        const picture      = OptionalURL .with(data.picture)
         const siape        = Siape       .with(data.siape)
         const email        = Email       .with(data.email)
         const role         = Role        .with(data.role)

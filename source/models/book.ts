@@ -1,5 +1,5 @@
 import { failure, Result, success } from '@helpers'
-import { Attribute, Id, ISBN, Timestamp, URL } from './index'
+import { Attribute, Id, ISBN, OptionalURL, Timestamp } from './index'
 
 export namespace Book {
     
@@ -41,7 +41,7 @@ export class Book {
         public readonly createdAt : Timestamp,
         public readonly updatedAt : Timestamp,
         public readonly createdBy : Id,
-        public readonly coverImage: URL,
+        public readonly coverImage: OptionalURL,
         public readonly subject   : Attribute,
         public readonly author    : Attribute,
         public readonly genre     : Attribute,
@@ -52,12 +52,12 @@ export class Book {
 
     public static create(request: Book.Request): Result<Error, Book.Response> {
 
-        const coverImageResult = URL      .create(request.coverImage)
-        const subjectResult    = Attribute.create(request.subject)
-        const authorResult     = Attribute.create(request.author)
-        const genreResult      = Attribute.create(request.genre)
-        const titleResult      = Attribute.create(request.title)
-        const isbnResult       = ISBN     .create(request.isbn)
+        const coverImageResult = OptionalURL.create(request.coverImage)
+        const subjectResult    = Attribute  .create(request.subject)
+        const authorResult     = Attribute  .create(request.author)
+        const genreResult      = Attribute  .create(request.genre)
+        const titleResult      = Attribute  .create(request.title)
+        const isbnResult       = ISBN       .create(request.isbn)
         
         if (coverImageResult.failed())
             return failure(coverImageResult.value)
@@ -96,16 +96,16 @@ export class Book {
 
     public static with(data: Book.DTO): Book.Response {
         
-        const createdAt  = Timestamp.with(data.createdAt)
-        const updatedAt  = Timestamp.with(data.updatedAt)
-        const createdBy  = Id       .with(data.createdBy)
-        const coverImage = URL      .with(data.coverImage)
-        const subject    = Attribute.with(data.subject)
-        const author     = Attribute.with(data.author)
-        const genre      = Attribute.with(data.genre)
-        const title      = Attribute.with(data.title)
-        const isbn       = ISBN     .with(data.isbn)
-        const id         = Id       .with(data.id)
+        const createdAt  = Timestamp  .with(data.createdAt)
+        const updatedAt  = Timestamp  .with(data.updatedAt)
+        const createdBy  = Id         .with(data.createdBy)
+        const coverImage = OptionalURL.with(data.coverImage)
+        const subject    = Attribute  .with(data.subject)
+        const author     = Attribute  .with(data.author)
+        const genre      = Attribute  .with(data.genre)
+        const title      = Attribute  .with(data.title)
+        const isbn       = ISBN       .with(data.isbn)
+        const id         = Id         .with(data.id)
         
         return new Book(createdAt, updatedAt, createdBy, coverImage, subject, author, genre, title, isbn, id)
 
