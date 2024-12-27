@@ -14,6 +14,7 @@ export namespace Loan {
     
     export type DTO = Request & {
         confirmedBy?: string
+        finishedBy?: string
         returnedAt?: number
         createdAt: number
         updatedAt: number
@@ -26,6 +27,7 @@ export namespace Loan {
     export namespace Update {
         export type Request = {
             confirmedBy?: string
+            finishedBy?: string
             pickupTime?: string
             returnTime?: string
             returnedAt?: number
@@ -40,6 +42,7 @@ export class Loan {
 
     private constructor (
         public readonly confirmedBy: OptionalId,
+        public readonly finishedBy : OptionalId,
         public readonly pickupTime : TimeSlot,
         public readonly returnTime : TimeSlot,
         public readonly returnedAt : OptionalTimestamp,
@@ -78,6 +81,7 @@ export class Loan {
         const status     = statusResult    .value
         
         const confirmedBy = OptionalId       .create(undefined)
+        const finishedBy  = OptionalId       .create(undefined)
         const returnedAt  = OptionalTimestamp.create(undefined)
 
         const startsAt = Timestamp.create(request.startsAt)
@@ -89,13 +93,14 @@ export class Loan {
         const userId = Id.create(request.userId)
         const id     = Id.create()
         
-        return success(new Loan(confirmedBy, pickupTime, returnTime, returnedAt, createdAt, updatedAt, startsAt, unitCode, status, endsAt, userId, id))
+        return success(new Loan(confirmedBy, finishedBy, pickupTime, returnTime, returnedAt, createdAt, updatedAt, startsAt, unitCode, status, endsAt, userId, id))
 
     }
 
     public static with(data: Loan.DTO): Loan.Response {
 
         const confirmedBy = OptionalId       .with(data.confirmedBy)
+        const finishedBy  = OptionalId       .with(data.finishedBy)
         const pickupTime  = TimeSlot         .with(data.pickupTime)
         const returnTime  = TimeSlot         .with(data.returnTime)
         const returnedAt  = OptionalTimestamp.with(data.returnedAt)
@@ -108,7 +113,7 @@ export class Loan {
         const userId      = Id               .with(data.userId)
         const id          = Id               .with(data.id)
         
-        return new Loan(confirmedBy, pickupTime, returnTime, returnedAt, createdAt, updatedAt, startsAt, unitCode, status, endsAt, userId, id)
+        return new Loan(confirmedBy, finishedBy, pickupTime, returnTime, returnedAt, createdAt, updatedAt, startsAt, unitCode, status, endsAt, userId, id)
 
     }
 
@@ -116,6 +121,7 @@ export class Loan {
 
         const results = [
             request.confirmedBy ? this.confirmedBy.update(request.confirmedBy) : undefined,
+            request.finishedBy  ? this.finishedBy .update(request.finishedBy)  : undefined,
             request.returnedAt  ? this.returnedAt .update(request.returnedAt)  : undefined,
             request.pickupTime  ? this.pickupTime .update(request.pickupTime)  : undefined,
             request.returnTime  ? this.returnTime .update(request.returnTime)  : undefined,
@@ -135,6 +141,7 @@ export class Loan {
     public to(): Loan.DTO {
 
         const confirmedBy = this.confirmedBy.to()
+        const finishedBy  = this.finishedBy .to()
         const pickupTime  = this.pickupTime .to()
         const returnTime  = this.returnTime .to()
         const returnedAt  = this.returnedAt .to()
@@ -147,7 +154,7 @@ export class Loan {
         const userId      = this.userId     .to()
         const id          = this.id         .to()
 
-        return { confirmedBy, pickupTime, returnTime, returnedAt, createdAt, updatedAt, startsAt, unitCode, status, endsAt, userId, id }
+        return { confirmedBy, finishedBy, pickupTime, returnTime, returnedAt, createdAt, updatedAt, startsAt, unitCode, status, endsAt, userId, id }
 
     }
 
