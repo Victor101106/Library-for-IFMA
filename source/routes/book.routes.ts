@@ -8,7 +8,7 @@ import { z } from 'zod'
 module.exports = (instance: FastifyTypedInstance) => {
 
     instance.post('/books', {
-        onRequest: [authMiddleware.ensureAuthenticationHandle],
+        onRequest: [authMiddleware.ensureAuthenticationHandler],
         schema: {
             tags: ['Books'],
             summary: 'Create book',
@@ -22,7 +22,7 @@ module.exports = (instance: FastifyTypedInstance) => {
     })
 
     instance.get('/books', {
-        onRequest: [authMiddleware.ensureAuthenticationHandle],
+        onRequest: [authMiddleware.ensureAuthenticationHandler],
         schema: {
             tags: ['Books'],
             summary: 'Get all books',
@@ -35,7 +35,7 @@ module.exports = (instance: FastifyTypedInstance) => {
     })
 
     instance.get('/books/search', {
-        onRequest: [authMiddleware.ensureAuthenticationHandle],
+        onRequest: [authMiddleware.ensureAuthenticationHandler],
         schema: {
             tags: ['Books'],
             summary: 'Search books',
@@ -49,7 +49,7 @@ module.exports = (instance: FastifyTypedInstance) => {
     })
 
     instance.get('/books/:bookId', {
-        onRequest: [authMiddleware.ensureAuthenticationHandle],
+        onRequest: [authMiddleware.ensureAuthenticationHandler],
         schema: {
             tags: ['Books'],
             summary: 'Get book by id',
@@ -63,7 +63,7 @@ module.exports = (instance: FastifyTypedInstance) => {
     })
 
     instance.put('/books/:bookId', {
-        onRequest: [authMiddleware.ensureAuthenticationHandle],
+        onRequest: [authMiddleware.ensureAuthenticationHandler],
         schema: {
             tags: ['Books'],
             summary: 'Update book',
@@ -78,7 +78,7 @@ module.exports = (instance: FastifyTypedInstance) => {
     })
     
     instance.delete('/books/:bookId', {
-        onRequest: [authMiddleware.ensureAuthenticationHandle],
+        onRequest: [authMiddleware.ensureAuthenticationHandler],
         schema: {
             tags: ['Books'],
             summary: 'Delete book',

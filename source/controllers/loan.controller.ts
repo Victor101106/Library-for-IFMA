@@ -13,10 +13,7 @@ export class LoanController {
 
     public async addBookToCartHandler(request: FastifyRequest<AddBookToCartRequest.Type>, reply: FastifyReply): Promise<FastifyReply> {
         
-        const addResult = await this.loanService.addBookToCart({
-            userId: String(request.locals.userId),
-            bookId: request.params.bookId
-        })
+        const addResult = await this.loanService.addBookToCart({...request.params, ...request.authentication})
 
         if (addResult.failed())
             return badRequest(reply, addResult.value)
@@ -29,9 +26,7 @@ export class LoanController {
 
     public async removeAllBooksFromCartHandler(request: FastifyRequest, reply: FastifyReply): Promise<FastifyReply> {
 
-        const authenticatedUserId = String(request.locals.userId)
-
-        const removeResult = await this.loanService.removeAllBooksFromCart(authenticatedUserId)
+        const removeResult = await this.loanService.removeAllBooksFromCart(request.authentication.userId)
 
         if (removeResult.failed())
             return badRequest(reply, removeResult.value)
@@ -46,9 +41,7 @@ export class LoanController {
 
     public async removeBookFromCartHandler(request: FastifyRequest<RemoveBookFromCartRequest.Type>, reply: FastifyReply): Promise<FastifyReply> {
 
-        const authenticatedUserId = String(request.locals.userId)
-
-        const removeResult = await this.loanService.removeBookFromCart({ ...request.params, userId: authenticatedUserId })
+        const removeResult = await this.loanService.removeBookFromCart({...request.params, ...request.authentication})
 
         if (removeResult.failed())
             return badRequest(reply, removeResult.value)
@@ -61,7 +54,7 @@ export class LoanController {
 
     public async getBooksFromCartHandler(request: FastifyRequest, reply: FastifyReply): Promise<FastifyReply> {
         
-        const cartBooksResult = await this.loanService.getBooksFromCartByUserId(String(request.locals.userId))
+        const cartBooksResult = await this.loanService.getBooksFromCartByUserId(request.authentication.userId)
 
         if (cartBooksResult.failed())
             return badRequest(reply, cartBooksResult.value)

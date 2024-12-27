@@ -74,10 +74,7 @@ export class AuthenticationController {
 
     public async completeSignUpHandler(request: FastifyRequest<CompleteSignUpRequest.Type>, reply: FastifyReply): Promise<FastifyReply> {
 
-        const assignResult = await userService.assignRoleToUser({ 
-            ...request.body,
-            userId: String(request.locals.userId)
-        })
+        const assignResult = await userService.assignRoleToUser({...request.body, ...request.authentication})
 
         if (assignResult.failed())
             return badRequest(reply, assignResult.value)

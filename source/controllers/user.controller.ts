@@ -1,27 +1,22 @@
 import { badRequest, forbidden, ok, unauthorized } from '@helpers'
+import { defineAbilityFor } from '@libraries'
 import { DeleteUserRequest, FindUserByIdRequest, UpdateMeRequest, UpdateUserRequest } from '@schemas'
-import { AuthorizationService, authorizationService, userService, UserService } from '@services'
+import { userService, UserService } from '@services'
 import { FastifyReply, FastifyRequest } from 'fastify'
 
 export class UserController {
 
     private constructor (
-        private readonly authorizationService: AuthorizationService,
         private readonly userService: UserService
     ) {}
 
-    public static create(authorizationService: AuthorizationService, userService: UserService): UserController {
-        return new UserController(authorizationService, userService)
+    public static create(userService: UserService): UserController {
+        return new UserController(userService)
     }
 
     public async updateUserHandler(request: FastifyRequest<UpdateUserRequest.Type>, reply: FastifyReply): Promise<FastifyReply> {
 
-        const permissionsResult = await this.authorizationService.getPermissionsByUserId(String(request.locals.userId))
-        
-        if (permissionsResult.failed())
-            return forbidden(reply, permissionsResult.value)
-        
-        const permissions = permissionsResult.value
+        const permissions = defineAbilityFor(request.authentication.user)
 
         if (permissions.cannot('update', 'User'))
             return forbidden(reply)
@@ -39,9 +34,7 @@ export class UserController {
 
     public async updateMeHandler(request: FastifyRequest<UpdateMeRequest.Type>, reply: FastifyReply): Promise<FastifyReply> {
 
-        const authenticatedUserId = String(request.locals.userId)
-
-        const updateResult = await this.userService.updateUser({ ...request.body, userId: authenticatedUserId })
+        const updateResult = await this.userService.updateUser({...request.body, ...request.authentication})
 
         if (updateResult.failed())
             return badRequest(reply, updateResult.value)
@@ -54,12 +47,7 @@ export class UserController {
 
     public async deleteUserHandler(request: FastifyRequest<DeleteUserRequest.Type>, reply: FastifyReply): Promise<FastifyReply> {
 
-        const permissionsResult = await this.authorizationService.getPermissionsByUserId(String(request.locals.userId))
-        
-        if (permissionsResult.failed())
-            return forbidden(reply, permissionsResult.value)
-        
-        const permissions = permissionsResult.value
+        const permissions = defineAbilityFor(request.authentication.user)
 
         if (permissions.cannot('delete', 'User'))
             return forbidden(reply)
@@ -77,12 +65,7 @@ export class UserController {
 
     public async findAllUsersHandler(request: FastifyRequest, reply: FastifyReply): Promise<FastifyReply> {
         
-        const permissionsResult = await this.authorizationService.getPermissionsByUserId(String(request.locals.userId))
-        
-        if (permissionsResult.failed())
-            return forbidden(reply, permissionsResult.value)
-        
-        const permissions = permissionsResult.value
+        const permissions = defineAbilityFor(request.authentication.user)
 
         if (permissions.cannot('get-all', 'User'))
             return forbidden(reply)
@@ -97,12 +80,7 @@ export class UserController {
 
     public async findUserByIdHandler(request: FastifyRequest<FindUserByIdRequest.Type>, reply: FastifyReply): Promise<FastifyReply> {
 
-        const permissionsResult = await this.authorizationService.getPermissionsByUserId(String(request.locals.userId))
-        
-        if (permissionsResult.failed())
-            return forbidden(reply, permissionsResult.value)
-        
-        const permissions = permissionsResult.value
+        const permissions = defineAbilityFor(request.authentication.user)
 
         if (permissions.cannot('get', 'User'))
             return forbidden(reply)
@@ -120,7 +98,7 @@ export class UserController {
 
     public async findMeHandler(request: FastifyRequest, reply: FastifyReply): Promise<FastifyReply> {
         
-        const findResult = await this.userService.findUserById(String(request.locals.userId))
+        const findResult = await this.userService.findUserById(request.authentication.userId)
 
         if (findResult.failed())
             return unauthorized(reply, findResult.value)
@@ -133,7 +111,4 @@ export class UserController {
 
 }
 
-export const userController = UserController.create(
-    authorizationService,
-    userService
-)
+export const userController = UserController.create(userService)

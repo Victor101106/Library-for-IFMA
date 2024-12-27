@@ -1,47 +1,55 @@
 import { ACCESS_TOKEN_COOKIE, unauthorized } from '@helpers'
-import { ensureAuthenticationRequestSchema } from '@schemas'
-import { tokenService, TokenService } from '@services'
+import { tokenService, TokenService, userService, UserService } from '@services'
 import { parse as parseCookie } from 'cookie'
 import { FastifyReply, FastifyRequest } from 'fastify'
 import { AccessTokenMissingError } from './errors'
 
 export class AuthMiddleware {
 
-    private constructor (private readonly tokenService: TokenService) {
-        this.ensureAuthenticationHandle = this.ensureAuthenticationHandle.bind(this)
+    private constructor (
+        private readonly tokenService: TokenService,
+        private readonly userService: UserService
+    ) {
+        this.ensureAuthenticationHandler = this.ensureAuthenticationHandler.bind(this)
     }
 
-    public static create(tokenService: TokenService): AuthMiddleware {
-        return new AuthMiddleware(tokenService)
+    public static create(tokenService: TokenService, userService: UserService): AuthMiddleware {
+        return new AuthMiddleware(tokenService, userService)
     }
 
-    public async ensureAuthenticationHandle(request: FastifyRequest, reply: FastifyReply): Promise<FastifyReply | void> {
+    public async ensureAuthenticationHandler(request: FastifyRequest, reply: FastifyReply): Promise<FastifyReply | void> {
 
-        const validationResult = ensureAuthenticationRequestSchema.validateSafe(request)
-
-        if (validationResult.failed())
-            return unauthorized(reply, validationResult.value)
-
-        const { cookie: cookieHeader } = validationResult.value.headers
-
-        const cookie = parseCookie(cookieHeader)
+        if (!request.headers.cookie)
+            return unauthorized(reply, new AccessTokenMissingError())
+        
+        const cookie = parseCookie(request.headers.cookie)
 
         const accessToken = cookie[ACCESS_TOKEN_COOKIE.name]
 
         if (!accessToken)
             return unauthorized(reply, new AccessTokenMissingError())
 
-        const receiptResult = await this.tokenService.verifyAccessToken(accessToken)
+        const verifyResult = await this.tokenService.verifyAccessToken(accessToken)
 
-        if (receiptResult.failed())
-            return unauthorized(reply, receiptResult.value)
+        if (verifyResult.failed())
+            return unauthorized(reply, verifyResult.value)
 
-        const userId = receiptResult.value
+        const userId = verifyResult.value
 
-        request.locals = { userId }
+        const findResult = await this.userService.findUserById(userId)
+
+        if (findResult.failed())
+            return unauthorized(reply, findResult.value)
+
+        const user = findResult.value
+
+        request.authentication = { user, userId }
 
     }
 
 }
 
-export const authMiddleware = AuthMiddleware.create(tokenService)
+export const authMiddleware = AuthMiddleware.create(
+    tokenService,
+    userService
+)

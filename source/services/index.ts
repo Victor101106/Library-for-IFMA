@@ -1,5 +1,4 @@
 export * from './authentication.service'
-export * from './authorization.service'
 export * from './book.service'
 export * from './errors'
 export * from './experimental.service'

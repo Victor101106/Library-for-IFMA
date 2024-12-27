@@ -8,7 +8,7 @@ import { z } from 'zod'
 module.exports = (instance: FastifyTypedInstance) => {
 
     instance.get('/users/me', {
-        onRequest: [authMiddleware.ensureAuthenticationHandle],
+        onRequest: [authMiddleware.ensureAuthenticationHandler],
         schema: {
             tags: ['Users'],
             summary: 'Get authenticated user',
@@ -21,7 +21,7 @@ module.exports = (instance: FastifyTypedInstance) => {
     })
 
     instance.get('/users/', {
-        onRequest: [authMiddleware.ensureAuthenticationHandle],
+        onRequest: [authMiddleware.ensureAuthenticationHandler],
         schema: {
             tags: ['Users'],
             summary: 'Get all users',
@@ -34,7 +34,7 @@ module.exports = (instance: FastifyTypedInstance) => {
     })
 
     instance.get('/users/:userId', {
-        onRequest: [authMiddleware.ensureAuthenticationHandle],
+        onRequest: [authMiddleware.ensureAuthenticationHandler],
         schema: {
             tags: ['Users'],
             summary: 'Get user',
@@ -48,7 +48,7 @@ module.exports = (instance: FastifyTypedInstance) => {
     })
 
     instance.put('/users/:userId', {
-        onRequest: [authMiddleware.ensureAuthenticationHandle],
+        onRequest: [authMiddleware.ensureAuthenticationHandler],
         schema: {
             tags: ['Users'],
             summary: 'Update user',
@@ -63,7 +63,7 @@ module.exports = (instance: FastifyTypedInstance) => {
     })
 
     instance.put('/users/me', {
-        onRequest: [authMiddleware.ensureAuthenticationHandle],
+        onRequest: [authMiddleware.ensureAuthenticationHandler],
         schema: {
             tags: ['Users'],
             summary: 'Update authenticated user',
@@ -77,7 +77,7 @@ module.exports = (instance: FastifyTypedInstance) => {
     })
 
     instance.delete('/users/:userId', {
-        onRequest: [authMiddleware.ensureAuthenticationHandle],
+        onRequest: [authMiddleware.ensureAuthenticationHandler],
         schema: {
             tags: ['Users'],
             summary: 'Delete user',

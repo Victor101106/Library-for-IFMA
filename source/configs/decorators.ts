@@ -1,11 +1,10 @@
-import { FastifyTypedInstance } from '@configs'
+import { User } from '@models'
 
 declare module 'fastify' {
     interface FastifyRequest {
-        locals: Record<string, unknown>
+        authentication: {
+            userId: string
+            user: User
+        }
     }
-}
-
-export default (instance: FastifyTypedInstance) => {
-    instance.decorateRequest('locals')
 }

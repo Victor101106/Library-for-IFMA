@@ -8,7 +8,7 @@ import { z } from 'zod'
 module.exports = (instance: FastifyTypedInstance) => {
 
     instance.post('/users/me/cart/:bookId', {
-        onRequest: [authMiddleware.ensureAuthenticationHandle],
+        onRequest: [authMiddleware.ensureAuthenticationHandler],
         schema: {
             tags: ['Cart'],
             summary: 'Add book to cart',
@@ -22,7 +22,7 @@ module.exports = (instance: FastifyTypedInstance) => {
     })
 
     instance.get('/users/me/cart', {
-        onRequest: [authMiddleware.ensureAuthenticationHandle],
+        onRequest: [authMiddleware.ensureAuthenticationHandler],
         schema: {
             tags: ['Cart'],
             summary: 'Get user cart',
@@ -35,7 +35,7 @@ module.exports = (instance: FastifyTypedInstance) => {
     })
 
     instance.delete('/users/me/cart', {
-        onRequest: [authMiddleware.ensureAuthenticationHandle],
+        onRequest: [authMiddleware.ensureAuthenticationHandler],
         schema: {
             tags: ['Cart'],
             summary: 'Remove all books from cart',
@@ -48,7 +48,7 @@ module.exports = (instance: FastifyTypedInstance) => {
     })
 
     instance.delete('/users/me/cart/:bookId', {
-        onRequest: [authMiddleware.ensureAuthenticationHandle],
+        onRequest: [authMiddleware.ensureAuthenticationHandler],
         schema: {
             tags: ['Cart'],
             summary: 'Remove book from cart',
